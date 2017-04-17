@@ -23,22 +23,115 @@
  */
 package com.app.gpo.model;
 
+import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 /**
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
-public class OrderItem {
-    CREATE TABLE `gpodb`.`orderitem` (
-  `orderItemID` INT NOT NULL AUTO_INCREMENT,
-  `orderItemName` VARCHAR(255) NOT NULL,
-  `orderItemDueDate` DATE NOT NULL,
-  `orderStatusID` INT NOT NULL,
-  `orderStatusDate` DATE NULL,
-  PRIMARY KEY (`orderItemID`),
-  INDEX `fk_orderStatus_idx` (`orderStatusID` ASC),
-  CONSTRAINT `fk_orderStatus`
-    FOREIGN KEY (`orderStatusID`)
-    REFERENCES `gpodb`.`orderstatus` (`orderStatusID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+
+@Entity
+@Table(name="orderItem")
+public class OrderItem implements Serializable {
+  
+    @Id
+    @Column(name = "orderItemID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int orderItemID;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="orderStatusID")
+    private OrderStatus orderStatus;
+ 
+    @Column(name = "orderItemName", nullable = false)
+    private String orderItemName;
+    
+    @Temporal(TemporalType.DATE)
+    @Column(name = "orderStatusDate", nullable = false, length=10)
+    private Date orderStatusDate;
+    
+    @Temporal(TemporalType.DATE)
+    @Column(name = "orderItemDueDate", nullable = false, length=10)
+    private Date orderItemDueDate;
+  
+    /**
+     * Default empty constructor
+     */
+    public OrderItem () {}
+    
+    /**
+     * Constructor initializes orderItemID only
+     * @param id
+     */
+    public OrderItem (int id) {
+        this.orderItemID = id;
+    }
+    
+    /**
+     * Constructor which initializes all columns
+     * @param orderItemID
+     * @param orderStatus
+     * @param orderItemName
+     * @param orderStatusDate
+     * @param orderItemDueDate
+     */
+    public OrderItem (int orderItemID, OrderStatus orderStatus, String orderItemName, Date orderStatusDate,  Date orderItemDueDate) {
+        this.orderItemID = orderItemID;
+        this.orderItemName = orderItemName;
+        this.orderStatus = orderStatus;
+        this.orderStatusDate = orderStatusDate;
+        this.orderItemDueDate = orderItemDueDate;
+    }
+    
+    public int getorderItemID() {
+        return orderItemID;
+    }
+ 
+    public void setorderItemID(int id) {
+        this.orderItemID = id;
+    }
+    
+    public OrderStatus getorderStatus() {
+        return orderStatus;
+    }
+ 
+    public void setorderStatus(OrderStatus object) {
+        this.orderStatus = object;
+    }
+    
+    public String getorderItemName() {
+        return orderItemName;
+    }
+ 
+    public void setorderItemName(String orderItemName) {
+        this.orderItemName = orderItemName;
+    }
+    
+    public Date getorderStatusDate() {
+        return orderStatusDate;
+    }
+ 
+    public void setorderStatusDate(Date orderStatusDate) {
+        this.orderStatusDate = orderStatusDate;
+    }
+    
+    public Date getorderItemDueDate() {
+        return orderItemDueDate;
+    }
+ 
+    public void setorderItemDueDate(Date orderItemDueDate) {
+        this.orderItemDueDate = orderItemDueDate;
+    }
 }

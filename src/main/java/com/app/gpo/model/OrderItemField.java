@@ -23,23 +23,98 @@
  */
 package com.app.gpo.model;
 
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
-public class OrderItemField {
-    CREATE TABLE `gpodb`.`orderitemfield` (
-  `orderItemID` INT NOT NULL,
-  `fieldID` INT NOT NULL,
-  `fieldText` VARCHAR(255) NULL,
-  CONSTRAINT `fk_orderItemKey`
-    FOREIGN KEY (`orderItemID`)
-    REFERENCES `gpodb`.`orderitem` (`orderItemID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_fieldKey`
-    FOREIGN KEY (`fieldID`)
-    REFERENCES `gpodb`.`field` (`fieldID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+
+@Entity
+@Table(name="orderitemfield")
+public class OrderItemField implements Serializable {
+ 
+    @Id
+    @Column(name = "orderItemfieldID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int orderItemfieldID;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="fieldID")
+    private Field field;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="orderItemID")
+    private OrderItem orderItem;
+    
+    @Column(name = "fieldText", nullable = false)
+    private String fieldText;
+    
+    /**
+     * Default empty conrtuctor
+     */
+    public OrderItemField() {}
+    
+    /**
+     * Constructor initializing orderItemfieldID only
+     * @param orderItemfieldID 
+     */
+    public OrderItemField (int orderItemfieldID) {
+        this.orderItemfieldID = orderItemfieldID;
+    }
+    
+    /**
+     * Constructor which initializes all columns
+     * @param orderItemfieldID
+     * @param field
+     * @param orderItem
+     * @param fieldText 
+     */
+    public OrderItemField (int orderItemfieldID, Field field, OrderItem orderItem, String fieldText ) {
+        this.orderItemfieldID = orderItemfieldID;
+        this.field = field;
+        this.orderItem = orderItem;
+        this.fieldText = fieldText;
+    }
+    
+    public int getorderItemfieldID() {
+        return orderItemfieldID;
+    }
+ 
+    public void setorderItemfieldID(int id) {
+        this.orderItemfieldID = id;
+    }
+    
+    public Field getfield() {
+        return field;
+    }
+ 
+    public void setfield(Field field) {
+        this.field = field;
+    }
+    
+    public OrderItem getorderItem() {
+        return orderItem;
+    }
+ 
+    public void setorderItem(OrderItem orderItem) {
+        this.orderItem = orderItem;
+    }
+    
+    public String getfieldText() {
+        return fieldText;
+    }
+ 
+    public void setfieldText(String fieldText) {
+        this.fieldText = fieldText;
+    }
 }

@@ -23,16 +23,113 @@
  */
 package com.app.gpo.model;
 
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
-public class FieldMapping {
-     CREATE TABLE `gpodb`.`fieldmapping` (
-  `fieldID` INT NOT NULL,
-  `productionSlotID` INT NOT NULL,
-  `fieldMappingOrder` INT NOT NULL,
-  `fieldShownInMainTable` TINYINT NOT NULL,
-  UNIQUE INDEX `fieldMappingOrder_UNIQUE` (`fieldMappingOrder` ASC));
+
+@Entity
+@Table(name="fieldmapping")
+public class FieldMapping implements Serializable {
+  
+    @Id
+    @Column(name = "fieldMappingID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int fieldMappingID;
+    
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="fieldID")
+    private Field field;
+ 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="productionSlotID")
+    private ProductionSlot productionSlot;
+    
+    @Column(name = "fieldMappingOrder", nullable = false)
+    private Integer fieldMappingOrder;
+    
+    @Column(name = "fieldShownInMainTable", nullable = false)
+    private Boolean fieldShownInMainTable;
+    
+    /**
+     * Default empty constructor
+     */
+    public FieldMapping () {}
+    
+    /**
+     * Constructor initializes fieldMappingID only
+     * @param id 
+     */
+    public FieldMapping (int id) {
+        this.fieldMappingID = id;
+    }
+    
+    /**
+     * Constructor which initializes all columns
+     * @param fieldMappingID
+     * @param field
+     * @param productionSlot
+     * @param fieldMappingOrder
+     * @param fieldShownInMainTable 
+     */
+    public FieldMapping (int fieldMappingID, Field field, ProductionSlot productionSlot, Integer fieldMappingOrder, Boolean fieldShownInMainTable) {
+        this.fieldMappingID = fieldMappingID;
+        this.field = field;
+        this.productionSlot = productionSlot;
+        this.fieldMappingOrder = fieldMappingOrder;
+        this.fieldShownInMainTable = fieldShownInMainTable;
+    }
+    
+    public int getfieldMappingID() {
+        return fieldMappingID;
+    }
+ 
+    public void setfieldMappingID(int id) {
+        this.fieldMappingID = id;
+    }
+    
+    public Field getfield() {
+        return field;
+    }
+ 
+    public void setfield(Field field) {
+        this.field = field;
+    }
+    
+    public ProductionSlot getproductionSlot() {
+        return productionSlot;
+    }
+ 
+    public void setproductionSlot(ProductionSlot productionSlot) {
+        this.productionSlot = productionSlot;
+    }
+ 
+    public Integer getfieldMappingOrder() {
+        return fieldMappingOrder;
+    }
+ 
+    public void setfieldMappingOrder(Integer number) {
+        this.fieldMappingOrder = number;
+    }
+    
+    public Boolean getfieldShownInMainTable() {
+        return fieldShownInMainTable;
+    }
+ 
+    public void setfieldShownInMainTable(Boolean value) {
+        this.fieldShownInMainTable = value;
+    }
+  
 }
 

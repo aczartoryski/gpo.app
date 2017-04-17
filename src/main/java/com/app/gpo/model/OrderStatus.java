@@ -23,6 +23,7 @@
  */
 package com.app.gpo.model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,10 +39,11 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="orderstatus")
-public class OrderStatus {
+public class OrderStatus implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "orderStatusID", nullable = false)
     private int orderStatusID;
  
     @Size(min=3, max=100)

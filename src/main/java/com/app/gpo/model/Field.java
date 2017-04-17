@@ -42,13 +42,48 @@ public class Field implements Serializable {
  
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "fieldID", nullable = false)
+    /**
+     * Identity column for field table
+     */
     private int fieldID;
  
     @Column(name = "fieldValueID", nullable = false)
+    /**
+     * Sub-Identity column for field table
+     */
     private Integer fieldValueID;
     
     @Column(name = "fieldLabel", nullable = false)
+    /**
+     * Label column for field table
+     */
     private String fieldLabel;
+    
+    /**
+     * Default empty conrtuctor
+     */
+    public Field () {}
+    
+    /**
+     * Constructor initializing fieldID only
+     * @param id 
+     */
+    public Field (int id) {
+        this.fieldID = id;
+    }
+    
+    /**
+     * Constructor which initializes all columns
+     * @param fieldID
+     * @param fieldValueID
+     * @param fieldLabel 
+     */
+    public Field (int fieldID, Integer fieldValueID, String fieldLabel) {
+        this.fieldID = fieldID;
+        this.fieldLabel= fieldLabel;
+        this.fieldValueID = fieldValueID; 
+    }
     
     public int getfieldID() {
         return fieldID;
