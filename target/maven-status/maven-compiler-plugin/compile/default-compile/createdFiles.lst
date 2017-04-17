@@ -1,0 +1,5 @@
+com\app\gpo\dao\AbstractDao.class
+com\app\gpo\configuration\AppConfig.class
+com\app\gpo\security\SecurityConfig.class
+com\app\gpo\configuration\AppInitializer.class
+com\app\gpo\configuration\HibernateConfiguration.class
