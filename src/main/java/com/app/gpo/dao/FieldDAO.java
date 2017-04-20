@@ -27,12 +27,15 @@ import com.app.gpo.model.Field;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
+@Repository("fieldDAO")
 public class FieldDAO extends AbstractDao<Integer, Field> {
+    
     public Field find (int id) {
         return getByKey(id);
     }

@@ -50,6 +50,9 @@ public class ProductionSlot implements Serializable {
     @Column(name = "productionSlotDescription", nullable = false)
     private String productionSlotDescription;
     
+    @Column(name = "productionSlotNumber", nullable = false)
+    private Integer productionSlotNumber;
+    
     public int getproductionSlotID() {
         return productionSlotID;
     }
@@ -64,6 +67,14 @@ public class ProductionSlot implements Serializable {
  
     public void setproductionSlotDescription(String name) {
         this.productionSlotDescription = name;
+    }
+    
+    public Integer getproductionSlotNumber() {
+        return productionSlotNumber;
+    }
+ 
+    public void setproductionSlotNumber(Integer number) {
+        this.productionSlotNumber = number;
     }
   
 }

@@ -27,11 +27,13 @@ import com.app.gpo.model.OrderStatus;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
+@Repository("orderStatusDAO")
 public class OrderStatusDAO extends AbstractDao<Integer, OrderStatus> {
     public OrderStatus find (int id) {
         return getByKey(id);

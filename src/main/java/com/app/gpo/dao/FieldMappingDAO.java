@@ -27,11 +27,13 @@ import com.app.gpo.model.FieldMapping;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
+@Repository("fieldMappingDAO")
 public class FieldMappingDAO extends AbstractDao<Integer, FieldMapping> {
     
    public FieldMapping find (int id) {

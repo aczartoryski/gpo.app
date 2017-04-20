@@ -1,0 +1,17 @@
+#sortable1, #sortable2, #notsortable {
+    border: 0px;
+    width: 100%;
+    min-height: 20px;
+    list-style-type: none;
+    margin: 2px;
+    padding: 5px;
+    float: left;
+    margin-right: 10px;
+  }
+  .ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+  #sortable1 li, #sortable2 li, #notsortable li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 1.2em;
+    width: 95%;
+  }

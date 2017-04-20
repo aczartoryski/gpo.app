@@ -23,6 +23,11 @@
  */
 package com.app.gpo.configuration;
 
+import java.io.IOException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
@@ -46,5 +51,21 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
     protected String[] getServletMappings() {
         return new String[] { "/" };
     }
- 
+    
+   // @Override
+   // protected Filter[] getServletFilters() {
+   //     return new Filter[] { 
+   //          new DelegatingFilterProxy("GPOEncodingFilter")
+   //     };
+   // }
+    
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) 
+        throws ServletException, IOException {
+
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        chain.doFilter(request, response);
+
+        }
 }

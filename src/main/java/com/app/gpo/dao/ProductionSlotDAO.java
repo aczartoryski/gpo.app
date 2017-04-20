@@ -26,23 +26,34 @@ package com.app.gpo.dao;
 import com.app.gpo.model.ProductionSlot;
 import java.util.List;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
+@Repository("productionSlotDAO")
 public class ProductionSlotDAO extends AbstractDao<Integer, ProductionSlot> {
     
-   public ProductionSlot findById(int id) {
+   public ProductionSlot find (int id) {
         return getByKey(id);
     }
  
     public void save (ProductionSlot productionSlot) {
         persist(productionSlot);
     }
+    
+    public void update (ProductionSlot productionSlot) throws HibernateException  {
+        try {
+           saveUpdate(productionSlot);
+        } catch (final HibernateException e) {
+            throw new HibernateException(e);
+        }
+    }
  
-    public void deleteById(int id) {
+    public void delete (int id) {
         Query query = getSession().createSQLQuery("delete from productionSlot where productionSlotID = :productionSlotID");
         query.setString("productionSlotID", Integer.toString(id));
         query.executeUpdate();

@@ -27,11 +27,13 @@ import com.app.gpo.model.OrderItemField;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
+@Repository("orderItemFieldDAO")
 public class OrderItemFieldDAO   extends AbstractDao<Integer, OrderItemField> {
     
    public OrderItemField find (int id) {
