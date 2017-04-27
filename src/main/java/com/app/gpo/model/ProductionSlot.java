@@ -24,11 +24,17 @@
 package com.app.gpo.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -41,40 +47,64 @@ import javax.validation.constraints.Size;
 @Table(name="productionslot")
 public class ProductionSlot implements Serializable {
  
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productionSlotID", nullable = false)
     private int productionSlotID;
- 
-    @Size(min=3, max=255)
-    @Column(name = "productionSlotDescription", nullable = false)
     private String productionSlotDescription;
-    
-    @Column(name = "productionSlotNumber", nullable = false)
     private Integer productionSlotNumber;
+    private Set<FieldMapping> fieldMappings = new HashSet<FieldMapping>(0);
     
+    public ProductionSlot () {
+    }
+    
+    public ProductionSlot (int productionSlotID,String productionSlotDescription,Integer productionSlotNumber ) {
+        this.productionSlotID = productionSlotID;
+        this.productionSlotNumber = productionSlotNumber;
+        this.productionSlotDescription = productionSlotDescription;
+    }
+    
+    public ProductionSlot (int productionSlotID,String productionSlotDescription,Integer productionSlotNumber,Set<FieldMapping> fieldMappings ) {
+        this.productionSlotID = productionSlotID;
+        this.productionSlotNumber = productionSlotNumber;
+        this.productionSlotDescription = productionSlotDescription;
+        this.fieldMappings = fieldMappings;
+    }
+    
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "productionSlotID",unique = true, nullable = false)
     public int getproductionSlotID() {
         return productionSlotID;
     }
- 
-    public void setproductionSlotID(int id) {
-        this.productionSlotID = id;
+
+    public void setproductionSlotID(int productionSlotID) {
+        this.productionSlotID = productionSlotID;
     }
- 
-    public String getproductionSlotDescription() {
+    
+    @Column(name = "productionSlotDescription", nullable = false)
+    public String getProductionSlotDescription() {
         return productionSlotDescription;
     }
  
-    public void setproductionSlotDescription(String name) {
+    public void setProductionSlotDescription(String name) {
         this.productionSlotDescription = name;
     }
     
-    public Integer getproductionSlotNumber() {
+    @Column(name = "productionSlotNumber", nullable = false)
+    public Integer getProductionSlotNumber() {
         return productionSlotNumber;
     }
  
-    public void setproductionSlotNumber(Integer number) {
+    public void setProductionSlotNumber(Integer number) {
         this.productionSlotNumber = number;
     }
-  
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "productionSlot", cascade=CascadeType.ALL)
+    @OrderBy ("fieldMappingOrder")
+    public Set<FieldMapping> getFieldMappings() {
+	return this.fieldMappings;
+    }
+
+    public void setFieldMappings(Set<FieldMapping> fieldMappings) {
+	this.fieldMappings = fieldMappings;
+    }
+ 
 }

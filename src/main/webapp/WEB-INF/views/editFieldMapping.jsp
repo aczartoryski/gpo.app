@@ -38,7 +38,9 @@
     <div class="col-xs-12">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Edycja mapowania pól karty produkcyjnej dla gniazda <i>0</i></div>
+          <div class="card-title">Edycja mapowania pól karty produkcyjnej dla gniazda 
+                 <c:out value='${productionSlot.productionSlotNumber}' /> 
+                (<c:out value='${productionSlot.productionSlotDescription}' />)</div>
         </div>
         <div class="card-body no-paddings table-responsive">
           <table class="table table-bordered table-condensed" cellspacing="0" width="100%">
@@ -52,23 +54,31 @@
                   <tr>
                       <td width="50%">
                         <ul id="sortable1" class="connectedSortable">
-                          <li class="ui-state-default">Wiercenie otworów w prowadnicy do montażu (15)</li>
-                          <li class="ui-state-default">Kolor skrzynki (1)</li>
-                          <li class="ui-state-default">Pole 103 (xxx)</li>
-                          <li class="ui-state-default">Pole 104 (xxx)</li>
-                          <li class="ui-state-default">Pole 105 (xxx)</li>
+
+                            <c:forEach var="f" items="${fieldList}">
+
+                                    <li class="ui-state-default">
+                                    (<c:out value='${f.fieldOriginID}' />) 
+                                     <c:out value='${f.fieldLabel}' />
+                                    </li>
+
+                              </c:forEach>
+
                         </ul>
                       </td>
                       <td width="50%">
                         <ul id="notsortable" >
-                          <li class="ui-state-highlight ui-state-disabled">Nr zamówienia (0)</li>
-                          <li class="ui-state-highlight ui-state-disabled">Termin (1)</li>
-                          <li class="ui-state-highlight ui-state-disabled">Wyrób (2)</li>
+                          
+                          <li class="ui-state-highlight ui-state-disabled">Nr zamówienia</li>
+                          <li class="ui-state-highlight ui-state-disabled">Wyrób</li>
                         </ul>
                         <ul id="sortable2" class="connectedSortable">
-                          <li class="ui-state-default">Pole 100 (xxx)</li>
-                          <li class="ui-state-default">Pole 101 (xxx)</li>
-                          <li class="ui-state-default">Pole 102 (xxx)</li>
+                            <c:forEach var="fM" items="${fieldMappingList}">
+                                <li class="ui-state-default">
+                                 (<c:out value='${fM.field.fieldOriginID}' />) 
+                                  <c:out value='${fM.field.fieldLabel}' />
+                                </li>
+                            </c:forEach>
                         </ul>
                       </td>
                   </tr>
@@ -83,6 +93,7 @@
               <div class="form-group">
                 <div class="col-md-9 col-md-offset-1">
                   <button type="submit" class="btn btn-primary">Zapisz</button>
+                  <div id="seializeTable"></div>
                   <button type="button" class="btn btn-default">Anuluj</button>
                   <button type="button" class="btn btn-danger">Usuń</button>
                 </div>

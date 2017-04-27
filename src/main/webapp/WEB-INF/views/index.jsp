@@ -41,6 +41,13 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Lista zleceń produkcji
+              <c:if test="${not empty message}">
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                    <c:out value='${message}' />
+                    </div>
+              </c:if>
             <div>
                 <a>
                             <span class="badge badge-info badge-icon">
@@ -92,15 +99,16 @@
                         <a class="toggle-vis" data-column="4">
                             <span class="badge badge-success badge-icon">
                                 <i class="fa fa-plus-square" aria-hidden="true"></i>
-                                <span>Status</span>
+                                <span>Data zmiany statusu</span>
                             </span>
                         </a>
                         <a class="toggle-vis" data-column="5">
                             <span class="badge badge-success badge-icon">
                                 <i class="fa fa-plus-square" aria-hidden="true"></i>
-                                <span>Data zmiany statusu</span>
+                                <span>Status</span>
                             </span>
                         </a>
+                        
                         <a class="toggle-vis" data-column="6">
                             <span class="badge badge-success badge-icon">
                                 <i class="fa fa-plus-square" aria-hidden="true"></i>
@@ -156,29 +164,30 @@
                 </tr>
             </thead>
     <tbody>
+        <c:forEach var="oItem" items="${orderItemList}">
         <tr>
             <td>
-              <a>
+              <a href="printOrderItem-<c:out value='${oItem.orderItemID}' />">
                 <span class="badge badge-primary badge-icon">
                     <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                 </span>
               </a>
-              <a>
+              <a href="printProductionLabel-<c:out value='${oItem.orderItemID}' />">
                 <span class="badge badge-primary badge-icon">
                     <i class="fa fa-print" aria-hidden="true"></i>
                 </span>
               </a>
-              <a href="pozycjaPodejrzyj.html">
+              <a href="viewOrderItem-<c:out value='${oItem.orderItemID}' />">
                 <span class="badge badge-info badge-icon">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </span>
               </a>
-              <a href="pozycjaEdytuj.html">
+              <a href="editOrderItem-<c:out value='${oItem.orderItemID}' />">
                 <span class="badge badge-success badge-icon">
                     <i class="fa fa-edit" aria-hidden="true"></i>
                 </span>
               </a>
-              <a>
+              <a href="deleteOrderItem-<c:out value='${oItem.orderItemID}' />" onclick="return confirm('Czy na pewno skasować ?')" >
                 <span class="badge badge-warning badge-icon">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </span>
@@ -186,153 +195,38 @@
             </td>
             <td class="">
                 <div class="checkbox" >
-                    <input type="checkbox" id="checkbox1">&nbsp;&nbsp;
-                    <label for="checkbox1">
-                        45950#1#3
+                    <input type="checkbox" id="checkbox<c:out value='${oItem.orderItemID}' />">&nbsp;&nbsp;
+                    <label for="checkbox<c:out value='${oItem.orderItemID}' />">
+                        <c:out value='${oItem.orderNumber}' />
                     </label>
                 </div>
             </td>
-            <td>2017/04/20</td>
-            <td>Brama garażowa Profil 52</td>
-            <td></td>
-            <td><span class="label label-info">Nowe</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td style="width: 105px">
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-print" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaPodejrzyj.html">
-                <span class="badge badge-info badge-icon">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaEdytuj.html">
-                <span class="badge badge-success badge-icon">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-warning badge-icon">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </span>
-              </a>
-            </td>
-            <td><div class="checkbox">
-                    <input type="checkbox" id="checkbox2">&nbsp;&nbsp;
-                    <label for="checkbox2">
-                        45950#2#3
-                    </label>
-            </td>
-            <td>2017/04/20</td>
-            <td>Brama garażowa Profil 52</td>
-            <td></td>
-            <td><span class="label label-info">Nowe</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td style="width: 105px">
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-print" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaPodejrzyj.html">
-                <span class="badge badge-info badge-icon">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaEdytuj.html">
-                <span class="badge badge-success badge-icon">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-warning badge-icon">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </span>
-              </a>
-            </td>
+            <td><c:out value='${oItem.orderItemDueDate}' /></td>
+            <td><c:out value='${oItem.orderItemName}' /></td>
+            <td><c:out value='${oItem.orderStatusDate}' /></td>
             <td>
-                <div class="checkbox">
-                    <input type="checkbox" id="checkbox3">&nbsp;&nbsp;
-                    <label for="checkbox3">
-                        45950#3#3
-                    </label>
-            </td>
-            <td>2017/04/20</td>
-            <td>Brama garażowa Profil 52</td>
-            <td></td>
-            <td><span class="label label-info">Nowe</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td style="width: 105px">
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-print" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaPodejrzyj.html">
-                <span class="badge badge-info badge-icon">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaEdytuj.html">
-                <span class="badge badge-success badge-icon">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-warning badge-icon">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </span>
-              </a>
-            </td>
-            <td>
-                <div class="checkbox">
-                    <input type="checkbox" id="checkbox4">&nbsp;&nbsp;
-                    <label for="checkbox4">
-                        45956#1#3
-                    </label>
-            </td>
-            <td>2017/04/12</td>
-            <td>Brama garażowa Profil 51</td>
-            <td>2017/04/01</td>
-            <td><span class="label label-danger">Anulowane</span></td>
+                    <c:choose>
+                        <c:when test="${oItem.orderStatus.orderStatusName == 'Nowe'}">
+                           <span class="label label-info">
+                        </c:when>
+                        <c:when test="${oItem.orderStatus.orderStatusName == 'Zakończone'}">
+                            <span class="label label-success">
+                        </c:when>
+                        <c:when test="${oItem.orderStatus.orderStatusName == 'W toku'}">
+                            <span class="label label-warning">
+                        </c:when>
+                        <c:when test="${oItem.orderStatus.orderStatusName == 'Przywrócone'}">
+                            <span class="label label-primary">
+                        </c:when>
+                        <c:when test="${oItem.orderStatus.orderStatusName == 'Anulowane'}">
+                            <span class="label label-danger">
+                        </c:when>
+                        <c:otherwise>
+                            <span class="label label-info">
+                        </c:otherwise>
+                    </c:choose>
+                    <c:out value='${oItem.orderStatus.orderStatusName}' />
+                </span></td>
             <td></td>
             <td></td>
             <td></td>
@@ -340,145 +234,7 @@
             <td></td>
             <td></td>
         </tr>
-        <tr>
-            <td style="width: 105px">
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-print" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaPodejrzyj.html">
-                <span class="badge badge-info badge-icon">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaEdytuj.html">
-                <span class="badge badge-success badge-icon">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-warning badge-icon">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </span>
-              </a>
-            </td>
-            <td>
-                <div class="checkbox">
-                    <input type="checkbox" id="checkbox5">&nbsp;&nbsp;
-                    <label for="checkbox5">
-                        45956#2#3
-                    </label>
-            </td>
-            <td>2017/04/12</td>
-            <td>Brama garażowa Profil 51</td>
-            <td>2017/04/05</td>
-            <td><span class="label label-warning">W toku</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-
-        </tr>
-        <tr>
-            <td style="width: 105px">
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-print" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaPodejrzyj.html">
-                <span class="badge badge-info badge-icon">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaEdytuj.html">
-                <span class="badge badge-success badge-icon">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-warning badge-icon">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </span>
-              </a>
-            </td>
-            <td>
-                <div class="checkbox">
-                    <input type="checkbox" id="checkbox6">&nbsp;&nbsp;
-                    <label for="checkbox6">
-                        45956#3#3
-                    </label>
-            </td>
-            <td>2017/04/12</td>
-            <td>Brama garażowa Profil 51</td>
-            <td>2017/04/04</td>
-            <td><span class="label label-primary">Przywrócone</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td style="width: 105px">
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-print" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaPodejrzyj.html">
-                <span class="badge badge-info badge-icon">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a href="pozycjaEdytuj.html">
-                <span class="badge badge-success badge-icon">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-warning badge-icon">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </span>
-              </a>
-            </td>
-            <td>
-                <div class="checkbox">
-                    <input type="checkbox" id="checkbox7">&nbsp;&nbsp;
-                    <label for="checkbox7">
-                        45953#1#3
-                    </label>
-            </td>
-            <td>2017/04/20</td>
-            <td>Brama garażowa Profil 52</td>
-            <td>2017/04/18</td>
-            <td><span class="label label-success">Zakończone</span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+        </c:forEach>
     </tbody>
 </table>
         </div>

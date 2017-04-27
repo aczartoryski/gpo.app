@@ -39,7 +39,7 @@
         <div class="card-header">Edycja gniazda produkcyjnego</div>
         <div class="card-body">
             <form:form method="POST" modelAttribute="productionSlot" action="${pageContext.request.contextPath}/updateProductionSlot">
-            <form:input type="hidden" path="productionSlotID" id="productionSlotID" value="${productionSlot.getproductionSlotID()}" />
+            <form:input type="hidden" path="productionSlotID" id="productionSlotID" value="${productionSlot.productionSlotID}" />
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">

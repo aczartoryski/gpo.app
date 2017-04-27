@@ -24,11 +24,15 @@
 package com.app.gpo.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -40,25 +44,12 @@ import javax.persistence.Table;
 @Table(name="field")
 public class Field implements Serializable {
  
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "fieldID", nullable = false)
-    /**
-     * Identity column for field table
-     */
     private int fieldID;
- 
-    @Column(name = "fieldValueID", nullable = false)
-    /**
-     * Sub-Identity column for field table
-     */
     private Integer fieldValueID;
-    
-    @Column(name = "fieldLabel", nullable = false)
-    /**
-     * Label column for field table
-     */
     private String fieldLabel;
+    private Integer fieldOriginID;
+    private Set<FieldMapping> fieldMappings = new HashSet<FieldMapping>(0);
+    
     
     /**
      * Default empty conrtuctor
@@ -76,37 +67,64 @@ public class Field implements Serializable {
     /**
      * Constructor which initializes all columns
      * @param fieldID
+     * @param fieldOriginID
      * @param fieldValueID
      * @param fieldLabel 
+     * @param fieldMappings 
      */
-    public Field (int fieldID, Integer fieldValueID, String fieldLabel) {
+    public Field (int fieldID, Integer fieldOriginID, Integer fieldValueID, String fieldLabel, Set<FieldMapping> fieldMappings) {
         this.fieldID = fieldID;
         this.fieldLabel= fieldLabel;
         this.fieldValueID = fieldValueID; 
+        this.fieldOriginID = fieldOriginID;
+        this.fieldMappings = fieldMappings;
     }
     
-    public int getfieldID() {
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "fieldID", nullable = false)
+    public int getFieldID() {
         return fieldID;
     }
  
-    public void setfieldID(int id) {
+    public void setFieldID(int id) {
         this.fieldID = id;
     }
     
-    public int getfieldValueID() {
-        return fieldID;
+    @Column(name = "fieldOriginID", nullable = false)
+    public int getFieldOriginID() {
+        return fieldOriginID;
     }
  
-    public void setfieldValueID(int id) {
+    public void setFieldOriginID(int id) {
+        this.fieldOriginID = id;
+    }
+    
+    @Column(name = "fieldValueID", nullable = false)
+    public int getFieldValueID() {
+        return fieldValueID;
+    }
+ 
+    public void setFieldValueID(int id) {
         this.fieldValueID = id;
     }
- 
-    public String getfieldLabel() {
+    
+    @Column(name = "fieldLabel", nullable = false)
+    public String getFieldLabel() {
         return fieldLabel;
     }
  
-    public void setfieldLabel(String name) {
+    public void setFieldLabel(String name) {
         this.fieldLabel = name;
+    }
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "field")
+    public Set<FieldMapping> getFieldMappings() {
+	return (Set<FieldMapping>) this.fieldMappings;
+    }
+
+    public void setFieldMappings(Set<FieldMapping> fieldMappings) {
+	this.fieldMappings = fieldMappings;
     }
     
 }

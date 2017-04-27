@@ -46,6 +46,10 @@ public class FieldService {
     public List<Field> findAll() {
         return dao.findAll();
     }
+    
+    public List<Field> findAllNotAssignToProductSlot (int id) {
+        return dao.findAllNotAssignToProductSlot(id);
+    }
  
     public Field find(int id) {
         return dao.find(id);

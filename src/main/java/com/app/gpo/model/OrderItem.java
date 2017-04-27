@@ -36,6 +36,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -60,11 +61,16 @@ public class OrderItem implements Serializable {
     
     @Temporal(TemporalType.DATE)
     @Column(name = "orderStatusDate", nullable = false, length=10)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date orderStatusDate;
     
     @Temporal(TemporalType.DATE)
     @Column(name = "orderItemDueDate", nullable = false, length=10)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date orderItemDueDate;
+    
+    @Column(name = "orderNumber", nullable = false)
+    private String orderNumber;
   
     /**
      * Default empty constructor
@@ -87,12 +93,13 @@ public class OrderItem implements Serializable {
      * @param orderStatusDate
      * @param orderItemDueDate
      */
-    public OrderItem (int orderItemID, OrderStatus orderStatus, String orderItemName, Date orderStatusDate,  Date orderItemDueDate) {
+    public OrderItem (int orderItemID, OrderStatus orderStatus, String orderItemName, Date orderStatusDate,  Date orderItemDueDate, String orderNumber) {
         this.orderItemID = orderItemID;
         this.orderItemName = orderItemName;
         this.orderStatus = orderStatus;
         this.orderStatusDate = orderStatusDate;
         this.orderItemDueDate = orderItemDueDate;
+        this.orderNumber = orderNumber;
     }
     
     public int getorderItemID() {
@@ -133,5 +140,13 @@ public class OrderItem implements Serializable {
  
     public void setorderItemDueDate(Date orderItemDueDate) {
         this.orderItemDueDate = orderItemDueDate;
+    }
+    
+    public String getorderNumber() {
+        return this.orderNumber;
+    }
+ 
+    public void setorderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 }

@@ -69,21 +69,21 @@
                 <c:forEach var="productionSlot" items="${productionSlotList}">
                 <tr>
                     <td style="width: 20%">
-                      <a href="editProductionSlot-<c:out value='${productionSlot.getproductionSlotID()}' />"> 
+                      <a href="editProductionSlot-<c:out value='${productionSlot.productionSlotID}' />"> 
                         <span class="badge badge-info badge-icon">
                             <i class="fa fa-edit" aria-hidden="true"></i>
                             <span>Edytuj</span>
                         </span>
                       </a>
-                      <a href="deleteProductionSlot-<c:out value='${productionSlot.getproductionSlotID()}' />" onclick="return confirm('Czy na pewnoc hcesz skasować ?')">
+                      <a href="deleteProductionSlot-<c:out value='${productionSlot.productionSlotID}' />" onclick="return confirm('Czy na pewnoc hcesz skasować ?')">
                         <span class="badge badge-danger badge-icon">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                             <span>Usuń</span>
                         </span>
                       </a>
                     </td>
-                   <td><c:out value='${productionSlot.getproductionSlotNumber()}' /></td>
-                    <td><c:out value='${productionSlot.getproductionSlotDescription()}' /></td>
+                   <td><c:out value='${productionSlot.productionSlotNumber}' /></td>
+                    <td><c:out value='${productionSlot.productionSlotDescription}' /></td>
                 </tr>
                 </c:forEach>
             </tbody>

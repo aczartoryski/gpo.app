@@ -22,6 +22,11 @@
  * THE SOFTWARE.
  */
 package com.app.gpo.controller;
+
+import com.app.gpo.model.Field;
+import com.app.gpo.model.FieldMapping;
+import com.app.gpo.model.OrderItem;
+import com.app.gpo.model.OrderStatus;
 import com.app.gpo.model.ProductionSlot;
 import com.app.gpo.services.FieldMappingService;
 import com.app.gpo.services.FieldService;
@@ -29,9 +34,11 @@ import com.app.gpo.services.OrderItemFieldService;
 import com.app.gpo.services.OrderItemService;
 import com.app.gpo.services.OrderStatusService;
 import com.app.gpo.services.ProductionSlotService;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,6 +53,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
 @Controller
+@Transactional
 @RequestMapping("/")
 public class AppController {
    
@@ -100,10 +108,51 @@ public class AppController {
     @RequestMapping(value="/index", method = RequestMethod.GET)
     public ModelAndView showIndex() {
         ModelAndView mv = new ModelAndView("index");
-        //List<OrderItem> orderItemList = orderItemService.findAll();
-        //mv.addObject("orderItemList", orderItemList);
+        List<OrderItem> orderItemList = orderItemService.findAll();
+        mv.addObject("orderItemList", orderItemList);
         return mv;
     } 
+    
+    @RequestMapping(value={ "editOrderItem-{orderItemID}" }, method = RequestMethod.GET)
+    public ModelAndView ediOrderItem (Model model, @PathVariable Integer orderItemID) {
+        OrderItem orderItem = orderItemService.find(orderItemID);
+        List<OrderStatus> orderStatusList = orderStatusService.findAll();
+        ModelAndView mv = new ModelAndView("editOrderItem");
+        mv.addObject("orderItem", orderItem);
+        mv.addObject("orderStatusList", orderStatusList);
+        return mv;
+    }
+    
+    @RequestMapping(value = { "deleteOrderItem-{orderItemID}" }, method = RequestMethod.GET)
+    public String deleteOrderItem(@PathVariable Integer orderItemID,Model model,RedirectAttributes redirectAttributes) {
+        String message;
+        orderItemService.delete(orderItemID);
+        message = "Pozycja zamówienia została poprawnie usunięta." ;
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/index";
+    }
+    
+    @RequestMapping(value="/updateOrderItem", method = RequestMethod.POST)
+    public String updateOrderItem(@ModelAttribute OrderItem orderItem,BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+        String message;
+        Date today = new Date();
+        if (bindingResult.hasErrors()) {
+            message = "W trakcie aktualizacji wystąpiły błędy !";
+            message = message + bindingResult.getAllErrors().toString();
+        } else {
+            if (orderItem.getorderItemID() == 0) {
+                orderItem.setorderStatusDate(today);
+                orderItemService.save(orderItem);
+                message = "Pozycja zamówienia ("+orderItem.getorderItemName()+")została poprawnie dodana." ;
+            } else {
+                orderItem.setorderStatusDate(today);
+                orderItemService.update(orderItem);
+                message = "Pozycja zamówienia ("+orderItem.getorderItemName()+") została poprawnie zaktualizowana." ;
+            }
+        }
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/index";
+    }
     
     @RequestMapping(value="/productionSlots", method = RequestMethod.GET)
     public ModelAndView showProductionSlots() {
@@ -123,14 +172,11 @@ public class AppController {
     public ModelAndView editProductionSlot(Model model, @PathVariable Integer productionSlotID) {
         ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
         ModelAndView mv = new ModelAndView("editProductionSlot");
-        try {
-            mv.addObject("productionSlot", productionSlot);
-        }
-        catch ( Exception e) {
-            e.printStackTrace();
-        }
+        mv.addObject("productionSlot", productionSlot);
         return mv;
     }
+    
+    
     
         
     @RequestMapping(value="/updateProductionSlot", method = RequestMethod.POST)
@@ -164,16 +210,22 @@ public class AppController {
     @RequestMapping(value="/fieldMappings", method = RequestMethod.GET)
     public ModelAndView showfieldMappings() {
         ModelAndView mv = new ModelAndView("fieldMappings");
-        //List<OrderItem> orderItemList = orderItemService.findAll();
-        //mv.addObject("orderItemList", orderItemList);
+        List<ProductionSlot> productionSlotList = productionSlotService.findAll();
+        mv.addObject("productionSlotList", productionSlotList);
         return mv;
     } 
     
-    @RequestMapping(value="/editFieldMapping", method = RequestMethod.GET)
-    public ModelAndView editfieldMapping() {
+    @RequestMapping(value="/editFieldMapping-{productionSlotID}", method = RequestMethod.GET)
+    public ModelAndView editfieldMapping(Model model, @PathVariable Integer productionSlotID) {
         ModelAndView mv = new ModelAndView("editFieldMapping");
-        //List<OrderItem> orderItemList = orderItemService.findAll();
-        //mv.addObject("orderItemList", orderItemList);
+        ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
+        mv.addObject("productionSlot", productionSlot);
+        
+        List<FieldMapping> fieldMappingList = fieldMappingService.findByProductionSlotID(productionSlotID);
+        mv.addObject("fieldMappingList", fieldMappingList);
+        
+        List<Field> fieldList = fieldService.findAllNotAssignToProductSlot(productionSlotID);
+        mv.addObject("fieldList",fieldList);
         return mv;
     } 
     

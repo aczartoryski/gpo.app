@@ -28,9 +28,7 @@
 <!DOCTYPE html>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%
-    session.setAttribute( "menuActive", "zamowienia" );
-%>
+<% session.setAttribute( "menuActive", "fields" ); %>
 <jsp:include page="${request.contextPath}/header">
   <jsp:param name="pageTitle" value="Lista zleceń produkcji"/>
 </jsp:include>
@@ -60,86 +58,38 @@
         <tr>
             <th>Akcje</th>
             <th>Mapowanie dla gniazda</th>
-            <th>Nazwa pola (ID)</th>
+            <th>(ID) Nazwa pola</th>
         </tr>
     </thead>
     <tbody>
+        <c:forEach var="pS" items="${productionSlotList}">
         <tr>
             <td style="width: 20%">
-              <a href="editFieldMapping">
+                <a href="editFieldMapping-<c:out value='${pS.productionSlotID}' />"> 
                 <span class="badge badge-info badge-icon">
                     <i class="fa fa-edit" aria-hidden="true"></i>
                     <span>Edytuj</span>
                 </span>
               </a>
-              <a href="deleteFieldMapping" onclick="return confirm('Czy na pewnoc hcesz skasować ?')">
+              <a href="deleteFieldMapping-<c:out value='${pS.productionSlotID}' />" onclick="return confirm('Czy na pewnoc hcesz skasować ?')">
                 <span class="badge badge-danger badge-icon">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                     <span>Usuń</span>
                 </span>
               </a>
             </td>
-            <td>0</td>
+            <td><c:out value='${pS.productionSlotNumber}' /> 
+                (<c:out value='${pS.productionSlotDescription}' />)</td>
             <td>
-              <ol>
-                <li>Nr zamówienia (0)</li>
-                <li>Kolor skrzynki (1)</li>
-                <li>Wiercenie otworów w prowadnicy do montażu (15)</li>
-                <li>.... itd.</li>
-              </ol>
+              <ul>
+                  <c:forEach var="fM" items="${pS.fieldMappings}">
+                      <li style="list-style: none">(<c:out value='${fM.field.fieldOriginID}' />) 
+                          <c:out value='${fM.field.fieldLabel}' /></li>    
+                  </c:forEach>  
+              </ul>
             </td>
         </tr>
-        <tr>
-            <td style="width: 20%">
-              <a href="polaEdytuj.html">
-                <span class="badge badge-info badge-icon">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                    <span>Edytuj</span>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-danger badge-icon">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                    <span>Usuń</span>
-                </span>
-              </a>
-            </td>
-            <td>1</td>
-            <td>
-              <ol>
-                <li>Nr zamówienia (0)</li>
-                <li>Kolor skrzynki (1)</li>
-                <li>Wiercenie otworów w prowadnicy do montażu (15)</li>
-                <li>.... itd.</li>
-              </ol>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 20%">
-              <a href="polaEdytuj.html">
-                <span class="badge badge-info badge-icon">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                    <span>Edytuj</span>
-                </span>
-              </a>
-              <a>
-                <span class="badge badge-danger badge-icon">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                    <span>Usuń</span>
-                </span>
-              </a>
-            </td>
-            <td>2</td>
-            <td>
-              <ol>
-                <li>Nr zamówienia (0)</li>
-                <li>Kolor skrzynki (1)</li>
-                <li>Wiercenie otworów w prowadnicy do montażu (15)</li>
-                <li>.... itd.</li>
-              </ol>
-            </td>
-        </tr>
-        
+        </c:forEach>
     </tbody>
 </table>
         </div>

@@ -55,5 +55,13 @@ public class FieldDAO extends AbstractDao<Integer, Field> {
         Criteria criteria = createEntityCriteria();
         return (List<Field>) criteria.list();
     }
+    
+    @SuppressWarnings("unchecked")
+    public List<Field> findAllNotAssignToProductSlot (int id) {
+        Query query = getSession().createQuery("from Field as f where f.fieldID not in "
+                + "(select fm.field.fieldID from FieldMapping as fm where fm.productionSlot.productionSlotID = :productionSlotID)");
+        query.setString("productionSlotID", Integer.toString(id));
+        return query.list();
+    }
 
 }

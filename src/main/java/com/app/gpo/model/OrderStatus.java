@@ -47,8 +47,8 @@ public class OrderStatus implements Serializable {
     private int orderStatusID;
  
     @Size(min=3, max=100)
-    @Column(name = "oderStatusName", nullable = false)
-    private String oderStatusName;
+    @Column(name = "orderStatusName", nullable = false)
+    private String orderStatusName;
     
     public int getorderStatusID() {
         return orderStatusID;
@@ -58,12 +58,12 @@ public class OrderStatus implements Serializable {
         this.orderStatusID = id;
     }
  
-    public String getoderStatusName() {
-        return oderStatusName;
+    public String getorderStatusName() {
+        return orderStatusName;
     }
  
-    public void setoderStatusName(String name) {
-        this.oderStatusName = name;
+    public void setorderStatusName(String name) {
+        this.orderStatusName = name;
     }
     
   

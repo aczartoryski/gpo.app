@@ -26,9 +26,6 @@ package com.app.gpo.model;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -41,56 +38,42 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="fieldmapping")
+
 public class FieldMapping implements Serializable {
-  
-    @Id
-    @Column(name = "fieldMappingID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int fieldMappingID;
-    
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="fieldID")
-    private Field field;
- 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="productionSlotID")
+
     private ProductionSlot productionSlot;
-    
-    @Column(name = "fieldMappingOrder", nullable = false)
+    private Field field;
+    private int fieldMappingID;
     private Integer fieldMappingOrder;
-    
-    @Column(name = "fieldShownInMainTable", nullable = false)
     private Boolean fieldShownInMainTable;
     
-    /**
-     * Default empty constructor
-     */
-    public FieldMapping () {}
-    
-    /**
-     * Constructor initializes fieldMappingID only
-     * @param id 
-     */
-    public FieldMapping (int id) {
-        this.fieldMappingID = id;
+    public FieldMapping () {
     }
     
-    /**
-     * Constructor which initializes all columns
-     * @param fieldMappingID
-     * @param field
-     * @param productionSlot
-     * @param fieldMappingOrder
-     * @param fieldShownInMainTable 
-     */
-    public FieldMapping (int fieldMappingID, Field field, ProductionSlot productionSlot, Integer fieldMappingOrder, Boolean fieldShownInMainTable) {
-        this.fieldMappingID = fieldMappingID;
-        this.field = field;
+       
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "productionSlotID")
+    public ProductionSlot getProductionSlot() {
+        return this.productionSlot;
+    }
+    
+    public void setProductionSlot(ProductionSlot productionSlot) {
         this.productionSlot = productionSlot;
-        this.fieldMappingOrder = fieldMappingOrder;
-        this.fieldShownInMainTable = fieldShownInMainTable;
     }
     
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "fieldID")
+    public Field getfield() {
+        return this.field;
+    }
+    
+    public void setfield(Field field) {
+        this.field = field;
+    }
+    
+    @Column(name = "fieldMappingID", nullable = false)
     public int getfieldMappingID() {
         return fieldMappingID;
     }
@@ -99,30 +82,16 @@ public class FieldMapping implements Serializable {
         this.fieldMappingID = id;
     }
     
-    public Field getfield() {
-        return field;
-    }
- 
-    public void setfield(Field field) {
-        this.field = field;
+    @Column(name = "fieldMappingOrder", nullable = false)
+    public Integer getfieldMappingOrder () {
+        return this.fieldMappingOrder;
     }
     
-    public ProductionSlot getproductionSlot() {
-        return productionSlot;
-    }
- 
-    public void setproductionSlot(ProductionSlot productionSlot) {
-        this.productionSlot = productionSlot;
-    }
- 
-    public Integer getfieldMappingOrder() {
-        return fieldMappingOrder;
-    }
- 
     public void setfieldMappingOrder(Integer number) {
         this.fieldMappingOrder = number;
     }
     
+    @Column(name = "fieldShownInMainTable", nullable = false)
     public Boolean getfieldShownInMainTable() {
         return fieldShownInMainTable;
     }

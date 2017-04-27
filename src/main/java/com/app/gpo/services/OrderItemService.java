@@ -54,6 +54,10 @@ public class OrderItemService {
         dao.save(orderItem);
     }
     
+    public void update (OrderItem orderItem) {
+        dao.update(orderItem);
+    }
+    
     public void delete (int id) {
         dao.delete(id);
     }

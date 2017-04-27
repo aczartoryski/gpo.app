@@ -26,6 +26,7 @@ package com.app.gpo.dao;
 import com.app.gpo.model.ProductionSlot;
 import java.util.List;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -38,7 +39,9 @@ import org.springframework.stereotype.Repository;
 public class ProductionSlotDAO extends AbstractDao<Integer, ProductionSlot> {
     
    public ProductionSlot find (int id) {
-        return getByKey(id);
+        ProductionSlot productionSlot = getByKey(id);
+        Hibernate.initialize(productionSlot.getFieldMappings());
+        return productionSlot;
     }
  
     public void save (ProductionSlot productionSlot) {
@@ -62,6 +65,10 @@ public class ProductionSlotDAO extends AbstractDao<Integer, ProductionSlot> {
     @SuppressWarnings("unchecked")
     public List<ProductionSlot> findAll() {
         Criteria criteria = createEntityCriteria();
-        return (List<ProductionSlot>) criteria.list();
+        List<ProductionSlot> productionSlots = (List<ProductionSlot>) criteria.list(); 
+        for(ProductionSlot productionSlot : productionSlots){
+            Hibernate.initialize(productionSlot.getFieldMappings());
+        }
+        return productionSlots;
     }
 }

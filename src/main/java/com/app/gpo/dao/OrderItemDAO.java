@@ -26,6 +26,8 @@ package com.app.gpo.dao;
 import com.app.gpo.model.OrderItem;
 import java.util.List;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 /**
@@ -42,6 +44,14 @@ public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
     public void save (OrderItem orderItem) {
         persist(orderItem);
     }
+    
+    public void update (OrderItem orderItem) throws HibernateException  {
+        try {
+           saveUpdate(orderItem);
+        } catch (final HibernateException e) {
+            throw new HibernateException(e);
+        }
+    }
  
     public void delete (int id) {
         Query query = getSession().createSQLQuery("delete from orderItem where orderItemID = :orderItemID");
@@ -52,7 +62,13 @@ public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
     @SuppressWarnings("unchecked")
     public List<OrderItem> findAll() {
         Criteria criteria = createEntityCriteria();
-        return (List<OrderItem>) criteria.list();
+        
+        List<OrderItem> orderItems = (List<OrderItem>) criteria.list();
+        for(OrderItem s : orderItems){
+            Hibernate.initialize(s.getorderStatus());
+        }
+        
+        return orderItems;
     }
     
 }

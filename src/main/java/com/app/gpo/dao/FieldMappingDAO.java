@@ -24,9 +24,12 @@
 package com.app.gpo.dao;
 
 import com.app.gpo.model.FieldMapping;
+import java.util.Iterator;
 import java.util.List;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -38,7 +41,7 @@ public class FieldMappingDAO extends AbstractDao<Integer, FieldMapping> {
     
    public FieldMapping find (int id) {
         return getByKey(id);
-    }
+   }
  
     public void save (FieldMapping fieldMapping) {
         persist(fieldMapping);
@@ -55,4 +58,27 @@ public class FieldMappingDAO extends AbstractDao<Integer, FieldMapping> {
         Criteria criteria = createEntityCriteria();
         return (List<FieldMapping>) criteria.list();
     }
+    
+    @SuppressWarnings("unchecked")
+    public List<FieldMapping> findByProductionSlotID (int id) {
+        Criteria criteria = createEntityCriteria();
+        criteria.add(Restrictions.sqlRestriction("{alias}.productionSlotID = "+id));
+        List<FieldMapping> fieldMappings = (List<FieldMapping>) criteria.list();
+        for(FieldMapping s : fieldMappings){
+            Hibernate.initialize(s.getProductionSlot());
+        }
+        return fieldMappings;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<FieldMapping> findByNotProductionSlotID (int id) {
+        Criteria criteria = createEntityCriteria();
+        criteria.add(Restrictions.sqlRestriction("{alias}.productionSlotID = "+id));
+        List<FieldMapping> fieldMappings = (List<FieldMapping>) criteria.list();
+        for(FieldMapping s : fieldMappings){
+            Hibernate.initialize(s.getProductionSlot());
+        }
+        return fieldMappings;
+    }
+    
 }

@@ -50,6 +50,10 @@ public class FieldMappingService {
         return dao.find(id);
     }
     
+    public List<FieldMapping> findByProductionSlotID (int id) {
+        return dao.findByProductionSlotID(id);
+    }
+    
     public void save (FieldMapping fieldMapping) {
         dao.save(fieldMapping);
     }
