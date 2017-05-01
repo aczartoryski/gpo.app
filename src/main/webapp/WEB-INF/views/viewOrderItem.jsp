@@ -60,9 +60,7 @@
                   <div class="col-md-9">
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-gears" aria-hidden="true"></i></span>
-                      <form:select class="select2" path="orderStatus.orderStatusID" items="${orderStatusList}" 
-                                   itemLabel="orderStatusName" itemValue="orderStatusID" />
-                      
+                      <form:input path="orderStatus.orderStatusName" readonly="true" class="form-control" aria-label="Status" />
                     </div>
                   </div>
                 </div>
@@ -73,7 +71,7 @@
                     <div class="col-md-9">
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                        <form:input path="orderItemDueDate" class="form-control" aria-label="Termin zamówienia" />
+                        <form:input path="orderItemDueDate" readonly="true" class="form-control" aria-label="Termin zamówienia" />
                       </div>
                     </div>
                 </div>
@@ -82,7 +80,7 @@
                     <div class="col-md-9">
                       <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-server" aria-hidden="true"></i></span>
-                        <form:input path="orderItemName" class="form-control" aria-label="Wyrób" />
+                        <form:input path="orderItemName" readonly="true" class="form-control" aria-label="Wyrób" />
                       </div>
                     </div>
                 </div>
@@ -93,7 +91,7 @@
             <div class="form-footer">
               <div class="form-group">
                 <div class="col-md-9 col-md-offset-1">
-                  <button type="submit" class="btn btn-primary">Zapisz</button>
+                  <button type="button" class="btn btn-primary" onClick="document.location.href='editOrderItem-<c:out value="${orderItemID}" />'">Edytuj</button>
                   <button type="button" class="btn btn-default" onClick="document.location.href='index';">Anuluj</button>
                   <button type="button" class="btn btn-danger" onclick="if (confirm('Czy na pewno skasować ?')) {document.location.href='deleteOrderItem-<c:out value="${orderItemID}" />'}">Usuń</button>
                 </div>

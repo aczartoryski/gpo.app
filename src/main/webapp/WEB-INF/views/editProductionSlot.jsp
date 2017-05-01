@@ -71,7 +71,7 @@
                 <div class="col-md-9 col-md-offset-1">
                   <button type="submit" class="btn btn-primary">Zapisz</button>
                   <button type="button" class="btn btn-default" onClick="document.location.href='productionSlots';">Anuluj</button>
-                  <button type="button" class="btn btn-danger" onclick="return confirm('Czy na pewno skasować ?')">Usuń</button>
+                  <button type="button" class="btn btn-danger" onclick="if (confirm('Czy na pewno skasować ?')) {document.location.href='deleteProductionSlot-<c:out value="${productionSlotID}" />'}">Usuń</button>
                 </div>
               </div>
             </div>

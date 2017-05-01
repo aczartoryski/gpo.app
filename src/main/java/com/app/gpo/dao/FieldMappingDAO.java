@@ -53,6 +53,12 @@ public class FieldMappingDAO extends AbstractDao<Integer, FieldMapping> {
         query.executeUpdate();
     }
  
+    public void deleteByProductionSlotID (int id) {
+       Query query = getSession().createSQLQuery("delete from fieldMapping where productionSlotID = :productionSlotID");
+       query.setString("productionSlotID", Integer.toString(id));
+       query.executeUpdate(); 
+    }
+    
     @SuppressWarnings("unchecked")
     public List<FieldMapping> findAll() {
         Criteria criteria = createEntityCriteria();

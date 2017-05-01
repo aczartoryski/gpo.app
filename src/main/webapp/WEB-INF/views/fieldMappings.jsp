@@ -42,14 +42,13 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Lista mapowania pól
-            <div>
-              <a href="newFieldMapping.html">
-                <span class="badge badge-info badge-icon">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                    <span>Nowe mapowanie</span>
-                </span>
-              </a>
-            </div>
+          <c:if test="${not empty message}">
+                    <div class="alert alert-warning alert-dismissible" role="alert" style="width: 50%;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                    <c:out value='${message}' />
+                    </div>
+              </c:if>  
           </div>
         </div>
         <div class="card-body no-paddings table-responsive">
@@ -58,7 +57,7 @@
         <tr>
             <th>Akcje</th>
             <th>Mapowanie dla gniazda</th>
-            <th>(ID) Nazwa pola</th>
+            <th>Nazwa pola  (ID / VALUEID)</th>
         </tr>
     </thead>
     <tbody>
@@ -74,7 +73,7 @@
               <a href="deleteFieldMapping-<c:out value='${pS.productionSlotID}' />" onclick="return confirm('Czy na pewnoc hcesz skasować ?')">
                 <span class="badge badge-danger badge-icon">
                     <i class="fa fa-trash" aria-hidden="true"></i>
-                    <span>Usuń</span>
+                    <span>Czyść</span>
                 </span>
               </a>
             </td>
@@ -82,8 +81,11 @@
                 (<c:out value='${pS.productionSlotDescription}' />)</td>
             <td>
               <ul>
+                  <li style="list-style: none">(0/1) Nr zamówienia</li>
+                  <li style="list-style: none">(0/2) Wyrób</li>
                   <c:forEach var="fM" items="${pS.fieldMappings}">
-                      <li style="list-style: none">(<c:out value='${fM.field.fieldOriginID}' />) 
+                      <li style="list-style: none">
+                          (<c:out value='${fM.field.fieldOriginID}' /><c:if test="${not empty fM.field.fieldValueID}" >/<c:out value='${fM.field.fieldValueID}' /></c:if>) 
                           <c:out value='${fM.field.fieldLabel}' /></li>    
                   </c:forEach>  
               </ul>

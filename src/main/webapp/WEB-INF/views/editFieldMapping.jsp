@@ -27,85 +27,91 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <% session.setAttribute( "menuActive", "fields" ); %>
 <jsp:include page="${request.contextPath}/header" />
 <jsp:include page="${request.contextPath}/menu" />
 <div class="app-container">
-
-  <div class="row"> 
+<div class="row"> 
     <div class="col-xs-12">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Edycja mapowania pól karty produkcyjnej dla gniazda 
+            <div class="card-title">Edycja mapowania pól karty produkcyjnej dla gniazda 
                  <c:out value='${productionSlot.productionSlotNumber}' /> 
-                (<c:out value='${productionSlot.productionSlotDescription}' />)</div>
+                (<c:out value='${productionSlot.productionSlotDescription}' />)
+                </br>
+                <div class="form-group">
+                <form method="POST" action="${pageContext.request.contextPath}/saveFieldMapping">
+                    <div class="col-md-9">
+                        <button type="submit" class="btn btn-primary">Zapisz</button>
+                        <button type="button" class="btn btn-default" onClick="document.location.href='fieldMappings'">Anuluj</button>
+                        <button type="button" class="btn btn-danger" onClick="if (confirm('Czy na pewno wyczyścić ?')) {document.location.href='deleteFieldMapping-<c:out value="${productionSlot.productionSlotID}" />'}">Czyść</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card-body no-paddings table-responsive">
-          <table class="table table-bordered table-condensed" cellspacing="0" width="100%">
-            <thead> 
-                <tr>
-                    <th>Dostępne pola</th>
-                    <th>Układ na karcie zlecenia</th>
-                </tr>
-            </thead>
-              <tbody>
-                  <tr>
-                      <td width="50%">
-                        <ul id="sortable1" class="connectedSortable">
-
-                            <c:forEach var="f" items="${fieldList}">
-
-                                    <li class="ui-state-default">
-                                    (<c:out value='${f.fieldOriginID}' />) 
-                                     <c:out value='${f.fieldLabel}' />
-                                    </li>
-
-                              </c:forEach>
-
-                        </ul>
-                      </td>
-                      <td width="50%">
-                        <ul id="notsortable" >
-                          
-                          <li class="ui-state-highlight ui-state-disabled">Nr zamówienia</li>
-                          <li class="ui-state-highlight ui-state-disabled">Wyrób</li>
-                        </ul>
-                        <ul id="sortable2" class="connectedSortable">
-                            <c:forEach var="fM" items="${fieldMappingList}">
-                                <li class="ui-state-default">
-                                 (<c:out value='${fM.field.fieldOriginID}' />) 
-                                  <c:out value='${fM.field.fieldLabel}' />
+            <table class="table table-bordered table-condensed" cellspacing="0" width="100%">
+                <thead> 
+                    <tr>
+                        <th>Dostępne pola (ID / VALUEID)</th>
+                        <th>Układ na karcie zlecenia (ID / VALUEID)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width="50%">
+                            <ul id="sortable1" class="connectedSortable" >
+                                <c:forEach var="f" items="${fieldList}">
+                                <li class="ui-state-default fieldMapping" id="fieldMapping_${f.fieldID}">
+                                   (<c:out value='${f.fieldOriginID}' /><c:if test="${not empty fM.field.fieldValueID}" >/<c:out value='${fM.field.fieldValueID}' /></c:if>)
+                                    <c:out value='${f.fieldLabel}' />
                                 </li>
-                            </c:forEach>
-                        </ul>
-                      </td>
-                  </tr>
-              </tbody>
-          </table>
+                                </c:forEach>
+                            </ul>
+                        </td>
+                        <td width="50%">
+                            <ul id="notsortable" >
+                                <li class="ui-state-highlight ui-state-disabled">(0/1) Nr zamówienia</li>
+                                <li class="ui-state-highlight ui-state-disabled">(0/2) Wyrób</li>
+                            </ul>
+
+<input type="hidden" name="fieldMappingString" id="fieldMappingString">
+<input type="hidden" name="productionSlotID" id="productionSlotID" value="${productionSlot.productionSlotID}">
+
+                            <ul id="sortable2" class="connectedSortable">
+                                <c:forEach var="fM" items="${fieldMappingList}">
+                                    <li class="ui-state-default fieldMapping" id="fieldMapping_${fM.field.fieldID}">
+                                     (<c:out value='${fM.field.fieldOriginID}' /><c:if test="${not empty fM.field.fieldValueID}" >/<c:out value='${fM.field.fieldValueID}' /></c:if>) 
+                                      <c:out value='${fM.field.fieldLabel}' />
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row"> 
-            <div class="form-footer">
-              <div class="form-group">
-                <div class="col-md-9 col-md-offset-1">
-                  <button type="submit" class="btn btn-primary">Zapisz</button>
-                  <div id="seializeTable"></div>
-                  <button type="button" class="btn btn-default">Anuluj</button>
-                  <button type="button" class="btn btn-danger">Usuń</button>
-                </div>
-              </div>
+</div>
+<div class="row"> 
+    <div class="form-footer">
+        <div class="form-group">
+            <div class="col-md-9 col-md-offset-1">
+                <button type="submit" class="btn btn-primary">Zapisz</button>
+                <button type="button" class="btn btn-default" onClick="document.location.href='fieldMappings'">Anuluj</button>
+                <button type="button" class="btn btn-danger" onClick="if (confirm('Czy na pewno wyczyścić ?')) {document.location.href='deleteFieldMapping-<c:out value="${productionSlot.productionSlotID}" />'}">Czyść</button>
             </div>
-          </div>
+        </div>
+    </div>
+</div>
+</form>
 </div>
 
-  </div>
 <script type="text/javascript" src="resources/assets/js/vendor.js"></script>
 <script type="text/javascript" src="resources/assets/js/app.js"></script>
 <script type="text/javascript" src="resources/assets/js/jquery-ui.js"></script>
 <script type="text/javascript" src="resources/assets/js/sortable.config.js"></script>
+<script type="text/javascript" src="resources/assets/js/sortable.return.js"></script>
 </body>
 </html>

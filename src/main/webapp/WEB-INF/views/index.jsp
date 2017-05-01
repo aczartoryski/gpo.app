@@ -42,7 +42,7 @@
         <div class="card-header">
           <div class="card-title">Lista zleceń produkcji
               <c:if test="${not empty message}">
-                    <div class="alert alert-warning alert-dismissible" role="alert">
+                    <div class="alert alert-warning alert-dismissible" role="alert" style="width: 50%;">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
                     <c:out value='${message}' />
@@ -50,29 +50,23 @@
               </c:if>
             <div>
                 <a>
-                            <span class="badge badge-info badge-icon">
-                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                                <span>Drukuj karty dla zaznaczonych</span>
-                            </span>
-                        </a>
-                        <a>
-                            <span class="badge badge-info badge-icon">
-                                <i class="fa fa-print" aria-hidden="true"></i>
-                                <span>Drukuj etykiety dla zaznaczonych</span>
-                            </span>
-                        </a>
-                        <a class="select-all">
-                            <span class="badge badge-info badge-icon">
-                                <i class="fa fa-check" aria-hidden="true"></i>
-                                <span>Zaznacz wszystkie</span>
-                            </span>
-                        </a>
-                        <a class="deselect-all">
-                            <span class="badge badge-info badge-icon">
-                                <i class="fa fa-close" aria-hidden="true"></i>
-                                <span>Anuluj zaznaczenie</span>
-                            </span>
-                        </a>
+                    <span class="badge badge-info badge-icon">
+                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                        <span>Drukuj karty dla zaznaczonych</span>
+                    </span>
+                </a>
+                <a>
+                    <span class="badge badge-info badge-icon">
+                        <i class="fa fa-print" aria-hidden="true"></i>
+                        <span>Drukuj etykiety dla zaznaczonych</span>
+                    </span>
+                </a>
+                <a href="importOrderItems">
+                    <span class="badge badge-warning badge-icon">
+                        <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+                        <span>Importuj zamówienia</span>
+                    </span>
+                </a>
             </div>
           </div>
         </div>
@@ -149,7 +143,21 @@
           <table class="datatable table-striped table-bordered table-hover table-condensed primary dt-responsive nowrap" cellspacing="0" width="100%" id="datatable1">
             <thead>
                 <tr>
-                    <th>Akcje</th>
+                    <th>Akcje</br>
+                    <a class="select-all">
+                            <span class="badge badge-info badge-icon">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                                <span>Zaznacz wszystkie</span>
+                            </span></br>
+                    </a>
+                    <a class="deselect-all">
+                        <span class="badge badge-info badge-icon">
+                                <i class="fa fa-close" aria-hidden="true"></i>
+                                <span>Anuluj zaznaczenie</span>
+                        </span>
+                    </a>
+                    
+                    </th>
                     <th>Nr<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Termin<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Wyrób<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
@@ -167,7 +175,7 @@
         <c:forEach var="oItem" items="${orderItemList}">
         <tr>
             <td>
-              <a href="printOrderItem-<c:out value='${oItem.orderItemID}' />">
+              <a href="printOrderItem-<c:out value='${oItem.orderItemID}' />" target="_blank">
                 <span class="badge badge-primary badge-icon">
                     <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                 </span>
@@ -188,7 +196,7 @@
                 </span>
               </a>
               <a href="deleteOrderItem-<c:out value='${oItem.orderItemID}' />" onclick="return confirm('Czy na pewno skasować ?')" >
-                <span class="badge badge-warning badge-icon">
+                <span class="badge badge-danger badge-icon">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </span>
               </a>

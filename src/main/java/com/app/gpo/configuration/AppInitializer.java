@@ -23,11 +23,9 @@
  */
 package com.app.gpo.configuration;
 
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.Filter;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
@@ -52,20 +50,37 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         return new String[] { "/" };
     }
     
-   // @Override
-   // protected Filter[] getServletFilters() {
-   //     return new Filter[] { 
-   //          new DelegatingFilterProxy("GPOEncodingFilter")
-   //     };
-   // }
+   /*@Override
+    protected Filter[] getServletFilters() {
+    Filter[] filters;
+
+    CharsetFilter encFilter;
+    HiddenHttpMethodFilter httpMethodFilter = new HiddenHttpMethodFilter();
+
+    encFilter = new CharsetFilter();
+
+    encFilter.setEncoding("UTF-8");
+    encFilter.setForceEncoding(true);
+
+    filters = new Filter[] {httpMethodFilter, encFilter};
+    return filters;
+}*/
     
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) 
-        throws ServletException, IOException {
+    @Override
+    protected Filter[] getServletFilters() {
+        Filter[] filters;
 
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        chain.doFilter(request, response);
+        CharacterEncodingFilter encFilter;
+        HiddenHttpMethodFilter httpMethodFilter = new HiddenHttpMethodFilter();
 
-        }
+        encFilter = new CharacterEncodingFilter();
+
+        encFilter.setEncoding("UTF-8");
+        encFilter.setForceEncoding(true);
+
+        filters = new Filter[] {httpMethodFilter, encFilter};
+        return filters;
+    }
+    
+   
 }

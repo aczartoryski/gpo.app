@@ -21,31 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.app.gpo.model;
 
-package com.app.gpo.configuration;
-
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.filter.OncePerRequestFilter;
+import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
-public class GPOEncodingFilter extends OncePerRequestFilter {
-
-@Override
-
-protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) 
-        throws ServletException, IOException {
-
-        response.setCharacterEncoding("UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        chain.doFilter(request, response);
-
-        }
+public class FileUploadForm {
+    private List<MultipartFile> files;
+    
+    public  FileUploadForm () {}
+    
+    public FileUploadForm (List<MultipartFile> files) {
+        this.files = files;
+    }
+    
+    public List<MultipartFile> getFiles () {
+        return this.files;
+    }
+    
+    public void setFiles (List<MultipartFile> files) {
+        this.files = files;
+    }
+    
 
 }

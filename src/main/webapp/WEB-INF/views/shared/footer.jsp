@@ -25,12 +25,13 @@
     Other lib that use in this software is on their own License.
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-        <footer class="app-footer">
+   
+<footer class="app-footer">
             <div class="wrapper">
                 <span class="pull-right">v1.0<a href="#"><i class="fa fa-long-arrow-up"></i></a></span> © 2017 Copyright Artur Czartoryski.
             </div>
         </footer>
-        </div>
+    </div>
   <script type="text/javascript" src="resources/assets/js/vendor.js"></script>
   <script type="text/javascript" src="resources/assets/js/app.js"></script>
   <script type="text/javascript" src="resources/assets/js/index.config.js"></script>
