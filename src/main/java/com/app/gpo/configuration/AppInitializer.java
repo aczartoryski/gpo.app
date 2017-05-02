@@ -50,22 +50,6 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         return new String[] { "/" };
     }
     
-   /*@Override
-    protected Filter[] getServletFilters() {
-    Filter[] filters;
-
-    CharsetFilter encFilter;
-    HiddenHttpMethodFilter httpMethodFilter = new HiddenHttpMethodFilter();
-
-    encFilter = new CharsetFilter();
-
-    encFilter.setEncoding("UTF-8");
-    encFilter.setForceEncoding(true);
-
-    filters = new Filter[] {httpMethodFilter, encFilter};
-    return filters;
-}*/
-    
     @Override
     protected Filter[] getServletFilters() {
         Filter[] filters;
@@ -74,13 +58,12 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         HiddenHttpMethodFilter httpMethodFilter = new HiddenHttpMethodFilter();
 
         encFilter = new CharacterEncodingFilter();
-
+        
         encFilter.setEncoding("UTF-8");
         encFilter.setForceEncoding(true);
+        
 
-        filters = new Filter[] {httpMethodFilter, encFilter};
+        filters = new Filter[] {encFilter, httpMethodFilter};
         return filters;
     }
-    
-   
 }

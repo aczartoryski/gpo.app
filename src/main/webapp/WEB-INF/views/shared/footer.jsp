@@ -26,12 +26,19 @@
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
    
-<footer class="app-footer">
-            <div class="wrapper">
-                <span class="pull-right">v1.0<a href="#"><i class="fa fa-long-arrow-up"></i></a></span> © 2017 Copyright Artur Czartoryski.
+    <footer class="app-footer">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="footer-copyright">© 2017 Copyright Artur Czartoryski</div>
             </div>
-        </footer>
-    </div>
+        </div>
+        <div class="wrapper">
+            <span class="pull-right">v1.0<a href="#">
+            <i class="fa fa-long-arrow-up"></i></a></span>
+        </div>
+    </footer>
+<!-- End class="app app-default" -->
+</div>
   <script type="text/javascript" src="resources/assets/js/vendor.js"></script>
   <script type="text/javascript" src="resources/assets/js/app.js"></script>
   <script type="text/javascript" src="resources/assets/js/index.config.js"></script>

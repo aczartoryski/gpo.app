@@ -50,6 +50,10 @@ public class OrderStatusService {
         return dao.find(id);
     }
     
+    public OrderStatus findByName (String statusName) {
+        return dao.findByName(statusName);
+    }
+    
     public void save (OrderStatus orderStatus) {
         dao.save(orderStatus);
     }

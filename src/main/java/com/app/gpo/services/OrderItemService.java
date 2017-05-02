@@ -54,6 +54,10 @@ public class OrderItemService {
         dao.save(orderItem);
     }
     
+    public String saveNew (OrderItem orderItem) {
+        return dao.saveNew(orderItem);
+    }
+    
     public void update (OrderItem orderItem) {
         dao.update(orderItem);
     }

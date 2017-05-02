@@ -25,14 +25,9 @@ package com.app.gpo.services;
 
 import com.app.gpo.dao.FieldMappingDAO;
 import com.app.gpo.dao.ProductionSlotDAO;
-import com.app.gpo.model.Field;
 import com.app.gpo.model.FieldMapping;
-import com.app.gpo.model.ProductionSlot;
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,11 +41,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class FieldMappingService {
    
-    private static final Logger logger = Logger.getLogger(FieldMappingService.class);
-    private FieldService fieldService;
-    private ProductionSlotService productionSlotService;
-    private ProductionSlotDAO productionSlotDAO;
-    
     @Autowired
     private FieldMappingDAO dao;
     

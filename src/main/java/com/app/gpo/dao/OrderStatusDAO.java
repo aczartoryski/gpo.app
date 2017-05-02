@@ -35,10 +35,17 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("orderStatusDAO")
 public class OrderStatusDAO extends AbstractDao<Integer, OrderStatus> {
+    
     public OrderStatus find (int id) {
         return getByKey(id);
     }
- 
+    
+    public OrderStatus findByName (String statusName) {
+        Query query = getSession().createQuery("from OrderStatus as oS where oS.orderStatusName = :orderStatusName)");
+        query.setString("orderStatusName", statusName);
+        return (OrderStatus) query.uniqueResult();
+    }
+    
     public void save (OrderStatus orderStatus) {
         persist(orderStatus);
     }

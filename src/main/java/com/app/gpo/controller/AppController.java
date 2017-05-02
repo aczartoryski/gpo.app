@@ -27,6 +27,7 @@ import com.app.gpo.model.Field;
 import com.app.gpo.model.FieldMapping;
 import com.app.gpo.model.FileUploadForm;
 import com.app.gpo.model.OrderItem;
+import com.app.gpo.model.OrderItemField;
 import com.app.gpo.model.OrderStatus;
 import com.app.gpo.model.ProductionSlot;
 import com.app.gpo.services.FieldMappingService;
@@ -38,6 +39,8 @@ import com.app.gpo.services.ProductionSlotService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -126,14 +129,13 @@ public class AppController {
         return mv;
     } 
     
-    @RequestMapping(value="/importOrderItems", method = RequestMethod.GET) 
-    public ModelAndView showImportOrderItems () {
-        ModelAndView mv = new ModelAndView("importOrderItems");
-        return mv;
-    }
+    @RequestMapping(value = "/importOrderItems", method = RequestMethod.GET)
+	public String showImportOrderItems() {
+		return "importOrderItems";
+	}
 
     
-    @RequestMapping(value={ "editOrderItem-{orderItemID}" }, method = RequestMethod.GET)
+    @RequestMapping(value={ "editOrderItem-{orderItemID}" }, method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editOrderItem (Model model, @PathVariable Integer orderItemID) {
         OrderItem orderItem = orderItemService.find(orderItemID);
         List<OrderStatus> orderStatusList = orderStatusService.findAll();
@@ -164,6 +166,7 @@ public class AppController {
     
     @RequestMapping(value="/updateOrderItem", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String updateOrderItem(@ModelAttribute OrderItem orderItem,BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+        
         String message;
         Date today = new Date();
         if (bindingResult.hasErrors()) {
@@ -192,13 +195,13 @@ public class AppController {
         return mv;
     }
     
-    @RequestMapping(value="/newProductionSlot", method = RequestMethod.GET)
+    @RequestMapping(value="/newProductionSlot", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView newProductionSlot() {
         ModelAndView mv = new ModelAndView("newProductionSlot");
         return mv;
     }
     
-    @RequestMapping(value = { "editProductionSlot-{productionSlotID}" }, method = RequestMethod.GET)
+    @RequestMapping(value = { "editProductionSlot-{productionSlotID}" }, method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editProductionSlot(Model model, @PathVariable Integer productionSlotID) {
         ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
         ModelAndView mv = new ModelAndView("editProductionSlot");
@@ -206,7 +209,7 @@ public class AppController {
         return mv;
     }
             
-    @RequestMapping(value="/updateProductionSlot", method = RequestMethod.POST)
+    @RequestMapping(value="/updateProductionSlot", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public String updateProductionSlot(@ModelAttribute ProductionSlot productionSlot,BindingResult bindingResult,RedirectAttributes redirectAttributes) {
         String message;
         if (bindingResult.hasErrors()) {
@@ -242,7 +245,7 @@ public class AppController {
         return mv;
     } 
     
-    @RequestMapping(value="/editFieldMapping-{productionSlotID}", method = RequestMethod.GET)
+    @RequestMapping(value="/editFieldMapping-{productionSlotID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editfieldMapping(Model model, @PathVariable Integer productionSlotID) {
         ModelAndView mv = new ModelAndView("editFieldMapping");
         ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
@@ -262,7 +265,7 @@ public class AppController {
         return "redirect:/fieldMappings";
     } 
     
-    @RequestMapping(value={ "saveFieldMapping" }, method = RequestMethod.POST)
+    @RequestMapping(value={ "saveFieldMapping" }, method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public String saveFieldMapping (@RequestParam("fieldMappingString") String getFormString,@RequestParam("productionSlotID") Integer productionSlotID, RedirectAttributes redirectAttributes) throws JSONException {
         logger.info("saveFieldMapping.RequestParam: "+getFormString);
         String fieldMappingString = getFormString.replaceAll("fieldMapping_", "{\"fieldMapping\":");
@@ -290,7 +293,7 @@ public class AppController {
         return "redirect:/fieldMappings";
     }
     
-    @RequestMapping(value = "/printOrderItem-{orderItemID}", method = RequestMethod.GET)
+    @RequestMapping(value = "/printOrderItem-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView printOrderItem(Model model, @PathVariable Integer orderItemID) {
         // create some sample data
         OrderItem orderItem = orderItemService.find(orderItemID);
@@ -304,18 +307,19 @@ public class AppController {
         return mv;
     } 
     
-    @RequestMapping(value = "/show", method = RequestMethod.GET)
-	public String displayForm() {
-		return "file_upload_form";
-	}
-    
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(@ModelAttribute("uploadForm") FileUploadForm uploadForm,Model map) throws JSONException, IOException {
+    @RequestMapping(value = "/importOrderItemsSuccess", method = RequestMethod.POST,produces = "text/html; charset=utf-8")
+    public String save(@ModelAttribute("uploadForm") FileUploadForm uploadForm,Model map) throws JSONException, IOException, ParseException {
     	List<MultipartFile> files = uploadForm.getFiles();
         List<String> fileNames = new ArrayList<>();
-	List<String> importedJSONArrays = new ArrayList<>();
         String importedFileContent = new String();
         List<OrderItem> importedOrders = new ArrayList<>();
+        List<Field> fieldList = new ArrayList<>();
+        List<Field> newFieldList = new ArrayList<>();
+        List<Field> importedFieldList = new ArrayList<>();
+        Date today = new Date();
+        
+        OrderStatus orderStatus = orderStatusService.findByName("Nowe");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         
 	if(null != files && files.size() > 0) {
             for (MultipartFile multipartFile : files) {
@@ -327,38 +331,98 @@ public class AppController {
                 
                 while ((inputStr = streamReader.readLine()) != null)
                     responseStrBuilder.append(inputStr);
-                    byte ptext[] = responseStrBuilder.toString().getBytes("UTF-8");
-                    String value = new String(ptext, "UTF-8");
-                    JSONObject importedJSON = new JSONObject(value);
-                    importedFileContent = responseStrBuilder.toString();
-                    Iterator<?> keys = importedJSON.keys();
-                    while( keys.hasNext() ) {
-                        String key = (String)keys.next();
-                        importedJSONArrays.add(key);
-                        if ( importedJSON.get(key) instanceof JSONArray) {
-                            JSONArray importedJSONArray = importedJSON.getJSONArray(key);
-                            logger.info("First array length : "+importedJSONArray.length());
-                            for (int i=0; i<importedJSONArray.length(); i++) {
+                byte ptext[] = responseStrBuilder.toString().getBytes("UTF-16");
+                String value = new String(ptext, "UTF-16");
+                JSONObject importedJSON = new JSONObject(value);
+                importedFileContent = responseStrBuilder.toString();
+                // Loop in JSON for each Order
+                Iterator<?> keys = importedJSON.keys();
+                while( keys.hasNext() ) {
+                    String keyOrderNumber = (String)keys.next();
+
+                    if ( importedJSON.get(keyOrderNumber) instanceof JSONArray) {
+                            JSONArray importedJSONArray = importedJSON.getJSONArray(keyOrderNumber);
+                            logger.info("For order number "+keyOrderNumber+" QTY items founded : "+importedJSONArray.length());
+                            // Loop for each orderItem in one Order
+                            for (int item=0; item<importedJSONArray.length(); item++) {
+                                JSONObject jsonObject = importedJSONArray.getJSONObject(item);
+                                
+                                // Setup new imported Order and save into DB
+                                int j = item+1;
                                 OrderItem orderItem = new OrderItem();
-                                JSONObject jsonObject = importedJSONArray.getJSONObject(i);
+                                orderItem.setorderStatusDate(today);
+                                orderItem.setorderNumber(keyOrderNumber+"#"+j+"#"+importedJSONArray.length());
+                                orderItem.setorderStatus(orderStatus);
+                                JSONObject j1 = jsonObject.getJSONObject("0");
+                                orderItem.setorderItemName(j1.getString("LABEL"));
+                                JSONObject j2 = jsonObject.getJSONObject("1013");
+                                Date date = formatter.parse(j2.getString("TEXT"));
+                                orderItem.setorderItemDueDate(date);
+                                String addedOrderID = orderItemService.saveNew(orderItem);
+                                importedOrders.add(orderItem);
+                                
+                                // Prepare list of fields from DB to compare
+                                fieldList = fieldService.findAll();
+                                
+                                // Find saved Order
+                                OrderItem insertedOrderItem = orderItemService.find(Integer.parseInt(addedOrderID));
+                                
+                                // Loop for other fields imported from JSON
                                 Iterator<?> innerKeys = jsonObject.keys();
                                 while (innerKeys.hasNext()) {
                                     String innerKey = (String) innerKeys.next();
-                                    logger.info("Key: "+key+" innerKey:"+innerKey);
-                                    logger.info("Cos:"+jsonObject.getString(innerKey));
+                                    if ("0".equals(innerKey) || "1013".equals(innerKey) || "1000".equals(innerKey))
+                                    {} 
+                                    else {
+
+                                        OrderItemField orderItemField = new OrderItemField();
+                                        Boolean result = fieldList.stream()
+                                            .filter(field -> innerKey.equals(field.getFieldOriginID()))
+                                            .findFirst().isPresent();
+                                        if (result) {
+                                            logger.info(keyOrderNumber+"-->"+innerKey+"=="); 
+                                            JSONObject jObject = jsonObject.getJSONObject(innerKey);
+                                            
+                                            // Find saved Field
+                                            Field foundedField= fieldService.findByfieldOriginID(innerKey);
+                                            orderItemField.setfield(foundedField);
+                                            orderItemField.setfieldText(jObject.getString("TEXT"));
+                                            orderItemField.setorderItem(insertedOrderItem);
+                                            //orderItemField.setorderItemfieldID(0);
+                                            orderItemFieldService.save(orderItemField);
+                                        } else {
+                                            logger.info(keyOrderNumber+"-->"+innerKey+"<>");
+                                            JSONObject jObject = jsonObject.getJSONObject(innerKey);
+                                            Field impField = new Field();
+                                            impField.setFieldID(0);
+                                            impField.setFieldLabel(jObject.getString("LABEL"));
+                                            impField.setFieldOriginID(innerKey);
+                                            logger.info(keyOrderNumber+"-->"+innerKey+"-->"+jObject.getString("LABEL"));
+                                            String fieldValueID = "";
+                                            if (!innerKey.contains("100")) {
+                                                fieldValueID = jObject.getString("VALUEID");
+                                            }
+                                            impField.setFieldValueID(fieldValueID);
+                                            String addedFieldID = fieldService.saveNew(impField);
+                                            // Find saved Field
+                                            Field insertedField= fieldService.find(Integer.parseInt(addedFieldID));
+                                            orderItemField.setfield(insertedField);
+                                            orderItemField.setfieldText(jObject.getString("TEXT"));
+                                            orderItemField.setorderItem(insertedOrderItem);
+                                            //orderItemField.setorderItemfieldID(0);
+                                            orderItemFieldService.save(orderItemField);
+                                        }                                       
+                                    }
                                 }
-                                orderItem.setorderNumber(key);
-                                
-                                importedOrders.add(orderItem);
                             }
                         }
                     }
-
             }
 	}
-        map.addAttribute("importedJSONArrays", importedJSONArrays);
+
         map.addAttribute("importedFileContent",importedFileContent);
+        map.addAttribute("importedOrders",importedOrders);
 	map.addAttribute("files", fileNames);
-	return "file_upload_success";
+	return "importOrderItemsSuccess";
     }
 }

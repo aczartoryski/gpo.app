@@ -27,7 +27,6 @@ import com.app.gpo.dao.FieldDAO;
 import com.app.gpo.model.Field;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,8 +54,16 @@ public class FieldService {
         return dao.find(id);
     }
     
+    public Field findByfieldOriginID(String id) {
+        return dao.findByfieldOriginID(id);
+    }
+    
     public void save (Field field) {
         dao.save(field);
+    }
+    
+    public String saveNew (Field field) {
+        return dao.saveNew(field);
     }
     
     public void delete (int id) {

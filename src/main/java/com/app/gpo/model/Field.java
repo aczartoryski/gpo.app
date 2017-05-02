@@ -45,10 +45,10 @@ import javax.persistence.Table;
 public class Field implements Serializable {
  
     private int fieldID;
-    private Integer fieldValueID;
+    private String fieldValueID;
     private String fieldLabel;
-    private Integer fieldOriginID;
-    private Set<FieldMapping> fieldMappings = new HashSet<FieldMapping>(0);
+    private String fieldOriginID;
+    private Set<FieldMapping> fieldMappings = new HashSet<>(0);
     
     
     /**
@@ -72,7 +72,7 @@ public class Field implements Serializable {
      * @param fieldLabel 
      * @param fieldMappings 
      */
-    public Field (int fieldID, Integer fieldOriginID, Integer fieldValueID, String fieldLabel, Set<FieldMapping> fieldMappings) {
+    public Field (int fieldID, String fieldOriginID, String fieldValueID, String fieldLabel, Set<FieldMapping> fieldMappings) {
         this.fieldID = fieldID;
         this.fieldLabel= fieldLabel;
         this.fieldValueID = fieldValueID; 
@@ -92,20 +92,20 @@ public class Field implements Serializable {
     }
     
     @Column(name = "fieldOriginID", nullable = false)
-    public int getFieldOriginID() {
+    public String getFieldOriginID() {
         return fieldOriginID;
     }
  
-    public void setFieldOriginID(int id) {
+    public void setFieldOriginID(String id) {
         this.fieldOriginID = id;
     }
     
-    @Column(name = "fieldValueID", nullable = false)
-    public int getFieldValueID() {
+    @Column(name = "fieldValueID")
+    public String getFieldValueID() {
         return fieldValueID;
     }
  
-    public void setFieldValueID(int id) {
+    public void setFieldValueID(String id) {
         this.fieldValueID = id;
     }
     

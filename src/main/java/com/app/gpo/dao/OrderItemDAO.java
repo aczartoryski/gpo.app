@@ -37,12 +37,17 @@ import org.springframework.stereotype.Repository;
 @Repository("orderItemDAO")
 public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
     
-   public OrderItem find (int id) {
+
+    public OrderItem find (int id) {
         return getByKey(id);
     }
  
     public void save (OrderItem orderItem) {
         persist(orderItem);
+    }
+    
+    public String saveNew (OrderItem orderItem) {
+        return addNew(orderItem);
     }
     
     public void update (OrderItem orderItem) throws HibernateException  {
@@ -62,12 +67,10 @@ public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
     @SuppressWarnings("unchecked")
     public List<OrderItem> findAll() {
         Criteria criteria = createEntityCriteria();
-        
         List<OrderItem> orderItems = (List<OrderItem>) criteria.list();
         for(OrderItem s : orderItems){
             Hibernate.initialize(s.getorderStatus());
         }
-        
         return orderItems;
     }
     

@@ -24,24 +24,67 @@
     This software is basing on Flat Admin Bootstrap Templates copied from https://github.com/tui2tone/flat-admin-bootstrap-templates.
     Other lib that use in this software is on their own License.
 --%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<% request.setCharacterEncoding("UTF-8"); %>
 <!DOCTYPE html>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <% session.setAttribute( "menuActive", "orderItems" ); %>
-<jsp:include page="${request.contextPath}/header" />
+<jsp:include page="${request.contextPath}/header">
+  <jsp:param name="pageTitle" value="Lista zleceń produkcji"/>
+</jsp:include>
 <jsp:include page="${request.contextPath}/menu" />
+
+<!-- Start Main Content -->
 <div class="app-container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">Importowanie zamówień z plików</div>
-                <div class="card-body">
-                    <input type="file" name="img" multiple id="upload-files">
-                </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="card">
+        <div class="card-header">
+            <div class="card-title">Import plików zamówień</div>
+        </div>
+          <div class="card-body no-paddings">
+          <form:form method="POST" action="importOrderItemsSuccess" modelAttribute="uploadForm" enctype="multipart/form-data">
+
+	<div>Wybierz pliki do zaimportowania</div>
+        
+	<table id="fileTable">
+		<tr>
+			<td><input multiple name="files" type="file" class="btn btn-primary" /></td>
+		</tr>
+	</table>
+	<br/>
+        <input type="submit" class="btn btn-submit" value="Zaimportuj"/>
+        
+        </form:form>    
+        <div class="progress">
+            <div class="bar progress-bar progress-bar-success progress-bar-striped active" role="progressbar"></div >
+            <div class="percent sr-only">0%</div >
+        </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Main Content -->
+    <footer class="app-footer">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="footer-copyright">© 2017 Copyright Artur Czartoryski</div>
             </div>
         </div>
-    </div>    
+        <div class="wrapper">
+            <span class="pull-right">v1.0<a href="#">
+            <i class="fa fa-long-arrow-up"></i></a></span>
+        </div>
+    </footer>
+<!-- End class="app app-default" -->
 </div>
-<jsp:include page="${request.contextPath}/footer" />
+<script type="text/javascript" src="resources/assets/js/vendor.js"></script>
+<script type="text/javascript" src="resources/assets/js/app.js"></script>
+<script type="text/javascript" src="resources/assets/js/jquery-ui.js"></script>
+<script type="text/javascript" src="resources/assets/js/jquery.form.js"></script>
+
+</body>
+</html>

@@ -43,6 +43,10 @@ public class FieldDAO extends AbstractDao<Integer, Field> {
     public void save (Field field) {
         persist(field);
     }
+    
+    public String saveNew (Field field) {
+        return addNew(field);
+    }
  
     public void delete (int id) {
         Query query = getSession().createSQLQuery("delete from field where fieldID = :fieldID");
@@ -63,5 +67,13 @@ public class FieldDAO extends AbstractDao<Integer, Field> {
         query.setString("productionSlotID", Integer.toString(id));
         return query.list();
     }
+    
+    @SuppressWarnings("unchecked")
+    public Field findByfieldOriginID (String fieldOriginID) {
+        Query query = getSession().createQuery("from Field as f where f.fieldOriginID = :fieldOriginID)");
+        query.setString("fieldOriginID", fieldOriginID);
+        return (Field) query.uniqueResult();
+    }
+    
 
 }
