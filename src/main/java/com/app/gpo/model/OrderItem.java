@@ -48,7 +48,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 
 @Entity
-@Table(name="orderItem")
+@Table(name="orderitem")
 public class OrderItem implements Serializable {
   
     @Id

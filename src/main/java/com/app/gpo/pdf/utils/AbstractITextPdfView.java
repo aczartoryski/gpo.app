@@ -79,7 +79,8 @@ public abstract class AbstractITextPdfView extends AbstractView {
     }
  
     protected Document newDocument() {
-        return new Document(PageSize.A4);
+        return new Document(PageSize.A4.rotate());
+        
     }
      
     protected PdfWriter newWriter(Document document, OutputStream os) throws DocumentException {

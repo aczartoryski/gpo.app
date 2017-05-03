@@ -72,7 +72,7 @@
           <div class="title">Główna tabela</div>
         </a>
       </li>
-      -->
+      
       <li>
         <a href="logout">
           <div class="icon">
@@ -81,6 +81,7 @@
           <div class="title">Wyloguj się</div>
         </a>
       </li>
+      -->
     </ul>
   </div>
   <div class="sidebar-footer">

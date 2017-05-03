@@ -30,6 +30,7 @@ import com.app.gpo.model.FileUploadForm;
 import com.app.gpo.model.OrderItem;
 import com.app.gpo.model.OrderItemField;
 import com.app.gpo.model.OrderStatus;
+import com.app.gpo.model.OrdersSelectedForm;
 import com.app.gpo.model.ProductionSlot;
 import com.app.gpo.services.FieldMappingService;
 import com.app.gpo.services.FieldService;
@@ -46,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -129,8 +130,26 @@ public class AppController {
         ModelAndView mv = new ModelAndView("index");
         List<OrderItem> orderItemList = orderItemService.findAll();
         mv.addObject("orderItemList", orderItemList);
+        //OrdersSelectedForm selectedOrders = new OrdersSelectedForm();
+        //selectedOrders.setorderItemList(orderItemService.findAll());
+        //mv.addObject("selectedOrders", selectedOrders);
         List<Field> fieldsForTable = fieldService.findAllForMainScreen();
         mv.addObject("fieldsForTable", fieldsForTable);
+        return mv;
+    } 
+    
+    @RequestMapping(value = "/selectProductionSlotMultiple", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+    public ModelAndView selectProductionSlotMultiple(Model model,@RequestParam(value="orderItemID")Integer[] checkboxList) {
+        ModelAndView mv = new ModelAndView("selectProductionSlotMultiple");
+        List<ProductionSlot> productionSlotList = productionSlotService.findAll(); 
+        List<OrderItem> orderItemList = new ArrayList<OrderItem>(0);
+
+        for (int i=0; i<checkboxList.length; i++) {
+            logger.info("Selected to print orderID : "+checkboxList[i]);
+            orderItemList.add(orderItemService.find(checkboxList[i]));
+        }
+        mv.addObject("productionSlotList", productionSlotList);
+        mv.addObject("ordersList", orderItemList);
         return mv;
     } 
     
@@ -323,12 +342,54 @@ public class AppController {
         return "redirect:/fieldMappings";
     }
     
-    @RequestMapping(value = "/printOrderItem-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
-    public ModelAndView printOrderItem(Model model, @PathVariable Integer orderItemID) {
-        // create some sample data
-        OrderItem orderItem = orderItemService.find(orderItemID);
-        // return a view which will be resolved by an excel view resolver
-        return new ModelAndView("pdfViewOrderItem", "orderItem", orderItem);
+    @RequestMapping(value = "/selectProductionSlot-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
+    public ModelAndView selectProductionSlot(Model model, @PathVariable Integer orderItemID) {
+        ModelAndView mv = new ModelAndView("selectProductionSlot");
+        List<ProductionSlot> productionSlotList = productionSlotService.findAll();
+        mv.addObject("productionSlotList", productionSlotList);
+        mv.addObject("orderItemID", orderItemID);
+        return mv;
+    } 
+    
+    
+    
+    @RequestMapping(value="/printOrderItemCard-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
+    public ModelAndView printOrderCard(Model model, @PathVariable Integer orderItemID, @RequestParam("productionSlotID") Integer productionSlotID) {
+       ModelAndView mv = new ModelAndView("printOrderItemCard");
+       OrderItem orderItem = orderItemService.find(orderItemID);
+       
+       OrderStatus orderStatus = orderStatusService.findByName("W toku");
+       orderItem.setorderStatus(orderStatus);
+       orderItemService.update(orderItem);
+
+       
+       mv.addObject("orderItem", orderItem);
+       ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
+       mv.addObject("productionSlot", productionSlot);
+       return mv;
+    }
+    
+    @RequestMapping(value="/printOrderItemCards", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+    public ModelAndView printOrderCards(Model model, @RequestParam("productionSlotID") Integer productionSlotID, @RequestParam(value="orderItem")Integer[] orderItemIDs) {
+       ModelAndView mv = new ModelAndView("printOrderItemCards");
+       
+       List<OrderItem> orderItemList = new ArrayList<>(0);
+       for (Integer orderItemID : orderItemIDs) {
+           logger.info("Sended to print orderID : " + orderItemID);
+           orderItemList.add(orderItemService.find(orderItemID));
+       }
+       OrderStatus orderStatus = orderStatusService.findByName("W toku");
+       Iterator<OrderItem> it = orderItemList.iterator();
+       while (it.hasNext()) {
+           OrderItem orderItem = it.next();
+           orderItem.setorderStatus(orderStatus);
+           orderItemService.update(orderItem);
+       }
+       
+       mv.addObject("selectedOrders", orderItemList);
+       ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
+       mv.addObject("productionSlot", productionSlot);
+       return mv;
     }
     
     @RequestMapping(value="/logout", method = RequestMethod.GET)

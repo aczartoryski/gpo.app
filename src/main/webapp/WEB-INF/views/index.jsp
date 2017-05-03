@@ -37,6 +37,7 @@
 <jsp:include page="${request.contextPath}/menu" />
 
 <!-- Main Content -->
+<form action="selectProductionSlotMultiple" method="POST">
 <div class="app-container">
   <div class="row">
     <div class="col-xs-12">
@@ -52,17 +53,19 @@
               </c:if>
             <div>
                 <a>
-                    <span class="badge badge-info badge-icon">
+                    <span class="badge badge-info badge-icon" onClick="$('form').submit();">
                         <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                         <span>Drukuj karty dla zaznaczonych</span>
                     </span>
                 </a>
+                <!--
                 <a>
                     <span class="badge badge-info badge-icon">
                         <i class="fa fa-print" aria-hidden="true"></i>
                         <span>Drukuj etykiety dla zaznaczonych</span>
                     </span>
                 </a>
+                -->
                 <a href="importOrderItems">
                     <span class="badge badge-warning badge-icon">
                         <i class="fa fa-folder-open-o" aria-hidden="true"></i>
@@ -120,13 +123,13 @@
                     <a class="select-all">
                             <span class="badge badge-info badge-icon">
                                 <i class="fa fa-check" aria-hidden="true"></i>
-                                <span>Zaznacz wszystkie</span>
+                                <span>Wszystkie</span>
                             </span></br>
                     </a>
                     <a class="deselect-all">
                         <span class="badge badge-info badge-icon">
                                 <i class="fa fa-close" aria-hidden="true"></i>
-                                <span>Anuluj zaznaczenie</span>
+                                <span>Anuluj</span>
                         </span>
                     </a>
                     
@@ -142,19 +145,22 @@
                 </tr>
             </thead>
     <tbody>
-        <c:forEach var="oItem" items="${orderItemList}">
+        <c:forEach var="oItem" items="${orderItemList}" varStatus="status">
+            
         <tr>
             <td>
-              <a href="printOrderItem-<c:out value='${oItem.orderItemID}' />" target="_blank">
+              <a href="selectProductionSlot-<c:out value='${oItem.orderItemID}' />">
                 <span class="badge badge-primary badge-icon">
                     <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                 </span>
               </a>
+              <!--
               <a href="printProductionLabel-<c:out value='${oItem.orderItemID}' />">
                 <span class="badge badge-primary badge-icon">
                     <i class="fa fa-print" aria-hidden="true"></i>
                 </span>
               </a>
+              -->
               <a href="viewOrderItem-<c:out value='${oItem.orderItemID}' />">
                 <span class="badge badge-info badge-icon">
                     <i class="fa fa-search" aria-hidden="true"></i>
@@ -171,13 +177,9 @@
                 </span>
               </a>
             </td>
-            <td class="">
-                <div class="checkbox" >
-                    <input type="checkbox" id="checkbox<c:out value='${oItem.orderItemID}' />">&nbsp;&nbsp;
-                    <label for="checkbox<c:out value='${oItem.orderItemID}' />">
+            <td>
+                <input type="checkbox" id="orderItemID" name="orderItemID" value="<c:out value='${oItem.orderItemID}' />">&nbsp;&nbsp;
                         <c:out value='${oItem.orderNumber}' />
-                    </label>
-                </div>
             </td>
             <td><c:out value='${oItem.orderItemDueDate}' /></td>
             <td><c:out value='${oItem.orderItemName}' /></td>
@@ -204,17 +206,16 @@
                         </c:otherwise>
                     </c:choose>
                     <c:out value='${oItem.orderStatus.orderStatusName}' />
-                </span></td>
-                
-                
+                </span>
+            </td>
             <c:forEach var="f4Table" items="${fieldsForTable}">
-                <td>
+            <td>
                 <c:forEach var="orderItemfield" items="${oItem.orderItemFields}">
                     <c:if test="${f4Table.fieldID eq orderItemfield.field.fieldID}">
                         <c:out value='${orderItemfield.fieldText}' />
                     </c:if>    
                 </c:forEach>
-                </td>
+            </td>
             </c:forEach>
         </tr>
         </c:forEach>
@@ -225,4 +226,5 @@
     </div>
   </div>
 </div>            
+</form>    
 <jsp:include page="${request.contextPath}/footer" />

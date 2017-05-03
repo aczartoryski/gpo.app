@@ -4,7 +4,7 @@
 
     <groupId>com.app</groupId>
     <artifactId>gpo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>war</packaging>
 
     <name>gpo</name>
@@ -241,4 +241,5 @@
         </plugins>
         <finalName>GPO</finalName>
     </build>
+    <description>Generator order production cards</description>
 </project>
