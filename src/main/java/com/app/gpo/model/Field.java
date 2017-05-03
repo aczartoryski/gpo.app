@@ -43,12 +43,29 @@ import javax.persistence.Table;
 @Entity
 @Table(name="field")
 public class Field implements Serializable {
- 
+    
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "fieldID", nullable = false)
     private int fieldID;
+    
+    @Column(name = "fieldValueID")
     private String fieldValueID;
+    
+    @Column(name = "fieldLabel", nullable = false)
     private String fieldLabel;
+    
+    @Column(name = "fieldOriginID", nullable = false)
     private String fieldOriginID;
-    private Set<FieldMapping> fieldMappings = new HashSet<>(0);
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "field")
+    private Set<FieldMapping> fieldMappings = new HashSet<FieldMapping>(0);
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "field")
+    private Set<OrderItemField> orderItemFields = new HashSet<OrderItemField>(0);
+    
+    @Column(name = "fieldShownInMainTable")
+    private Boolean fieldShownInMainTable;
     
     
     /**
@@ -80,9 +97,7 @@ public class Field implements Serializable {
         this.fieldMappings = fieldMappings;
     }
     
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "fieldID", nullable = false)
+    
     public int getFieldID() {
         return fieldID;
     }
@@ -91,7 +106,7 @@ public class Field implements Serializable {
         this.fieldID = id;
     }
     
-    @Column(name = "fieldOriginID", nullable = false)
+    
     public String getFieldOriginID() {
         return fieldOriginID;
     }
@@ -100,7 +115,7 @@ public class Field implements Serializable {
         this.fieldOriginID = id;
     }
     
-    @Column(name = "fieldValueID")
+    
     public String getFieldValueID() {
         return fieldValueID;
     }
@@ -109,7 +124,7 @@ public class Field implements Serializable {
         this.fieldValueID = id;
     }
     
-    @Column(name = "fieldLabel", nullable = false)
+    
     public String getFieldLabel() {
         return fieldLabel;
     }
@@ -118,13 +133,31 @@ public class Field implements Serializable {
         this.fieldLabel = name;
     }
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "field")
+    
     public Set<FieldMapping> getFieldMappings() {
 	return (Set<FieldMapping>) this.fieldMappings;
     }
 
     public void setFieldMappings(Set<FieldMapping> fieldMappings) {
 	this.fieldMappings = fieldMappings;
+    }
+    
+    
+    public Set<OrderItemField> getOrderItemFields() {
+        return this.orderItemFields;
+    }
+    
+    public void setOrderItemFields (Set<OrderItemField> orderItemFields) {
+        this.orderItemFields = orderItemFields;
+    }
+    
+    
+    public Boolean getfieldShownInMainTable() {
+        return fieldShownInMainTable;
+    }
+ 
+    public void setfieldShownInMainTable(Boolean value) {
+        this.fieldShownInMainTable = value;
     }
     
 }

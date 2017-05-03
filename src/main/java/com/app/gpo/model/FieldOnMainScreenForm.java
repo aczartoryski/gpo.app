@@ -21,47 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.app.gpo.services;
+package com.app.gpo.model;
 
-import com.app.gpo.dao.ProductionSlotDAO;
-import com.app.gpo.model.ProductionSlot;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
+public class FieldOnMainScreenForm {
+    private List<Field> fieldList;
 
-@Service("productionSlotService")
-@Transactional
-public class ProductionSlotService {
-    
-    @Autowired
-    private ProductionSlotDAO dao;
-    
-    
-    public List<ProductionSlot> findAll() {
-        return dao.findAll();
+    public List<Field> getfieldList() {
+	return fieldList;
     }
- 
-    public ProductionSlot find(int id) {
-        return dao.find(id);
+
+    public void setfieldList(List<Field> fieldList) {
+	this.fieldList = fieldList;
     }
-    
-    public void save (ProductionSlot productionSlot) {
-        dao.save(productionSlot);
-    }
-    
-    public void update (ProductionSlot productionSlot) {
-        dao.update(productionSlot);
-    }
-    
-    public void delete (int id) {
-        dao.delete(id);
-    }
-    
-    
 }

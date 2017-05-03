@@ -36,7 +36,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 /**
  *
@@ -46,10 +45,20 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name="productionslot")
 public class ProductionSlot implements Serializable {
- 
+    
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "productionSlotID",unique = true, nullable = false)
     private int productionSlotID;
+    
+    @Column(name = "productionSlotDescription", nullable = false)
     private String productionSlotDescription;
+    
+    @Column(name = "productionSlotNumber", nullable = false)
     private Integer productionSlotNumber;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "productionSlot", cascade=CascadeType.ALL)
+    @OrderBy ("fieldMappingOrder")
     private Set<FieldMapping> fieldMappings = new HashSet<FieldMapping>(0);
     
     public ProductionSlot () {
@@ -68,9 +77,7 @@ public class ProductionSlot implements Serializable {
         this.fieldMappings = fieldMappings;
     }
     
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "productionSlotID",unique = true, nullable = false)
+    
     public int getproductionSlotID() {
         return productionSlotID;
     }
@@ -79,7 +86,7 @@ public class ProductionSlot implements Serializable {
         this.productionSlotID = productionSlotID;
     }
     
-    @Column(name = "productionSlotDescription", nullable = false)
+    
     public String getProductionSlotDescription() {
         return productionSlotDescription;
     }
@@ -88,7 +95,7 @@ public class ProductionSlot implements Serializable {
         this.productionSlotDescription = name;
     }
     
-    @Column(name = "productionSlotNumber", nullable = false)
+    
     public Integer getProductionSlotNumber() {
         return productionSlotNumber;
     }
@@ -97,8 +104,7 @@ public class ProductionSlot implements Serializable {
         this.productionSlotNumber = number;
     }
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "productionSlot", cascade=CascadeType.ALL)
-    @OrderBy ("fieldMappingOrder")
+    
     public Set<FieldMapping> getFieldMappings() {
 	return this.fieldMappings;
     }

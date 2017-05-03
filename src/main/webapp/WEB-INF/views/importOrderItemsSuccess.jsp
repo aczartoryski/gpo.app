@@ -41,14 +41,27 @@
         <div class="col-xs-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="card-title">Importowanie zamówień z wgranych plików</div>
+                    <div class="card-title">Importowanie zamówień z wgranych plików
+                    <c:if test="${not empty message}">
+                        <div class="alert alert-warning alert-dismissible" role="alert" style="width: 50%;">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <c:out value='${message}' />
+                        <ul>
+                        <c:forEach items="${newFieldList}" var="field">
+                            <li>${field.fieldLabel}</li>
+                        </c:forEach>
+                        </ul>
+                        </div>
+                     </c:if>
+                    </div>
                 </div>
                 <div class="card-body no-paddings table-responsive">
                     <div>Lista zaimportowanych plików</div>
                     <ul>
                         <c:forEach items="${files}" var="file">
                             <li>${file}</li>
-                            </c:forEach>
+                        </c:forEach>
                     </ul>
                     <div>Lista znalezionych zamówień</div>
 <table class="datatable table-striped table-bordered table-hover table-condensed primary dt-responsive nowrap" cellspacing="0" width="100%" id="datatable1">

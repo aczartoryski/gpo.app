@@ -29,12 +29,13 @@
 <!DOCTYPE html>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<% session.setAttribute( "menuActive", "fields" ); %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<% session.setAttribute( "menuActive", "maintable" ); %>
 <jsp:include page="${request.contextPath}/header">
-  <jsp:param name="pageTitle" value="Lista mapowania pól na karty zleceń"/>
+  <jsp:param name="pageTitle" value="Lista pól widocznych na głównej stronie"/>
 </jsp:include>
 <jsp:include page="${request.contextPath}/menu">
-  <jsp:param name="menuActive" value="zamowienia"/>  
+  <jsp:param name="menuActive" value="maintable"/>  
 </jsp:include>
 <!-- Main Content -->
 <div class="app-container">
@@ -42,7 +43,12 @@
     <div class="col-xs-12">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Lista mapowania pól na karty zleceń
+          <div class="card-title">Lista pól widocznych na głównej stronie
+          <form:form action="fieldOnMainScreen" method="POST" modelAttribute="fieldOnMainScreenForm">
+   
+          <div class="col-md-9">
+                        <button type="submit" class="btn btn-primary">Zapisz</button>
+          </div>    
           <c:if test="${not empty message}">
                     <div class="alert alert-warning alert-dismissible" role="alert" style="width: 50%;">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -56,46 +62,40 @@
           <table class="datatable table table-striped table-bordered table-hover table-condensed primary" cellspacing="0" width="100%" id="datatable1">
     <thead>
         <tr>
-            <th>Akcje</th>
-            <th>Mapowanie dla gniazda</th>
-            <th>Nazwa pola  (ID / VALUEID)</th>
+            <th></th>
+            <th>ID</th>
+            <th>VALUEID</th>
+            <th>Nazwa pola</th>
+            <th>Widoczne ?</th>
         </tr>
     </thead>
     <tbody>
-        <c:forEach var="pS" items="${productionSlotList}">
+            
+        <c:forEach var="field" items="${fieldOnMainScreenForm.fieldList}" varStatus="status">
+        
         <tr>
-            <td style="width: 20%">
-                <a href="editFieldMapping-<c:out value='${pS.productionSlotID}' />"> 
-                <span class="badge badge-info badge-icon">
-                    <i class="fa fa-edit" aria-hidden="true"></i>
-                    <span>Edytuj</span>
-                </span>
-              </a>
-              <a href="deleteFieldMapping-<c:out value='${pS.productionSlotID}' />" onclick="return confirm('Czy na pewnoc hcesz skasować ?')">
-                <span class="badge badge-danger badge-icon">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                    <span>Czyść</span>
-                </span>
-              </a>
+            <td style="width: 2px;">${status.count}</td>
+            <td><c:out value='${field.fieldOriginID}' />
+            
+            <form:hidden path="fieldList[${status.index}].fieldID" />
+            <form:hidden path="fieldList[${status.index}].fieldOriginID" />
             </td>
-            <td><c:out value='${pS.productionSlotNumber}' /> 
-                (<c:out value='${pS.productionSlotDescription}' />)</td>
+            <td><c:out value='${field.fieldValueID}' />
+            
+            <form:hidden path="fieldList[${status.index}].fieldValueID" />
+            </td>
+            <td><c:out value='${field.fieldLabel}' />
+                <form:hidden path="fieldList[${status.index}].fieldLabel" />
+            </td>
             <td>
-              <ul>
-                  <li style="list-style: none">(0/1) Nr zamówienia</li>
-                  <li style="list-style: none">(0/2) Wyrób</li>
-                  <c:forEach var="fM" items="${pS.fieldMappings}">
-                      <li style="list-style: none">
-                          (<c:out value='${fM.field.fieldOriginID}' /><c:if test="${not empty fM.field.fieldValueID}" >/<c:out value='${fM.field.fieldValueID}' /></c:if>) 
-                          <c:out value='${fM.field.fieldLabel}' /></li>    
-                  </c:forEach>  
-              </ul>
+                <form:checkbox path="fieldList[${status.index}].fieldShownInMainTable" />
             </td>
         </tr>
         </c:forEach>
     </tbody>
 </table>
         </div>
+        </form:form>
       </div>
     </div>
   </div>

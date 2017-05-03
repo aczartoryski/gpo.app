@@ -25,6 +25,7 @@ package com.app.gpo.controller;
 
 import com.app.gpo.model.Field;
 import com.app.gpo.model.FieldMapping;
+import com.app.gpo.model.FieldOnMainScreenForm;
 import com.app.gpo.model.FileUploadForm;
 import com.app.gpo.model.OrderItem;
 import com.app.gpo.model.OrderItemField;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,6 +74,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/")
 public class AppController {
    private static final Logger logger = Logger.getLogger(AppController.class);
+   //private static final List<Field> fieldList = new ArrayList<Field>();
    
    @Autowired
    FieldMappingService fieldMappingService;
@@ -126,6 +129,8 @@ public class AppController {
         ModelAndView mv = new ModelAndView("index");
         List<OrderItem> orderItemList = orderItemService.findAll();
         mv.addObject("orderItemList", orderItemList);
+        List<Field> fieldsForTable = fieldService.findAllForMainScreen();
+        mv.addObject("fieldsForTable", fieldsForTable);
         return mv;
     } 
     
@@ -245,6 +250,32 @@ public class AppController {
         return mv;
     } 
     
+    @RequestMapping(value="/fieldOnMainScreen", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
+    public ModelAndView showFields() {
+        ModelAndView mv = new ModelAndView("fieldOnMainScreen");
+        FieldOnMainScreenForm fieldOnMainScreenForm = new FieldOnMainScreenForm(); 
+        fieldOnMainScreenForm.setfieldList(fieldService.findAll());
+        mv.addObject("fieldOnMainScreenForm", fieldOnMainScreenForm);
+        return mv;
+    } 
+    
+    @RequestMapping(value="/fieldOnMainScreen", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+    public ModelAndView saveFields(@ModelAttribute("fieldOnMainScreenForm") FieldOnMainScreenForm fieldOnMainScreenForm) {
+        
+        List<Field> fieldListToSave = fieldOnMainScreenForm.getfieldList();
+        logger.info(fieldOnMainScreenForm);
+        logger.info(fieldOnMainScreenForm.getfieldList());
+        for (Field field : fieldListToSave) {
+            logger.info(field.getFieldID()+" "+field.getFieldOriginID()+" "+field.getFieldValueID()+" "+field.getFieldLabel());
+            fieldService.update(field);
+        }
+        
+        ModelAndView mv = new ModelAndView("fieldOnMainScreen");
+        mv.addObject("fieldOnMainScreenForm", fieldService.findAll());
+        return mv;
+    } 
+    
+    
     @RequestMapping(value="/editFieldMapping-{productionSlotID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editfieldMapping(Model model, @PathVariable Integer productionSlotID) {
         ModelAndView mv = new ModelAndView("editFieldMapping");
@@ -285,7 +316,6 @@ public class AppController {
             fieldMapping.setProductionSlot(productionSlot);
             fieldMapping.setfield(field);
             fieldMapping.setfieldMappingOrder(fieldMappingOrder);
-            fieldMapping.setfieldShownInMainTable(Boolean.FALSE);
             fieldMappingService.save(fieldMapping);
         }
         String message = "Mapowanie pól zostało zapisane prawidłowo.";
@@ -315,7 +345,6 @@ public class AppController {
         List<OrderItem> importedOrders = new ArrayList<>();
         List<Field> fieldList = new ArrayList<>();
         List<Field> newFieldList = new ArrayList<>();
-        List<Field> importedFieldList = new ArrayList<>();
         Date today = new Date();
         
         OrderStatus orderStatus = orderStatusService.findByName("Nowe");
@@ -388,7 +417,6 @@ public class AppController {
                                             orderItemField.setfield(foundedField);
                                             orderItemField.setfieldText(jObject.getString("TEXT"));
                                             orderItemField.setorderItem(insertedOrderItem);
-                                            //orderItemField.setorderItemfieldID(0);
                                             orderItemFieldService.save(orderItemField);
                                         } else {
                                             logger.info(keyOrderNumber+"-->"+innerKey+"<>");
@@ -409,8 +437,8 @@ public class AppController {
                                             orderItemField.setfield(insertedField);
                                             orderItemField.setfieldText(jObject.getString("TEXT"));
                                             orderItemField.setorderItem(insertedOrderItem);
-                                            //orderItemField.setorderItemfieldID(0);
                                             orderItemFieldService.save(orderItemField);
+                                            newFieldList.add(impField);
                                         }                                       
                                     }
                                 }
@@ -419,7 +447,11 @@ public class AppController {
                     }
             }
 	}
-
+        if (!newFieldList.isEmpty()) {
+            map.addAttribute("newFieldList", newFieldList);
+            String message = "W trakcie importu znaleziono nowe pola. Pamietj o ich zmapowaniu na wydruki!";
+            map.addAttribute("message", message);
+        }
         map.addAttribute("importedFileContent",importedFileContent);
         map.addAttribute("importedOrders",importedOrders);
 	map.addAttribute("files", fileNames);

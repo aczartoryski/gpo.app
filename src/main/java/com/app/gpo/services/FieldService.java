@@ -58,12 +58,20 @@ public class FieldService {
         return dao.findByfieldOriginID(id);
     }
     
+    public List<Field> findAllForMainScreen () {
+        return dao.findAllForMainScreen();
+    }
+    
     public void save (Field field) {
         dao.save(field);
     }
     
     public String saveNew (Field field) {
         return dao.saveNew(field);
+    }
+    
+    public void update (Field field) {
+        dao.update(field);
     }
     
     public void delete (int id) {

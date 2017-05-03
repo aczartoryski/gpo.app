@@ -48,11 +48,11 @@ public class OrderItemField implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderItemfieldID;
     
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="fieldID")
     private Field field;
     
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="orderItemID")
     private OrderItem orderItem;
     
@@ -86,6 +86,7 @@ public class OrderItemField implements Serializable {
         this.fieldText = fieldText;
     }
     
+    
     public int getorderItemfieldID() {
         return orderItemfieldID;
     }
@@ -93,6 +94,7 @@ public class OrderItemField implements Serializable {
     public void setorderItemfieldID(int id) {
         this.orderItemfieldID = id;
     }
+    
     
     public Field getfield() {
         return field;
@@ -102,6 +104,7 @@ public class OrderItemField implements Serializable {
         this.field = field;
     }
     
+    
     public OrderItem getorderItem() {
         return orderItem;
     }
@@ -109,6 +112,7 @@ public class OrderItemField implements Serializable {
     public void setorderItem(OrderItem orderItem) {
         this.orderItem = orderItem;
     }
+    
     
     public String getfieldText() {
         return fieldText;

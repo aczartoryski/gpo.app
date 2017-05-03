@@ -37,9 +37,10 @@ import org.springframework.stereotype.Repository;
 @Repository("orderItemDAO")
 public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
     
-
     public OrderItem find (int id) {
-        return getByKey(id);
+        OrderItem orderItem = getByKey(id);
+        Hibernate.initialize(orderItem.getorderItemFields());
+        return orderItem;
     }
  
     public void save (OrderItem orderItem) {
@@ -62,6 +63,9 @@ public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
         Query query = getSession().createSQLQuery("delete from orderItem where orderItemID = :orderItemID");
         query.setString("orderItemID", Integer.toString(id));
         query.executeUpdate();
+        Query query2 = getSession().createSQLQuery("delete from orderItemField where orderItemID = :orderItemID");
+        query2.setString("orderItemID", Integer.toString(id));
+        query2.executeUpdate();
     }
  
     @SuppressWarnings("unchecked")
@@ -70,6 +74,7 @@ public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
         List<OrderItem> orderItems = (List<OrderItem>) criteria.list();
         for(OrderItem s : orderItems){
             Hibernate.initialize(s.getorderStatus());
+            Hibernate.initialize(s.getorderItemFields());
         }
         return orderItems;
     }

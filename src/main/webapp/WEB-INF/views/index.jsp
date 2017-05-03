@@ -29,6 +29,7 @@
 <!DOCTYPE html>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <% session.setAttribute( "menuActive", "orderItems" ); %>
 <jsp:include page="${request.contextPath}/header">
   <jsp:param name="pageTitle" value="Lista zleceń produkcji"/>
@@ -103,43 +104,14 @@
                                 <span>Status</span>
                             </span>
                         </a>
-                        
-                        <a class="toggle-vis" data-column="6">
+                        <c:forEach var="f4Table" items="${fieldsForTable}" varStatus="loop">
+                        <a class="toggle-vis" data-column="<c:out value="${6 + loop.index}" />">
                             <span class="badge badge-success badge-icon">
                                 <i class="fa fa-plus-square" aria-hidden="true"></i>
-                                <span>Wielkość skrzynki</span>
+                                <span><c:out value='${f4Table.fieldLabel}' /></span>
                             </span>
                         </a>
-                        <a class="toggle-vis" data-column="7">
-                            <span class="badge badge-success badge-icon">
-                                <i class="fa fa-plus-square" aria-hidden="true"></i>
-                                <span>Kolor lameli</span>
-                            </span>
-                        </a>
-                        <a class="toggle-vis" data-column="8">
-                            <span class="badge badge-success badge-icon">
-                                <i class="fa fa-plus-square" aria-hidden="true"></i>
-                                <span>Cięcie profili</span>
-                            </span>
-                        </a>
-                        <a class="toggle-vis" data-column="9">
-                            <span class="badge badge-success badge-icon">
-                                <i class="fa fa-plus-square" aria-hidden="true"></i>
-                                <span>Kolor skrzynki</span>
-                            </span>
-                        </a>
-                        <a class="toggle-vis" data-column="10">
-                            <span class="badge badge-success badge-icon">
-                                <i class="fa fa-plus-square" aria-hidden="true"></i>
-                                <span>Kolor prowadnic</span>
-                            </span>
-                        </a>
-                        <a class="toggle-vis" data-column="11">
-                            <span class="badge badge-success badge-icon">
-                                <i class="fa fa-plus-square" aria-hidden="true"></i>
-                                <span>Cięcie prowadnic</span>
-                            </span>
-                        </a>
+                        </c:forEach>
                     </div>
           <table class="datatable table-striped table-bordered table-hover table-condensed primary dt-responsive nowrap" cellspacing="0" width="100%" id="datatable1">
             <thead>
@@ -164,12 +136,9 @@
                     <th>Wyrób<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Data zmiany statusu<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Status<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
-                    <th>Wielkość skrzynki<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
-                    <th>Kolor lameli<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
-                    <th>Cięcie profili<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
-                    <th>Kolor skrzynki<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
-                    <th>Kolor prowadnic<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
-                    <th>Cięcie prowadnic<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
+                    <c:forEach var="f4Table" items="${fieldsForTable}">
+                    <th><c:out value='${f4Table.fieldLabel}' /><div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
+                    </c:forEach>
                 </tr>
             </thead>
     <tbody>
@@ -236,12 +205,17 @@
                     </c:choose>
                     <c:out value='${oItem.orderStatus.orderStatusName}' />
                 </span></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+                
+                
+            <c:forEach var="f4Table" items="${fieldsForTable}">
+                <td>
+                <c:forEach var="orderItemfield" items="${oItem.orderItemFields}">
+                    <c:if test="${f4Table.fieldID eq orderItemfield.field.fieldID}">
+                        <c:out value='${orderItemfield.fieldText}' />
+                    </c:if>    
+                </c:forEach>
+                </td>
+            </c:forEach>
         </tr>
         </c:forEach>
     </tbody>

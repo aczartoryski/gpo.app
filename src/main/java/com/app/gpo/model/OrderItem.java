@@ -25,6 +25,9 @@ package com.app.gpo.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,6 +36,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -55,7 +59,7 @@ public class OrderItem implements Serializable {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="orderStatusID")
     private OrderStatus orderStatus;
- 
+    
     @Column(name = "orderItemName", nullable = false)
     private String orderItemName;
     
@@ -64,6 +68,7 @@ public class OrderItem implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date orderStatusDate;
     
+            
     @Temporal(TemporalType.DATE)
     @Column(name = "orderItemDueDate", nullable = false, length=10)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -71,7 +76,9 @@ public class OrderItem implements Serializable {
     
     @Column(name = "orderNumber", nullable = false)
     private String orderNumber;
-  
+    
+    @OneToMany(targetEntity = OrderItemField.class, fetch = FetchType.LAZY, mappedBy = "orderItem", cascade=CascadeType.ALL)
+    private Set<OrderItemField> orderItemFields = new HashSet<OrderItemField>(0);
     /**
      * Default empty constructor
      */
@@ -92,16 +99,19 @@ public class OrderItem implements Serializable {
      * @param orderItemName
      * @param orderStatusDate
      * @param orderItemDueDate
+     * @param orderNumber
+     * @param orderItemFields
      */
-    public OrderItem (int orderItemID, OrderStatus orderStatus, String orderItemName, Date orderStatusDate,  Date orderItemDueDate, String orderNumber) {
+    public OrderItem (int orderItemID, OrderStatus orderStatus, String orderItemName, Date orderStatusDate, Date orderItemDueDate, String orderNumber, Set<OrderItemField> orderItemFields) {
         this.orderItemID = orderItemID;
         this.orderItemName = orderItemName;
         this.orderStatus = orderStatus;
         this.orderStatusDate = orderStatusDate;
         this.orderItemDueDate = orderItemDueDate;
         this.orderNumber = orderNumber;
+        this.orderItemFields = orderItemFields;
     }
-    
+
     public int getorderItemID() {
         return orderItemID;
     }
@@ -109,7 +119,7 @@ public class OrderItem implements Serializable {
     public void setorderItemID(int id) {
         this.orderItemID = id;
     }
-    
+
     public OrderStatus getorderStatus() {
         return orderStatus;
     }
@@ -117,7 +127,7 @@ public class OrderItem implements Serializable {
     public void setorderStatus(OrderStatus object) {
         this.orderStatus = object;
     }
-    
+
     public String getorderItemName() {
         return orderItemName;
     }
@@ -142,11 +152,20 @@ public class OrderItem implements Serializable {
         this.orderItemDueDate = orderItemDueDate;
     }
     
+        
     public String getorderNumber() {
         return this.orderNumber;
     }
  
     public void setorderNumber(String orderNumber) {
         this.orderNumber = orderNumber;
+    }
+    
+    public Set<OrderItemField> getorderItemFields() {
+	return this.orderItemFields;
+    }
+
+    public void setorderItemFields(Set<OrderItemField> orderItemFields) {
+	this.orderItemFields = orderItemFields;
     }
 }

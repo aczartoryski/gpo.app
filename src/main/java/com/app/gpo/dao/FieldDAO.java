@@ -26,7 +26,9 @@ package com.app.gpo.dao;
 import com.app.gpo.model.Field;
 import java.util.List;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -47,7 +49,15 @@ public class FieldDAO extends AbstractDao<Integer, Field> {
     public String saveNew (Field field) {
         return addNew(field);
     }
- 
+    
+    public void update (Field field) throws HibernateException  {
+        try {
+           saveUpdate(field);
+        } catch (final HibernateException e) {
+            throw new HibernateException(e);
+        }
+    }
+    
     public void delete (int id) {
         Query query = getSession().createSQLQuery("delete from field where fieldID = :fieldID");
         query.setString("fieldID", Integer.toString(id));
@@ -74,6 +84,14 @@ public class FieldDAO extends AbstractDao<Integer, Field> {
         query.setString("fieldOriginID", fieldOriginID);
         return (Field) query.uniqueResult();
     }
+    
+    @SuppressWarnings("unchecked")
+    public List<Field> findAllForMainScreen() {
+        Criteria criteria = createEntityCriteria();
+        criteria.add(Restrictions.sqlRestriction("{alias}.fieldShownInMainTable = 1"));
+        return (List<Field>) criteria.list();
+    }
+    
     
 
 }

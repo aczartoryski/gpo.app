@@ -24,7 +24,6 @@
 package com.app.gpo.dao;
 
 import com.app.gpo.model.FieldMapping;
-import java.util.Iterator;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -40,7 +39,10 @@ import org.springframework.stereotype.Repository;
 public class FieldMappingDAO extends AbstractDao<Integer, FieldMapping> {
     
    public FieldMapping find (int id) {
-        return getByKey(id);
+        FieldMapping fieldMapping = getByKey(id);
+        Hibernate.initialize(fieldMapping.getProductionSlot());
+        Hibernate.initialize(fieldMapping.getfield());
+        return fieldMapping;
    }
  
     public void save (FieldMapping fieldMapping) {
@@ -62,7 +64,12 @@ public class FieldMappingDAO extends AbstractDao<Integer, FieldMapping> {
     @SuppressWarnings("unchecked")
     public List<FieldMapping> findAll() {
         Criteria criteria = createEntityCriteria();
-        return (List<FieldMapping>) criteria.list();
+        List<FieldMapping> fieldMappings = (List<FieldMapping>) criteria.list();
+        for(FieldMapping s : fieldMappings){
+            Hibernate.initialize(s.getProductionSlot());
+            Hibernate.initialize(s.getfield());
+        }
+        return fieldMappings;
     }
     
     @SuppressWarnings("unchecked")
@@ -72,6 +79,7 @@ public class FieldMappingDAO extends AbstractDao<Integer, FieldMapping> {
         List<FieldMapping> fieldMappings = (List<FieldMapping>) criteria.list();
         for(FieldMapping s : fieldMappings){
             Hibernate.initialize(s.getProductionSlot());
+            Hibernate.initialize(s.getfield());
         }
         return fieldMappings;
     }
@@ -83,6 +91,7 @@ public class FieldMappingDAO extends AbstractDao<Integer, FieldMapping> {
         List<FieldMapping> fieldMappings = (List<FieldMapping>) criteria.list();
         for(FieldMapping s : fieldMappings){
             Hibernate.initialize(s.getProductionSlot());
+            Hibernate.initialize(s.getfield());
         }
         return fieldMappings;
     }

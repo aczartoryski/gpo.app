@@ -26,6 +26,7 @@ package com.app.gpo.dao;
 import com.app.gpo.model.OrderItemField;
 import java.util.List;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
@@ -37,7 +38,10 @@ import org.springframework.stereotype.Repository;
 public class OrderItemFieldDAO   extends AbstractDao<Integer, OrderItemField> {
     
    public OrderItemField find (int id) {
-        return getByKey(id);
+       OrderItemField orderItemField = getByKey(id);
+       Hibernate.initialize(orderItemField.getorderItem());
+       Hibernate.initialize(orderItemField.getfield());
+       return orderItemField;
     }
  
     public void save (OrderItemField orderItemField) {
@@ -53,7 +57,12 @@ public class OrderItemFieldDAO   extends AbstractDao<Integer, OrderItemField> {
     @SuppressWarnings("unchecked")
     public List<OrderItemField> findAll() {
         Criteria criteria = createEntityCriteria();
-        return (List<OrderItemField>) criteria.list();
+        List<OrderItemField> orderItemFields = criteria.list();
+        for(OrderItemField s : orderItemFields){
+            Hibernate.initialize(s.getfield());
+            Hibernate.initialize(s.getorderItem());
+        }
+        return orderItemFields;
     }
     
 }

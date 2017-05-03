@@ -63,6 +63,16 @@
           <div class="title">Mapowanie pól</div>
         </a>
       </li>
+      <!--
+      <li class="<% if ((session.getAttribute( "menuActive" ))=="maintable") { %> active <% } %>">
+        <a href="fieldOnMainScreen">
+          <div class="icon">
+            <i class="fa fa-map-marker" aria-hidden="true"></i>
+          </div>
+          <div class="title">Główna tabela</div>
+        </a>
+      </li>
+      -->
       <li>
         <a href="logout">
           <div class="icon">

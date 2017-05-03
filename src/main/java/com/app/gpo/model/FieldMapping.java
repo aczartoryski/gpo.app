@@ -26,6 +26,9 @@ package com.app.gpo.model;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -38,22 +41,30 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="fieldmapping")
-
 public class FieldMapping implements Serializable {
-
+    
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "productionSlotID")
     private ProductionSlot productionSlot;
+    
+    
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "fieldID")
     private Field field;
+    
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "fieldMappingID", nullable = false)
     private int fieldMappingID;
+    
+    @Column(name = "fieldMappingOrder", nullable = false)
     private Integer fieldMappingOrder;
-    private Boolean fieldShownInMainTable;
     
     public FieldMapping () {
     }
     
        
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "productionSlotID")
+    
     public ProductionSlot getProductionSlot() {
         return this.productionSlot;
     }
@@ -62,9 +73,7 @@ public class FieldMapping implements Serializable {
         this.productionSlot = productionSlot;
     }
     
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "fieldID")
+    
     public Field getfield() {
         return this.field;
     }
@@ -73,7 +82,7 @@ public class FieldMapping implements Serializable {
         this.field = field;
     }
     
-    @Column(name = "fieldMappingID", nullable = false)
+    
     public int getfieldMappingID() {
         return fieldMappingID;
     }
@@ -82,7 +91,7 @@ public class FieldMapping implements Serializable {
         this.fieldMappingID = id;
     }
     
-    @Column(name = "fieldMappingOrder", nullable = false)
+    
     public Integer getfieldMappingOrder () {
         return this.fieldMappingOrder;
     }
@@ -90,15 +99,7 @@ public class FieldMapping implements Serializable {
     public void setfieldMappingOrder(Integer number) {
         this.fieldMappingOrder = number;
     }
-    
-    @Column(name = "fieldShownInMainTable", nullable = false)
-    public Boolean getfieldShownInMainTable() {
-        return fieldShownInMainTable;
-    }
- 
-    public void setfieldShownInMainTable(Boolean value) {
-        this.fieldShownInMainTable = value;
-    }
+
   
 }
 
