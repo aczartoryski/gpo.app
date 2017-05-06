@@ -35,14 +35,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.Barcode;
+import com.itextpdf.text.pdf.BarcodeEAN;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.nio.charset.Charset;
+import java.util.Iterator;
+
  
 /**
  * This view class generates a PDF document 'on the fly' based on the data
@@ -50,58 +59,42 @@ import com.itextpdf.text.pdf.PdfWriter;
  * @author www.codejava.net
  *
  */
-public class PDFBuilder extends AbstractITextPdfView {
+public class PDForderLabelCards extends AbstractITextPdfView {
  
     @Override
     protected void buildPdfDocument(Map<String, Object> model, Document doc,
             PdfWriter writer, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         // get data model which is passed by the Spring container
-        OrderItem orderItem = (OrderItem) model.get("orderItem");
-         
-        doc.add(new Paragraph("Zamówienie numer "+orderItem.getorderNumber()));
-         
-        /*PdfPTable table = new PdfPTable(5);
-        table.setWidthPercentage(100.0f);
-        table.setWidths(new float[] {3.0f, 2.0f, 2.0f, 2.0f, 1.0f});
-        table.setSpacingBefore(10);
-         
-        // define font for table header row
-        Font font = FontFactory.getFont(FontFactory.HELVETICA);
-        font.setColor(BaseColor.WHITE);
-         
-        // define table header cell
-        /*
-        PdfPCell cell = new PdfPCell();
-        cell.setBackgroundColor(BaseColor.BLUE);
-        cell.setPadding(5);
-         
-        // write table header
-        cell.setPhrase(new Phrase("Book Title", font));
-        table.addCell(cell);
-         
-        cell.setPhrase(new Phrase("Author", font));
-        table.addCell(cell);
- 
-        cell.setPhrase(new Phrase("ISBN", font));
-        table.addCell(cell);
-         
-        cell.setPhrase(new Phrase("Published Date", font));
-        table.addCell(cell);
-         
-        cell.setPhrase(new Phrase("Price", font));
-        table.addCell(cell);
-         
-        // write table row data
-        /*for (Book aBook : listBooks) {
-            table.addCell(aBook.getTitle());
-            table.addCell(aBook.getAuthor());
-            table.addCell(aBook.getIsbn());
-            table.addCell(aBook.getPublishedDate());
-            table.addCell(String.valueOf(aBook.getPrice()));
+        List<OrderItem> orderItemList = (List<OrderItem>) model.get("orderItemList");
+        Font font = FontFactory.getFont(FontFactory.HELVETICA, BaseFont.CP1250, BaseFont.EMBEDDED);
+        font.setSize(18);
+        
+        Iterator<OrderItem> it = orderItemList.iterator();
+        while (it.hasNext()) {
+            OrderItem orderItem = it.next();
+            String utf = orderItem.getorderItemName();
+            byte[] data = utf.getBytes("CP1250");
+            String ascii = new String(data);
+            String code = orderItem.getorderNumber()+"#"+ascii;
+            Paragraph preface = new Paragraph(code,font);
+            preface.setAlignment(Element.ALIGN_CENTER);
+            doc.add(new Phrase("\n"));
+            doc.add(new Phrase("\n"));
+            doc.add(new Phrase("\n"));
+            doc.add(new Phrase("\n"));
+            doc.add(new Phrase("\n"));
+            doc.add(new Phrase("\n"));
+            
+            /*BarcodeEAN barcode = new BarcodeEAN();
+            barcode.setCodeType(Barcode.CODE128);
+            barcode.setCode(code);
+            Rectangle barcodeRect = new Rectangle(400,200);
+            barcode.placeBarcode(barcodeRect, BaseColor.BLACK, BaseColor.YELLOW);
+            doc.add(barcode.createImageWithBarcode(writer.getDirectContent(), BaseColor.BLACK, BaseColor.GRAY));*/
+            doc.add(preface);
+            doc.newPage();
         }
-         
-        doc.add(table);*/
          
     }
  

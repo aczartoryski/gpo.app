@@ -433,10 +433,37 @@ public class AppController {
            orderItemService.update(orderItem);
        }
        
+       
+       
        mv.addObject("selectedOrders", orderItemList);
        ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
        mv.addObject("productionSlot", productionSlot);
        return mv;
+    }
+    
+    @RequestMapping(value = "/printProductionLabel-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
+    public ModelAndView printProductionLabel(Model model, @PathVariable Integer orderItemID) {
+        ModelAndView mv = new ModelAndView("pdforderLabelCard");
+        // create some sample data
+        OrderItem orderItem = orderItemService.find(orderItemID);
+        logger.info("Sended to print label orderID : " + orderItemID);
+        mv.addObject("orderItem", orderItem);
+        // return a view which will be resolved by an PDF view resolver
+        return mv;
+    }
+    
+    @RequestMapping(value = "/printProductionLabels", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+    public ModelAndView printProductionLabels(Model model, @RequestParam(value="orderItemID")Integer[] orderItemIDs) {
+        ModelAndView mv = new ModelAndView("pdforderLabelCards");
+        // create some sample data
+        List<OrderItem> orderItemList = new ArrayList<>(0);
+        for (Integer orderItemID : orderItemIDs) {
+           logger.info("Sended to print label orderID : " + orderItemID);
+           orderItemList.add(orderItemService.find(orderItemID));
+        }
+        mv.addObject("orderItemList", orderItemList);
+        // return a view which will be resolved by an PDF view resolver
+        return mv;
     }
     
     @RequestMapping(value="/logout", method = RequestMethod.GET)

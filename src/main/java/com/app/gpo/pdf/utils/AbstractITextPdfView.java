@@ -39,6 +39,7 @@ import org.springframework.web.servlet.view.AbstractView;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
  
 /**
@@ -79,7 +80,14 @@ public abstract class AbstractITextPdfView extends AbstractView {
     }
  
     protected Document newDocument() {
-        return new Document(PageSize.A4.rotate());
+        
+        Document document = new Document();
+
+        Rectangle pageSize = new Rectangle(420,297);
+        document.setPageSize(pageSize);
+        document.setMargins(2, 2, 2, 2);
+        
+        return document;
         
     }
      

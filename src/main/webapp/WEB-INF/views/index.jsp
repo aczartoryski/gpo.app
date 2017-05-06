@@ -58,14 +58,14 @@
                         <span>Drukuj karty dla zaznaczonych</span>
                     </span>
                 </a>
-                <!--
-                <a>
+
+                <a href="#" id="printProductionLabels" onClick='$("#indexform").attr("action", "printProductionLabels");$("#indexform").submit();' target="_blank">
                     <span class="badge badge-info badge-icon">
                         <i class="fa fa-barcode" aria-hidden="true"></i>
                         <span>Drukuj etykiety dla zaznaczonych</span>
                     </span>
                 </a>
-                -->
+
                 <a href="importOrderItems">
                     <span class="badge badge-warning badge-icon">
                         <i class="fa fa-folder-open-o" aria-hidden="true"></i>
@@ -167,13 +167,12 @@
                     <i class="fa fa-print" aria-hidden="true"></i>
                 </span>
               </a>
-              <!--
+              
               <a href="printProductionLabel-<c:out value='${oItem.orderItemID}' />" title='Drukuj etykietę zlecenia'>
                 <span class="badge badge-primary badge-icon">
                     <i class="fa fa-barcode" aria-hidden="true"></i>
                 </span>
               </a>
-              -->
               <a href="viewOrderItem-<c:out value='${oItem.orderItemID}' />" title='Podgląd zamówienia'>
                 <span class="badge badge-info badge-icon">
                     <i class="fa fa-search" aria-hidden="true"></i>
