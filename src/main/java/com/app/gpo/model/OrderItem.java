@@ -70,7 +70,7 @@ public class OrderItem implements Serializable {
     
             
     @Temporal(TemporalType.DATE)
-    @Column(name = "orderItemDueDate", nullable = false, length=10)
+    @Column(name = "orderItemDueDate", length=10)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date orderItemDueDate;
     

@@ -43,7 +43,6 @@
 %>
 <html>
     <head>
-    <head>
         <title>GKZP</title>
         <meta name="description" content="Generator Kart Zleceń Produkcji">
         <meta name="author" content="Artur Czartoryski"> 
@@ -53,11 +52,11 @@
         <link rel="stylesheet" type="text/css" href="resources/assets/css/vendor.css">
         <link rel="stylesheet" type="text/css" href="resources/assets/css/printout.css">
     </head>
-</head>
 <body>
+    <c:choose>
+        <c:when test="${productionSlot.productionSlotNumber eq 3}">
+            <c:forEach var="orderItem" items="${selectedOrders}" >
     <div class="page">
-            <c:choose>
-                <c:when test="${productionSlot.productionSlotNumber eq 3}">
         <div>
             <table class="table-bordered table-condensed" cellspacing="1" width="100%">
                 <caption>
@@ -65,23 +64,18 @@
                     <hr>
                     <div>
                         <span class="list-group-item list-group-item-info">
-                            Gniazdo produkcyjne: (<c:out value='${productionSlot.productionSlotNumber}' />) <c:out value='${productionSlot.productionSlotDescription}' />
+                            Gniazdo produkcyjne: (<c:out value='${productionSlot.productionSlotNumber}' />) <c:out value='${productionSlot.productionSlotDescription}' /> |
+                            Numer zamówienia: <c:out value='${orderItem.orderNumber}' /> |
+                            Termin: <c:out value='${orderItem.orderItemDueDate}' />|
+                            Wyrób: <c:out value='${orderItem.orderItemName}' />
                         </span>
                     </div>
                 </caption>
                 <tbody>
-                    <c:forEach var="orderItem" items="${selectedOrders}" >
                     <tr>
-                        <th>Zamówienie</th>
-                        <td><c:out value='${orderItem.orderNumber}' /></td>
-                        <th>Termin</th>
-                        <td><c:out value='${orderItem.orderItemDueDate}' /></td>
-                        <th>Wyrób</th>
-                        <td colspan="9"><c:out value='${orderItem.orderItemName}' /></td>
                         <c:forEach var="fieldMapping" items="${productionSlot.fieldMappings}" varStatus="theCount">
-                        <c:if test="${theCount.index % 5 == 0}"> </tr> </c:if>
+                            <c:if test="${theCount.index % 5 == 0}"> </tr> </c:if>
                         <th><c:out value='${fieldMapping.field.fieldLabel}' /></th>
-                        
                         <td>
                             <c:forEach var="orderItemfield" items="${orderItem.orderItemFields}">
                                 <c:if test="${fieldMapping.field.fieldID eq orderItemfield.field.fieldID}">
@@ -89,16 +83,17 @@
                                 </c:if>    
                             </c:forEach>
                         </td>
-                        
                         </c:forEach>
                     </tr>
-                    </c:forEach>
                 </tbody>
             </table>
         </div>
+    </div>
+    </c:forEach>                    
             </c:when>
             <c:otherwise>
-            <div>
+    <div class="page">
+        <div>
             <table class="table-bordered table-condensed" cellspacing="1" width="100%">
                 <caption>
                     <div style="text-align: right; ">Karta produkcji wygenerowana:  <c:out value='${SimpleDateFormat("yyyy-MM-dd HH:mm").format(Date())}' /></div>
@@ -139,8 +134,9 @@
                 </tbody>
             </table>
         </div>       
+    </div>                    
             </c:otherwise>
             </c:choose>             
-    </div>
+    
 </body>
 </html>

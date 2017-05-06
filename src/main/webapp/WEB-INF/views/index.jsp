@@ -37,7 +37,7 @@
 <jsp:include page="${request.contextPath}/menu" />
 
 <!-- Main Content -->
-<form action="selectProductionSlotMultiple" method="POST">
+<form action="selectProductionSlotMultiple" method="POST" id="indexform">
 <div class="app-container">
   <div class="row">
     <div class="col-xs-12">
@@ -51,17 +51,17 @@
                     <c:out value='${message}' />
                     </div>
               </c:if>
-            <div>
-                <a>
-                    <span class="badge badge-info badge-icon" onClick="$('form').submit();">
-                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+              <div>
+                <a href="#" onClick="$('form').submit();">
+                    <span class="badge badge-info badge-icon" >
+                        <i class="fa fa-print" aria-hidden="true"></i>
                         <span>Drukuj karty dla zaznaczonych</span>
                     </span>
                 </a>
                 <!--
                 <a>
                     <span class="badge badge-info badge-icon">
-                        <i class="fa fa-print" aria-hidden="true"></i>
+                        <i class="fa fa-barcode" aria-hidden="true"></i>
                         <span>Drukuj etykiety dla zaznaczonych</span>
                     </span>
                 </a>
@@ -70,6 +70,19 @@
                     <span class="badge badge-warning badge-icon">
                         <i class="fa fa-folder-open-o" aria-hidden="true"></i>
                         <span>Importuj zamówienia</span>
+                    </span>
+                </a>
+                <br/><br/>
+                <a href="#" id="deleteOrderItemsAction" onClick='$("#indexform").attr("action", "deleteOrderItems");$("#indexform").submit();'>
+                    <span class="badge badge-danger badge-icon">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        <span>Usuń zamówienia</span>
+                    </span>
+                </a>
+                <a href="#" id="statusChangeForOrderItems" onClick='$("#indexform").attr("action", "statusChangeForOrderItems");$("#indexform").submit();'>
+                    <span class="badge badge-primary badge-icon">
+                        <i class="fa fa-random" aria-hidden="true"></i>
+                        <span>Zmień status zamówień</span>
                     </span>
                 </a>
             </div>
@@ -149,29 +162,29 @@
             
         <tr>
             <td>
-              <a href="selectProductionSlot-<c:out value='${oItem.orderItemID}' />">
-                <span class="badge badge-primary badge-icon">
-                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                </span>
-              </a>
-              <!--
-              <a href="printProductionLabel-<c:out value='${oItem.orderItemID}' />">
+              <a href="selectProductionSlot-<c:out value='${oItem.orderItemID}' />" title='Drukuj kartę zlecenia'>
                 <span class="badge badge-primary badge-icon">
                     <i class="fa fa-print" aria-hidden="true"></i>
                 </span>
               </a>
+              <!--
+              <a href="printProductionLabel-<c:out value='${oItem.orderItemID}' />" title='Drukuj etykietę zlecenia'>
+                <span class="badge badge-primary badge-icon">
+                    <i class="fa fa-barcode" aria-hidden="true"></i>
+                </span>
+              </a>
               -->
-              <a href="viewOrderItem-<c:out value='${oItem.orderItemID}' />">
+              <a href="viewOrderItem-<c:out value='${oItem.orderItemID}' />" title='Podgląd zamówienia'>
                 <span class="badge badge-info badge-icon">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </span>
               </a>
-              <a href="editOrderItem-<c:out value='${oItem.orderItemID}' />">
+              <a href="editOrderItem-<c:out value='${oItem.orderItemID}' />" title='Edytuj zamówienie'>
                 <span class="badge badge-success badge-icon">
                     <i class="fa fa-edit" aria-hidden="true"></i>
                 </span>
               </a>
-              <a href="deleteOrderItem-<c:out value='${oItem.orderItemID}' />" onclick="return confirm('Czy na pewno skasować ?')" >
+              <a href="deleteOrderItem-<c:out value='${oItem.orderItemID}' />" onclick="return confirm('Czy na pewno skasować ?')" title='Usuń zlzcenie'>
                 <span class="badge badge-danger badge-icon">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </span>
@@ -226,5 +239,11 @@
     </div>
   </div>
 </div>            
-</form>    
+</form>
+<script>
+    $("#deleteOrderItemsAction").click(function(){
+       $("#indexform").attr("action", "deleteOrderItems");
+       $("#indexform").submit();
+    };
+</script>
 <jsp:include page="${request.contextPath}/footer" />

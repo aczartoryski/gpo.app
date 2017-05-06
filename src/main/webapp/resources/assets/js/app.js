@@ -10464,6 +10464,8 @@ $(".select2").select2();
 var datatable = $('.datatable').DataTable({
   "dom": '<"top"fl<"clear">>rt<"bottom"ip<"clear">>',
   "scrollX": true,
+  "iDisplayLength": 500,
+  "lengthMenu": [ [500, 1000, 2000, -1], [500, 1000, 2000, "Wszystkie"] ],
   "columnDefs": [
     { "orderable": false, "targets": 0 }
   ],

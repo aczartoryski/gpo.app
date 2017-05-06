@@ -30,7 +30,6 @@ import com.app.gpo.model.FileUploadForm;
 import com.app.gpo.model.OrderItem;
 import com.app.gpo.model.OrderItemField;
 import com.app.gpo.model.OrderStatus;
-import com.app.gpo.model.OrdersSelectedForm;
 import com.app.gpo.model.ProductionSlot;
 import com.app.gpo.services.FieldMappingService;
 import com.app.gpo.services.FieldService;
@@ -55,7 +54,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,7 +73,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/")
 public class AppController {
    private static final Logger logger = Logger.getLogger(AppController.class);
-   //private static final List<Field> fieldList = new ArrayList<Field>();
    
    @Autowired
    FieldMappingService fieldMappingService;
@@ -142,12 +139,12 @@ public class AppController {
     public ModelAndView selectProductionSlotMultiple(Model model,@RequestParam(value="orderItemID")Integer[] checkboxList) {
         ModelAndView mv = new ModelAndView("selectProductionSlotMultiple");
         List<ProductionSlot> productionSlotList = productionSlotService.findAll(); 
-        List<OrderItem> orderItemList = new ArrayList<OrderItem>(0);
+        List<OrderItem> orderItemList = new ArrayList<>(0);
 
-        for (int i=0; i<checkboxList.length; i++) {
-            logger.info("Selected to print orderID : "+checkboxList[i]);
-            orderItemList.add(orderItemService.find(checkboxList[i]));
-        }
+       for (Integer checkboxList1 : checkboxList) {
+           logger.info("Selected to print orderID : " + checkboxList1);
+           orderItemList.add(orderItemService.find(checkboxList1));
+       }
         mv.addObject("productionSlotList", productionSlotList);
         mv.addObject("ordersList", orderItemList);
         return mv;
@@ -159,7 +156,7 @@ public class AppController {
 	}
 
     
-    @RequestMapping(value={ "editOrderItem-{orderItemID}" }, method = RequestMethod.GET, produces = "text/html; charset=utf-8")
+    @RequestMapping(value={ "/editOrderItem-{orderItemID}" }, method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editOrderItem (Model model, @PathVariable Integer orderItemID) {
         OrderItem orderItem = orderItemService.find(orderItemID);
         List<OrderStatus> orderStatusList = orderStatusService.findAll();
@@ -169,7 +166,7 @@ public class AppController {
         return mv;
     }
     
-    @RequestMapping(value={ "viewOrderItem-{orderItemID}" }, method = RequestMethod.GET)
+    @RequestMapping(value={ "/viewOrderItem-{orderItemID}" }, method = RequestMethod.GET)
     public ModelAndView viewOrderItem (Model model, @PathVariable Integer orderItemID) {
         OrderItem orderItem = orderItemService.find(orderItemID);
         List<OrderStatus> orderStatusList = orderStatusService.findAll();
@@ -179,13 +176,64 @@ public class AppController {
         return mv;
     }
     
-    @RequestMapping(value = { "deleteOrderItem-{orderItemID}" }, method = RequestMethod.GET)
+    @RequestMapping(value = { "/deleteOrderItem-{orderItemID}" }, method = RequestMethod.GET)
     public String deleteOrderItem(@PathVariable Integer orderItemID,Model model,RedirectAttributes redirectAttributes) {
         String message;
         orderItemService.delete(orderItemID);
         message = "Pozycja zamówienia została poprawnie usunięta." ;
         redirectAttributes.addFlashAttribute("message", message);
         return "redirect:/index";
+    }
+    
+    @RequestMapping(value="/deleteOrderItems", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+    public String deleteOrderItems(Model model, @RequestParam(value="orderItemID")Integer[] orderItemIDs,RedirectAttributes redirectAttributes) {
+
+       String message = "Usunięto pozycje zamówień :: "+orderItemIDs.length+"sztuk(i).";
+       
+       for (Integer id : orderItemIDs) {
+            logger.info("Sended to delete orderID : " + id);
+            orderItemService.delete(id);
+       }
+       
+       redirectAttributes.addFlashAttribute("message", message);
+       return "redirect:/index";
+    }
+    
+    @RequestMapping(value="/statusChangeForOrderItems", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+    public ModelAndView statusChangeForOrderItems(Model model, @RequestParam(value="orderItemID")Integer[] orderItemIDs) {
+       ModelAndView mv = new ModelAndView("statusChangeForOrderItems");
+       
+       List<OrderItem> orderItemList = new ArrayList<>(0);
+       for (Integer orderItemID : orderItemIDs) {
+           logger.info("Sended to change status orderID : " + orderItemID);
+           orderItemList.add(orderItemService.find(orderItemID));
+       }
+       mv.addObject("orderStatuses", orderStatusService.findAll());
+       mv.addObject("orderItemList", orderItemList);
+
+       return mv;
+    }
+    
+    @RequestMapping(value="saveStatusChangeForOrderItems", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+    public String saveStatusChangeForOrderItems(Model model, @RequestParam(value="orderItemID")Integer[] orderItemIDs, @RequestParam(value="orderStatus")Integer orderStatusID, RedirectAttributes redirectAttributes) {
+       
+       OrderStatus orderStatus = orderStatusService.find(orderStatusID);
+       
+       List<OrderItem> orderItemList = new ArrayList<>(0);
+       for (Integer orderItemID : orderItemIDs) {
+           logger.info("Change status for orderID : " + orderItemID);
+           orderItemList.add(orderItemService.find(orderItemID));
+       }
+       Iterator<OrderItem> it = orderItemList.iterator();
+       while (it.hasNext()) {
+           OrderItem orderItem = it.next();
+           orderItem.setorderStatus(orderStatus);
+           orderItemService.update(orderItem);
+       }
+       
+       String message = "Zmiana statusu na '"+orderStatus.getorderStatusName()+"' została zapisana dla "+orderItemList.size()+" zamówień.";
+       redirectAttributes.addFlashAttribute("message", message);
+       return "redirect:/index";
     }
     
     @RequestMapping(value="/updateOrderItem", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
@@ -225,7 +273,7 @@ public class AppController {
         return mv;
     }
     
-    @RequestMapping(value = { "editProductionSlot-{productionSlotID}" }, method = RequestMethod.GET, produces = "text/html; charset=utf-8")
+    @RequestMapping(value = { "/editProductionSlot-{productionSlotID}" }, method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editProductionSlot(Model model, @PathVariable Integer productionSlotID) {
         ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
         ModelAndView mv = new ModelAndView("editProductionSlot");
@@ -252,7 +300,7 @@ public class AppController {
         return "redirect:/productionSlots";
     }
     
-    @RequestMapping(value = { "deleteProductionSlot-{productionSlotID}" }, method = RequestMethod.GET)
+    @RequestMapping(value = { "/deleteProductionSlot-{productionSlotID}" }, method = RequestMethod.GET)
     public String deleteProductionSlot(@PathVariable Integer productionSlotID,Model model,RedirectAttributes redirectAttributes) {
         String message;
         productionSlotService.delete(productionSlotID);
@@ -318,15 +366,15 @@ public class AppController {
     @RequestMapping(value={ "saveFieldMapping" }, method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public String saveFieldMapping (@RequestParam("fieldMappingString") String getFormString,@RequestParam("productionSlotID") Integer productionSlotID, RedirectAttributes redirectAttributes) throws JSONException {
         logger.info("saveFieldMapping.RequestParam: "+getFormString);
-        String fieldMappingString = getFormString.replaceAll("fieldMapping_", "{\"fieldMapping\":");
+        String fieldMappingString = getFormString.replaceAll("fieldMapping_", "{\"fieldmapping\":");
         fieldMappingString = fieldMappingString.replaceAll(",", "},");
-        fieldMappingString = "{\"fieldMappings\":["+fieldMappingString + "}]}";
+        fieldMappingString = "{\"fieldmappings\":["+fieldMappingString + "}]}";
         fieldMappingService.deleteByProductionSlotID(productionSlotID);
         JSONObject fieldMappingOrderJSON = new JSONObject(fieldMappingString);
-        JSONArray fieldMappingOrderArray = fieldMappingOrderJSON.getJSONArray("fieldMappings");
+        JSONArray fieldMappingOrderArray = fieldMappingOrderJSON.getJSONArray("fieldmappings");
         for (int i=0; i<fieldMappingOrderArray.length(); i++) {
             JSONObject fieldMappingOrderItem = fieldMappingOrderArray.getJSONObject(i);
-            Integer fieldID = fieldMappingOrderItem.getInt("fieldMapping");
+            Integer fieldID = fieldMappingOrderItem.getInt("fieldmapping");
             logger.info("saveFieldMapping.loop.fieldID: "+fieldID);
             Field field = fieldService.find(fieldID);
             ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
@@ -350,7 +398,6 @@ public class AppController {
         mv.addObject("orderItemID", orderItemID);
         return mv;
     } 
-    
     
     
     @RequestMapping(value="/printOrderItemCard-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
@@ -445,8 +492,12 @@ public class AppController {
                                 orderItem.setorderStatus(orderStatus);
                                 JSONObject j1 = jsonObject.getJSONObject("0");
                                 orderItem.setorderItemName(j1.getString("LABEL"));
-                                JSONObject j2 = jsonObject.getJSONObject("1013");
-                                Date date = formatter.parse(j2.getString("TEXT"));
+                                Date date = null;
+                                if (jsonObject.has("1013")) {
+                                    JSONObject j2 = jsonObject.getJSONObject("1013");
+                                    date = formatter.parse(j2.getString("TEXT"));
+                                }
+                                
                                 orderItem.setorderItemDueDate(date);
                                 String addedOrderID = orderItemService.saveNew(orderItem);
                                 importedOrders.add(orderItem);

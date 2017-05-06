@@ -72,7 +72,7 @@
           <div class="title">Główna tabela</div>
         </a>
       </li>
-      
+      <!--
       <li>
         <a href="logout">
           <div class="icon">
