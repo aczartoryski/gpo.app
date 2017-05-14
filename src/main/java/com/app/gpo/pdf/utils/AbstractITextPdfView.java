@@ -83,7 +83,10 @@ public abstract class AbstractITextPdfView extends AbstractView {
         
         Document document = new Document();
 
-        Rectangle pageSize = new Rectangle(420,297);
+        Rectangle pageSize = new Rectangle(226,141);
+        //226,7206478
+        //141,6984733
+
         document.setPageSize(pageSize);
         document.setMargins(2, 2, 2, 2);
         

@@ -93,5 +93,5 @@
       </div>
     </div>
   </div>
-</div>           
+<jsp:include page="${request.contextPath}/scripts" />           
 <jsp:include page="${request.contextPath}/footer" />

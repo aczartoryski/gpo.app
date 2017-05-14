@@ -28,28 +28,19 @@ package com.app.gpo.pdf.utils;
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
 import com.app.gpo.model.OrderItem;
-import java.util.List;
 import java.util.Map;
  
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.Barcode;
-import com.itextpdf.text.pdf.BarcodeEAN;
 import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import java.nio.charset.Charset;
 
  
 /**
@@ -67,30 +58,28 @@ public class PDForderLabelCard extends AbstractITextPdfView {
         // get data model which is passed by the Spring container
         OrderItem orderItem = (OrderItem) model.get("orderItem");
         Font font = FontFactory.getFont(FontFactory.HELVETICA, BaseFont.CP1250, BaseFont.EMBEDDED);
-        font.setSize(18);
+        font.setSize(20);
+        Font font2 = FontFactory.getFont(FontFactory.HELVETICA, BaseFont.CP1250, BaseFont.EMBEDDED);
+        font2.setSize(12);
         
         String utf = orderItem.getorderItemName();
         byte[] data = utf.getBytes("CP1250");
         String ascii = new String(data);
-        String code = orderItem.getorderNumber()+"#"+ascii;
-        Paragraph preface = new Paragraph(code,font);
-        preface.setAlignment(Element.ALIGN_CENTER);
+        String code = orderItem.getorderNumber();
+        Paragraph numberText = new Paragraph(code,font);
+        numberText.setAlignment(Element.ALIGN_CENTER);
         doc.add(new Phrase("\n"));
-        doc.add(new Phrase("\n"));
-        doc.add(new Phrase("\n"));
-        doc.add(new Phrase("\n"));
-        doc.add(new Phrase("\n"));
-        doc.add(new Phrase("\n"));
-        // document.newPage()
+        Paragraph nameText = new Paragraph(ascii,font2);
+        nameText.setAlignment(Element.ALIGN_CENTER);
+         // document.newPage()
         /*BarcodeEAN barcode = new BarcodeEAN();
         barcode.setCodeType(Barcode.CODE128);
         barcode.setCode(code);
         Rectangle barcodeRect = new Rectangle(400,200);
         barcode.placeBarcode(barcodeRect, BaseColor.BLACK, BaseColor.YELLOW);
         doc.add(barcode.createImageWithBarcode(writer.getDirectContent(), BaseColor.BLACK, BaseColor.GRAY));*/
-        doc.add(preface);
-        
-         
+        doc.add(numberText);
+        doc.add(new Phrase("\n"));
+        doc.add(nameText);
     }
- 
 }

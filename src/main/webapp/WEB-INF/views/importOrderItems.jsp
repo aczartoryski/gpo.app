@@ -66,7 +66,7 @@
       </div>
     </div>
   </div>
-</div>
+
 <!-- End Main Content -->
     <footer class="app-footer">
         <div class="row">
@@ -79,6 +79,7 @@
             <i class="fa fa-long-arrow-up"></i></a></span>
         </div>
     </footer>
+    </div>  
 <!-- End class="app app-default" -->
 </div>
 <script type="text/javascript" src="resources/assets/js/vendor.js"></script>

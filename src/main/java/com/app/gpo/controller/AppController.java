@@ -107,6 +107,16 @@ public class AppController {
         return "/shared/footer";
     }
     
+    @RequestMapping(method = RequestMethod.GET, value = "scripts")
+    public String getscripts(Model model) {
+        return "/shared/scripts";
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "scripts")
+    public String getscriptsPost(Model model) {
+        return "/shared/scripts";
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value = "menu")
     public String getMenuPost(Model model) {
         return "/shared/menu";
@@ -127,9 +137,16 @@ public class AppController {
         ModelAndView mv = new ModelAndView("index");
         List<OrderItem> orderItemList = orderItemService.findAll();
         mv.addObject("orderItemList", orderItemList);
-        //OrdersSelectedForm selectedOrders = new OrdersSelectedForm();
-        //selectedOrders.setorderItemList(orderItemService.findAll());
-        //mv.addObject("selectedOrders", selectedOrders);
+        List<Field> fieldsForTable = fieldService.findAllForMainScreen();
+        mv.addObject("fieldsForTable", fieldsForTable);
+        return mv;
+    } 
+    
+    @RequestMapping(value="/index_1", method = RequestMethod.GET)
+    public ModelAndView showIndextest() {
+        ModelAndView mv = new ModelAndView("index_1");
+        List<OrderItem> orderItemList = orderItemService.findAll();
+        mv.addObject("orderItemList", orderItemList);
         List<Field> fieldsForTable = fieldService.findAllForMainScreen();
         mv.addObject("fieldsForTable", fieldsForTable);
         return mv;

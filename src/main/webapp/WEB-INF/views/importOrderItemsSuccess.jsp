@@ -57,55 +57,60 @@
                     </div>
                 </div>
                 <div class="card-body no-paddings table-responsive">
-                    <div>Lista zaimportowanych plików</div>
-                    <ul>
-                        <c:forEach items="${files}" var="file">
-                            <li>${file}</li>
-                        </c:forEach>
-                    </ul>
-                    <div>Lista znalezionych zamówień</div>
-<table class="datatable table-striped table-bordered table-hover table-condensed primary dt-responsive nowrap" cellspacing="0" width="100%" id="datatable1">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Nr</th>
-                    <th>Termin</th>
-                    <th>Wyrób</th>
-                    <th>Data zmiany statusu</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-    <tbody>
-        <c:forEach var="oItem" items="${importedOrders}">
-        <tr>
-            <td></td>
-            <td><c:out value='${oItem.orderNumber}' /></td>
-            <td><c:out value='${oItem.orderItemDueDate}' /></td>
-            <td><c:out value='${oItem.orderItemName}' /></td>
-            <td><c:out value='${oItem.orderStatusDate}' /></td>
-            <td><span class="label label-info"><c:out value='${oItem.orderStatus.orderStatusName}' /></span></td>
-        </tr>
-        </c:forEach>
-    </tbody>
-</table>
- 
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Zawartość pliku</div>
-                    </div>
-                    <div class="card-body no-paddings table-responsive">        
-                        <div>
-                            <textarea rows="30" class="form-control">${importedFileContent}</textarea>
-                        </div>
-                    </div>
-                </div>
+                    <div>Lista zaimportowanych zamówień</div>
+                    <table class="datatable table-striped table-bordered table-hover table-condensed primary dt-responsive nowrap" cellspacing="0" width="100%" id="datatable1">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Nr</th>
+                                <th>Termin</th>
+                                <th>Wyrób</th>
+                                <th>Data zmiany statusu</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="oItem" items="${importedOrders}">
+                            <tr>
+                                <td></td>
+                                <td><c:out value='${oItem.orderNumber}' /></td>
+                                <td><c:out value='${oItem.orderItemDueDate}' /></td>
+                                <td><c:out value='${oItem.orderItemName}' /></td>
+                                <td><c:out value='${oItem.orderStatusDate}' /></td>
+                                <td><span class="label label-info"><c:out value='${oItem.orderStatus.orderStatusName}' /></span></td>
+                            </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                 </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-body no-paddings table-responsive">
+                    <div>Lista zaimportowanych plików</div>
+                    <table class="table-striped table-bordered table-hover table-condensed primary dt-responsive nowrap" cellspacing="0" width="100%" id="datatable2">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Nazwa pliku</th>
+                                    </tr>
+                                </thead>
+                        <tbody>
+                            <c:forEach items="${files}" var="file">
+                            <tr>
+                                <td></td>
+                                <td><c:out value='${file}' /></td>
+                            </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                 </div>
+            </div>
+        </div>
+    </div>
+    
+<jsp:include page="${request.contextPath}/scripts" />   
 <jsp:include page="${request.contextPath}/footer" />

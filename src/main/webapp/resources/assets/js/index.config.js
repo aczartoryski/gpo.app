@@ -1,14 +1,12 @@
 $(document).ready(function() {
+        
     
-    
-    // Hide deselect all checkbox button
-    $('a.deselect-all').hide();
+        // Hide deselect all checkbox button
+        $('a.deselect-all').hide();
 
     // DataTable
     var table = $('#datatable1').DataTable();
-    
-    
-    
+     
     // Check all checkboxes in the table after click on select-all
     $('a.select-all').on( 'click', function (e) {
         $(":checkbox").attr('checked', true);
@@ -27,23 +25,7 @@ $(document).ready(function() {
                 $('#datetimepicker1').data("DateTimePicker").FUNCTION();
             });
 
-    // Hide or show selected column in the table
-    $('a.toggle-vis').on( 'click', function (e) {
-        e.preventDefault();
- 
-        // Get the column API object
-        var column = table.column( $(this).attr('data-column') );
-        if ($(this).children('span').hasClass('badge-success')) {
-            $(this).children('span').removeClass('badge-success').addClass('badge-danger');
-            $(this).children('span').children('i').removeClass('fa-plus-square').addClass('fa-minus-square');
-        } else {
-            $(this).children('span').removeClass('badge-danger').addClass('badge-success');
-            $(this).children('span').children('i').removeClass('fa-minus-square').addClass('fa-plus-square');
-        }
-        
-        // Toggle the visibility
-        column.visible( ! column.visible() );
-        } );
+    
 
     // Apply the search in the table columns
     table.columns().eq( 0 ).each( function ( colIdx ) {
@@ -58,3 +40,59 @@ $(document).ready(function() {
         });        
     } );
 } );
+  
+  $(".datatable").DataTable({
+    "dom": '<"top"fl<"clear">>Brt<"bottom"ip<"clear">>',
+    "buttons": [{
+            extend: 'colvis',
+            columns: ':gt(0)',
+            text: 'Ukryj/pokaż kolumny',
+            className: 'btn btn-success btn-xs'
+        },
+        {
+            extend: 'colvisRestore',
+            text: 'Pokaż wszystkie',
+            className: 'btn btn-default btn-light btn-xs'
+        }
+        ],
+    
+    "iDisplayLength": 500,
+    "lengthMenu": [ [500, 1000, 2000, -1], [500, 1000, 2000, "Wszystkie"] ],
+    "columnDefs": [ { "orderable": false, "targets": 0 } ],
+    "order": [[ 1, 'asc' ]],
+    "oLanguage": {
+        "sSearch": "",
+        "sLengthMenu": "_MENU_",
+        "sProcessing":     "Przetwarzanie...",
+        "sInfo":           "Pozycje od _START_ do _END_ z _TOTAL_ łącznie",
+        "sInfoEmpty":      "Pozycji 0 z 0 dostępnych",
+        "sInfoFiltered":   "(filtrowanie spośród _MAX_ dostępnych pozycji)",
+        "sInfoPostFix":    "",
+        "sLoadingRecords": "Wczytywanie...",
+        "sZeroRecords":    "Nie znaleziono pasujących pozycji",
+        "sEmptyTable":     "Brak danych",
+        "oPaginate": {
+            "sFirst":      "Pierwsza",
+            "sPrevious":   "Poprzednia",
+            "sNext":       "Następna",
+            "sLast":       "Ostatnia"
+        },
+	"oAria": {
+		"sSortAscending": ": aktywuj, by posortować kolumnę rosnąco",
+		"sSortDescending": ": aktywuj, by posortować kolumnę malejąco"
+	}
+    },
+    "initComplete": function initComplete(settings, json) {
+    $('div.dataTables_filter input').attr('placeholder', 'Szukaj...');
+    // $(".dataTables_wrapper select").select2({
+    //   minimumResultsForSearch: Infinity
+    // });
+    }
+  });
+  
+    $("#deleteOrderItemsAction").click(function(){
+       $("#indexform").attr("action", "deleteOrderItems");
+       $("#indexform").submit();
+    });
+    
+    

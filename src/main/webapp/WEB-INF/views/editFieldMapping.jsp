@@ -95,7 +95,7 @@
       </div>
     </div>
 </div>
-<div class="row"> 
+
     <div class="form-footer">
         <div class="form-group">
             <div class="col-md-9 col-md-offset-1">
@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
-</div>
+
 </form>
 </div>
 

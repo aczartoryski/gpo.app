@@ -37,11 +37,9 @@
             <i class="fa fa-long-arrow-up"></i></a></span>
         </div>
     </footer>
+</div>
 <!-- End class="app app-default" -->
 </div>
-  <script type="text/javascript" src="resources/assets/js/vendor.js"></script>
-  <script type="text/javascript" src="resources/assets/js/app.js"></script>
-  <script type="text/javascript" src="resources/assets/js/index.config.js"></script>
-  <script type="text/javascript" src="resources/assets/js/sortable.config.js"></script>
+
 </body>
 </html>

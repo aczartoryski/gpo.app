@@ -85,6 +85,7 @@
       </div>
     </div>
   </div>
-</div>     
+    
 </form>
+<jsp:include page="${request.contextPath}/scripts" />   
 <jsp:include page="${request.contextPath}/footer" />
