@@ -46,6 +46,13 @@ public class OrderStatusDAO extends AbstractDao<Integer, OrderStatus> {
         return (OrderStatus) query.uniqueResult();
     }
     
+    public OrderStatus findIdByName (String statusName) {
+        Query query = getSession().createQuery("from OrderStatus as oS where oS.orderStatusName = :orderStatusName)");
+        query.setString("orderStatusName", statusName);
+        OrderStatus orderStatus = (OrderStatus) query.uniqueResult();
+        return orderStatus;
+    }
+    
     public void save (OrderStatus orderStatus) {
         persist(orderStatus);
     }

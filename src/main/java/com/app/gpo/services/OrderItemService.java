@@ -25,6 +25,7 @@ package com.app.gpo.services;
 
 import com.app.gpo.dao.OrderItemDAO;
 import com.app.gpo.model.OrderItem;
+import com.app.gpo.model.OrderStatus;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,14 @@ public class OrderItemService {
     
     public boolean isInDbByOrderNumber (String orderNumber) {
         return dao.isInDbByOrderNumber(orderNumber);
+    }
+    
+    public List<OrderItem> findByOrderStatus (OrderStatus orderStatus) {
+        return dao.findByOrderStatus(orderStatus);
+    }
+    
+    public List<OrderItem> findNotOrderStatus (OrderStatus orderStatus) {
+        return dao.findNotOrderStatus(orderStatus);
     }
  
     public OrderItem find(int id) {

@@ -24,6 +24,7 @@
 package com.app.gpo.dao;
 
 import com.app.gpo.model.OrderItem;
+import com.app.gpo.model.OrderStatus;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
@@ -82,7 +83,6 @@ public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
     }
     
     public boolean isInDbByOrderNumber (String orderNumber) {
-      
         Criteria criteria = getSession().createCriteria(OrderItem.class);
         criteria.add(Restrictions.like("orderNumber", orderNumber+"%"));
         criteria.setProjection(Projections.rowCount());
@@ -95,12 +95,35 @@ public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
             logger.info("In DB no exist order items with order number "+orderNumber);
             return false;
         }
-
     }
  
     @SuppressWarnings("unchecked")
     public List<OrderItem> findAll() {
         Criteria criteria = createEntityCriteria();
+        List<OrderItem> orderItems = (List<OrderItem>) criteria.list();
+        for(OrderItem s : orderItems){
+            Hibernate.initialize(s.getorderStatus());
+            Hibernate.initialize(s.getorderItemFields());
+        }
+        return orderItems;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<OrderItem> findByOrderStatus (OrderStatus orderStatus) {
+        Criteria criteria = createEntityCriteria();
+        criteria.add(Restrictions.eq("orderStatus",orderStatus));
+        List<OrderItem> orderItems = (List<OrderItem>) criteria.list();
+        for(OrderItem s : orderItems){
+            Hibernate.initialize(s.getorderStatus());
+            Hibernate.initialize(s.getorderItemFields());
+        }
+        return orderItems;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<OrderItem> findNotOrderStatus (OrderStatus orderStatus) {
+        Criteria criteria = createEntityCriteria();
+        criteria.add(Restrictions.ne("orderStatus",orderStatus));
         List<OrderItem> orderItems = (List<OrderItem>) criteria.list();
         for(OrderItem s : orderItems){
             Hibernate.initialize(s.getorderStatus());

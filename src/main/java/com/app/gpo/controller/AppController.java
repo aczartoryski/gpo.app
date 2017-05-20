@@ -155,7 +155,8 @@ public class AppController {
     @RequestMapping(value="/index", method = RequestMethod.GET)
     public ModelAndView showIndex() {
         ModelAndView mv = new ModelAndView("index");
-        List<OrderItem> orderItemList = orderItemService.findAll();
+        OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
+        List<OrderItem> orderItemList = orderItemService.findNotOrderStatus(orderStatus);
         mv.addObject("orderItemList", orderItemList);
         List<Field> fieldsForTable = fieldService.findAllForMainScreen();
         mv.addObject("fieldsForTable", fieldsForTable);
@@ -165,22 +166,38 @@ public class AppController {
     @RequestMapping(value="/index", method = RequestMethod.POST)
     public ModelAndView showIndexPost() {
         ModelAndView mv = new ModelAndView("index");
-        List<OrderItem> orderItemList = orderItemService.findAll();
+        OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
+        List<OrderItem> orderItemList = orderItemService.findNotOrderStatus(orderStatus);
         mv.addObject("orderItemList", orderItemList);
         List<Field> fieldsForTable = fieldService.findAllForMainScreen();
         mv.addObject("fieldsForTable", fieldsForTable);
         return mv;
     } 
     
-    @RequestMapping(value="/index_1", method = RequestMethod.GET)
-    public ModelAndView showIndextest() {
-        ModelAndView mv = new ModelAndView("index_1");
-        List<OrderItem> orderItemList = orderItemService.findAll();
+    @RequestMapping(value="/listOrderItemsClosed", method = RequestMethod.GET)
+    public ModelAndView showlistOrderItemsClosed() {
+
+        ModelAndView mv = new ModelAndView("listOrderItemsClosed");
+        OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
+        List<OrderItem> orderItemList = orderItemService.findByOrderStatus(orderStatus);
         mv.addObject("orderItemList", orderItemList);
         List<Field> fieldsForTable = fieldService.findAllForMainScreen();
         mv.addObject("fieldsForTable", fieldsForTable);
         return mv;
     } 
+    
+    @RequestMapping(value="/listOrderItemsClosed", method = RequestMethod.POST)
+    public ModelAndView showlistOrderItemsClosedPost() {
+        ModelAndView mv = new ModelAndView("listOrderItemsClosed");
+        OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
+        List<OrderItem> orderItemList = orderItemService.findByOrderStatus(orderStatus);
+        mv.addObject("orderItemList", orderItemList);
+        List<Field> fieldsForTable = fieldService.findAllForMainScreen();
+        mv.addObject("fieldsForTable", fieldsForTable);
+        return mv;
+    } 
+    
+    
     
     @RequestMapping(value = "/selectProductionSlotMultiple", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public ModelAndView selectProductionSlotMultiple(Model model,@RequestParam(value="orderItemID")Integer[] checkboxList) {
