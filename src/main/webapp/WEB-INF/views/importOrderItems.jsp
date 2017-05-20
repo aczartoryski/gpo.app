@@ -58,10 +58,6 @@
         <input type="submit" class="btn btn-submit" value="Zaimportuj"/>
         
         </form:form>    
-        <div class="progress">
-            <div class="bar progress-bar progress-bar-success progress-bar-striped active" role="progressbar"></div >
-            <div class="percent sr-only">0%</div >
-        </div>
           </div>
       </div>
     </div>
