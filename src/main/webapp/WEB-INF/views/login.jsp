@@ -75,15 +75,16 @@
         </div>
         <c:if test="${param.error != null}">
                                 <div class="alert alert-danger">
-                                    <p>Invalid username and password.</p>
+                                    <p>Nieprawidłowy login lub hasło.</p>
                                 </div>
                             </c:if>
                             <c:if test="${param.logout != null}">
                                 <div class="alert alert-success">
-                                    <p>You have been logged out successfully.</p>
+                                    <p>Wylogowałeś się prawidłowo.</p>
                                 </div>
                             </c:if>
         <form action="${pageContext.request.contextPath}/login" method="POST">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon1">
                 <i class="fa fa-user" aria-hidden="true"></i></span>

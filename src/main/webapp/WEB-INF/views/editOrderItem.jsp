@@ -30,6 +30,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <% session.setAttribute( "menuActive", "orderItems" ); %>
 <jsp:include page="${request.contextPath}/header">
   <jsp:param name="pageTitle" value="Edycja pozycji zlecenia produkcji"/>
@@ -96,7 +97,9 @@
                 <div class="col-md-9 col-md-offset-1">
                   <button type="submit" class="btn btn-primary">Zapisz</button>
                   <button type="button" class="btn btn-default" onClick="document.location.href='index';">Anuluj</button>
+                  <sec:authorize access="hasRole('ADMIN')">
                   <button type="button" class="btn btn-danger" onclick="if (confirm('Czy na pewno skasować ?')) {document.location.href='deleteOrderItem-<c:out value="${orderItemID}" />'}">Usuń</button>
+                  </sec:authorize>
                 </div>
               </div>
             </div>

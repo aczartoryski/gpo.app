@@ -32,21 +32,37 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <aside class="app-sidebar" id="sidebar">
   <div class="sidebar-header">
-    <a class="sidebar-brand" href="#"><span class="highlight">v1</span> GKZP</a>
+    <a class="sidebar-brand" href="/"><span class="highlight">v1</span> GKZP</a>
     <button type="button" class="sidebar-toggle">
       <i class="fa fa-times"></i>
     </button>
+    
   </div>
   <div class="sidebar-menu">
     <ul class="sidebar-nav">
-      <li class="<% if ((session.getAttribute( "menuActive" ))=="orderItems") { %> active <% } %>">
-        <a href="index">
+      <li>
+          <a>
+              <div class="icon">
+                <i class="fa fa-user" aria-hidden="true"></i>
+              </div>
+              <div class="title">Zalogowany: <c:out value="${user}"/></div>
+            </a>      
+      </li>
+      <li class="dropdown <% if ((session.getAttribute( "menuActive" ))=="orderItems") { %> active <% } %>">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <div class="icon">
             <i class="fa fa-tasks" aria-hidden="true"></i>
           </div>
-          <div class="title">lista zleceń</div>
+          <div class="title">Zlecenia produkcji</div>
         </a>
+        <div class="dropdown-menu">
+          <ul>
+            <li class="section"><i class="fa fa-file-o" aria-hidden="true"></i><a href="index">Lista standardowa</a></li>
+            <li class="section"><i class="fa fa-file-o" aria-hidden="true"></i><a href="index">Lista zakończonych</a></li>
+          </ul>
+        </div>
       </li>
+      <sec:authorize access="hasRole('ADMIN')">
       <li class="<% if ((session.getAttribute( "menuActive" ))=="productionSlots") { %> active <% } %>">
         <a href="productionSlots">
           <div class="icon">
@@ -55,6 +71,7 @@
           <div class="title">Lista gniazd</div>
         </a>
       </li>
+      
       <li class="<% if ((session.getAttribute( "menuActive" ))=="fields") { %> active <% } %>">
         <a href="fieldMappings">
           <div class="icon">
@@ -63,6 +80,7 @@
           <div class="title">Mapowanie pól</div>
         </a>
       </li>
+      </sec:authorize>
       <!--
       <li class="<% if ((session.getAttribute( "menuActive" ))=="maintable") { %> active <% } %>">
         <a href="fieldOnMainScreen">
@@ -72,16 +90,16 @@
           <div class="title">Główna tabela</div>
         </a>
       </li>
-      <!--
+      -->
       <li>
-        <a href="logout">
+        <a href="login?logout">
           <div class="icon">
             <i class="fa fa-power-off" aria-hidden="true"></i>
           </div>
           <div class="title">Wyloguj się</div>
         </a>
       </li>
-      -->
+
     </ul>
   </div>
   <div class="sidebar-footer">

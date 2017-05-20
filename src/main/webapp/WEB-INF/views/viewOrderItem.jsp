@@ -30,9 +30,10 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <% session.setAttribute( "menuActive", "orderItems" ); %>
 <jsp:include page="${request.contextPath}/header">
-  <jsp:param name="pageTitle" value="Edycja pozycji zlecenia produkcji"/>
+  <jsp:param name="pageTitle" value="Podgląd pozycji zlecenia produkcji"/>
 </jsp:include>
 <jsp:include page="${request.contextPath}/menu" />
 
@@ -41,7 +42,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card">
-        <div class="card-header">Edycja pozycji zlecenia produkcji</div>
+        <div class="card-header">Podgląd pozycji zlecenia produkcji</div>
         <div class="card-body">
             <div class="row">
               <div class="col-md-6">
@@ -94,7 +95,9 @@
                 <div class="col-md-9 col-md-offset-1">
                   <button type="button" class="btn btn-primary" onClick="document.location.href='editOrderItem-<c:out value="${orderItemID}" />'">Edytuj</button>
                   <button type="button" class="btn btn-default" onClick="document.location.href='index';">Anuluj</button>
+                  <sec:authorize access="hasRole('ADMIN')">
                   <button type="button" class="btn btn-danger" onclick="if (confirm('Czy na pewno skasować ?')) {document.location.href='deleteOrderItem-<c:out value="${orderItemID}" />'}">Usuń</button>
+                  </sec:authorize>
                 </div>
               </div>
             </div>

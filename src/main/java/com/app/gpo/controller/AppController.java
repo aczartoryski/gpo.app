@@ -51,6 +51,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -119,11 +121,14 @@ public class AppController {
     
     @RequestMapping(method = RequestMethod.POST, value = "menu")
     public String getMenuPost(Model model) {
+        model.addAttribute("user", getPrincipal());
         return "/shared/menu";
+        
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "menu")
     public String getMenuGet(Model model) {
+        model.addAttribute("user", getPrincipal());
         return "/shared/menu";
     }
     
@@ -135,16 +140,6 @@ public class AppController {
     @RequestMapping(method = RequestMethod.POST, value = "/login")
     public String getLoginPost(Model model) {
         return "/login";
-    }
-    
-    @RequestMapping(method = RequestMethod.GET, value = "/403")
-    public String getAccessDenied(Model model) {
-        return "/403";
-    }
-    
-    @RequestMapping(method = RequestMethod.POST, value = "/403")
-    public String getAccessDeniedPost(Model model) {
-        return "/403";
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/")
@@ -647,5 +642,17 @@ public class AppController {
         map.addAttribute("importedOrders",importedOrders);
 	map.addAttribute("files", fileNames);
 	return "importOrderItemsSuccess";
+    }
+    
+    private String getPrincipal(){
+        String userName = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+ 
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails)principal).getUsername();
+        } else {
+            userName = principal.toString();
+        }
+        return userName;
     }
 }

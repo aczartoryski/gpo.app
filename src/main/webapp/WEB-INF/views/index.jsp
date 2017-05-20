@@ -30,6 +30,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <% session.setAttribute( "menuActive", "orderItems" ); %>
 <html lang="pl">
 <html>
@@ -94,12 +95,14 @@
                                         </span>
                                     </a>
                                     <br/><br/>
+                                    <sec:authorize access="hasRole('ADMIN')">
                                     <a href="#" id="deleteOrderItemsAction" name="deleteOrderItemsAction" onClick='$("#indexform").attr("action", "deleteOrderItems");$("#indexform").submit();'>
                                         <span class="badge badge-danger badge-icon">
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                             <span>Usuń zamówienia</span>
                                         </span>
                                     </a>
+                                    </sec:authorize>
                                     <a href="#" id="statusChangeForOrderItems" onClick='$("#indexform").attr("action", "statusChangeForOrderItems");$("#indexform").submit();'>
                                         <span class="badge badge-primary badge-icon">
                                             <i class="fa fa-random" aria-hidden="true"></i>
@@ -166,11 +169,13 @@
                                     <i class="fa fa-edit" aria-hidden="true"></i>
                                 </span>
                               </a>
+                              <sec:authorize access="hasRole('ADMIN')">
                               <a href="deleteOrderItem-<c:out value='${oItem.orderItemID}' />" onclick="return confirm('Czy na pewno skasować ?')" title='Usuń zlzcenie'>
                                 <span class="badge badge-danger badge-icon">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </span>
                               </a>
+                              </sec:authorize>
                             </td>
                             <td>
                                 <input type="checkbox" id="orderItemID" name="orderItemID" value="<c:out value='${oItem.orderItemID}' />">&nbsp;&nbsp;
