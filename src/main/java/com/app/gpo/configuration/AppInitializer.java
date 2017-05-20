@@ -23,7 +23,12 @@
  */
 package com.app.gpo.configuration;
 
+import com.app.gpo.security.SecurityConfig;
+import com.app.gpo.services.CustomUserDetailsService;
 import javax.servlet.Filter;
+import javax.servlet.ServletContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -32,22 +37,27 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
-
+@Order(2)
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
  
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] { AppConfig.class };
+        return new Class[] {  HibernateConfiguration.class, SecurityConfig.class };
     }
   
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return null;
+        return new Class[] {  AppConfig.class };
     }
   
     @Override
     protected String[] getServletMappings() {
         return new String[] { "/" };
+    }
+    
+     @Override
+    protected void registerDispatcherServlet(ServletContext servletContext) {
+        super.registerDispatcherServlet(servletContext);
     }
     
     @Override
@@ -66,4 +76,6 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
         filters = new Filter[] {encFilter, httpMethodFilter};
         return filters;
     }
+    
+
 }

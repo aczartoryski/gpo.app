@@ -127,13 +127,48 @@ public class AppController {
         return "/shared/menu";
     }
     
+    @RequestMapping(method = RequestMethod.GET, value = "/login")
+    public String getLogin(Model model) {
+        return "/login";
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/login")
+    public String getLoginPost(Model model) {
+        return "/login";
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/403")
+    public String getAccessDenied(Model model) {
+        return "/403";
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/403")
+    public String getAccessDeniedPost(Model model) {
+        return "/403";
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public String getHome(Model model) {
         return "redirect:/index";
     }
     
+    @RequestMapping(method = RequestMethod.POST, value = "/")
+    public String getHomePost(Model model) {
+        return "redirect:/index";
+    }
+    
     @RequestMapping(value="/index", method = RequestMethod.GET)
     public ModelAndView showIndex() {
+        ModelAndView mv = new ModelAndView("index");
+        List<OrderItem> orderItemList = orderItemService.findAll();
+        mv.addObject("orderItemList", orderItemList);
+        List<Field> fieldsForTable = fieldService.findAllForMainScreen();
+        mv.addObject("fieldsForTable", fieldsForTable);
+        return mv;
+    } 
+    
+    @RequestMapping(value="/index", method = RequestMethod.POST)
+    public ModelAndView showIndexPost() {
         ModelAndView mv = new ModelAndView("index");
         List<OrderItem> orderItemList = orderItemService.findAll();
         mv.addObject("orderItemList", orderItemList);
