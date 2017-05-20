@@ -57,8 +57,8 @@
         </a>
         <div class="dropdown-menu">
           <ul>
-            <li class="section"><i class="fa fa-file-o" aria-hidden="true"></i><a href="index">Lista standardowa</a></li>
-            <li class="section"><i class="fa fa-file-o" aria-hidden="true"></i><a href="index">Lista zakończonych</a></li>
+            <li class="section"><i class="fa fa-bars" aria-hidden="true"></i><a href="index">Lista standardowa</a></li>
+            <li class="section"><i class="fa fa-check-square-o" aria-hidden="true"></i><a href="index">Lista zakończonych</a></li>
           </ul>
         </div>
       </li>

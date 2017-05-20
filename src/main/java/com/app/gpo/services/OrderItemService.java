@@ -45,6 +45,14 @@ public class OrderItemService {
     public List<OrderItem> findAll() {
         return dao.findAll();
     }
+    
+    public OrderItem findByOrderNumber (String orderNumber) {
+        return dao.findByOrderNumber(orderNumber);
+    }
+    
+    public boolean isInDbByOrderNumber (String orderNumber) {
+        return dao.isInDbByOrderNumber(orderNumber);
+    }
  
     public OrderItem find(int id) {
         return dao.find(id);

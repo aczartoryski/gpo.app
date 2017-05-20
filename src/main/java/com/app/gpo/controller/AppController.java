@@ -550,19 +550,19 @@ public class AppController {
                 Iterator<?> keys = importedJSON.keys();
                 while( keys.hasNext() ) {
                     String keyOrderNumber = (String)keys.next();
-
+                    if (!orderItemService.isInDbByOrderNumber(keyOrderNumber)) {
                     if ( importedJSON.get(keyOrderNumber) instanceof JSONArray) {
                             JSONArray importedJSONArray = importedJSON.getJSONArray(keyOrderNumber);
                             logger.info("For order number "+keyOrderNumber+" QTY items founded : "+importedJSONArray.length());
                             // Loop for each orderItem in one Order
                             for (int item=0; item<importedJSONArray.length(); item++) {
                                 JSONObject jsonObject = importedJSONArray.getJSONObject(item);
-                                
                                 // Setup new imported Order and save into DB
                                 int j = item+1;
                                 OrderItem orderItem = new OrderItem();
                                 orderItem.setorderStatusDate(today);
                                 orderItem.setorderNumber(keyOrderNumber+"#"+j+"#"+importedJSONArray.length());
+                                logger.info("Importing order number "+keyOrderNumber+"#"+j+"#"+importedJSONArray.length()+" item");
                                 orderItem.setorderStatus(orderStatus);
                                 JSONObject j1 = jsonObject.getJSONObject("0");
                                 orderItem.setorderItemName(j1.getString("LABEL"));
@@ -628,10 +628,10 @@ public class AppController {
                                         }                                       
                                     }
                                 }
-                            }
+                            } 
                         }
                     }
-            }
+            }   }
 	}
         if (!newFieldList.isEmpty()) {
             map.addAttribute("newFieldList", newFieldList);

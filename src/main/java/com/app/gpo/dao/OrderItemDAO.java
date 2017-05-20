@@ -25,10 +25,14 @@ package com.app.gpo.dao;
 
 import com.app.gpo.model.OrderItem;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 /**
  *
@@ -36,6 +40,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("orderItemDAO")
 public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
+    private static final Logger logger = Logger.getLogger(OrderItemDAO.class);
     
     public OrderItem find (int id) {
         OrderItem orderItem = getByKey(id);
@@ -66,6 +71,31 @@ public class OrderItemDAO  extends AbstractDao<Integer, OrderItem> {
         Query query2 = getSession().createSQLQuery("delete from orderItemField where orderItemID = :orderItemID");
         query2.setString("orderItemID", Integer.toString(id));
         query2.executeUpdate();
+    }
+    
+    public OrderItem findByOrderNumber (String orderNumber) {
+        Query query = getSession().createSQLQuery("select from orderItem where orderNumber = :orderNumber");
+        query.setString("orderNumber", orderNumber);
+        OrderItem orderItem = (OrderItem) query.uniqueResult();
+        Hibernate.initialize(orderItem.getorderItemFields());
+        return orderItem;
+    }
+    
+    public boolean isInDbByOrderNumber (String orderNumber) {
+      
+        Criteria criteria = getSession().createCriteria(OrderItem.class);
+        criteria.add(Restrictions.like("orderNumber", orderNumber+"%"));
+        criteria.setProjection(Projections.rowCount());
+        long count = (Long) criteria.uniqueResult();
+        logger.info("DB count "+count+" for order items with order number "+orderNumber);
+        if(count != 0){
+            logger.info("In DB exist"+count+" order items with order number "+orderNumber);
+            return true;
+        } else {
+            logger.info("In DB no exist order items with order number "+orderNumber);
+            return false;
+        }
+
     }
  
     @SuppressWarnings("unchecked")
