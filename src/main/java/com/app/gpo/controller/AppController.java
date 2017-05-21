@@ -466,14 +466,15 @@ public class AppController {
     
     @RequestMapping(value="/printOrderItemCard-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView printOrderCard(Model model, @PathVariable Integer orderItemID, @RequestParam("productionSlotID") Integer productionSlotID) {
+       Date today = new Date();
        ModelAndView mv = new ModelAndView("printOrderItemCard");
        OrderItem orderItem = orderItemService.find(orderItemID);
        
        OrderStatus orderStatus = orderStatusService.findByName("W toku");
        orderItem.setorderStatus(orderStatus);
+       orderItem.setorderStatusDate(today);
        orderItemService.update(orderItem);
 
-       
        mv.addObject("orderItem", orderItem);
        ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
        mv.addObject("productionSlot", productionSlot);
@@ -483,7 +484,7 @@ public class AppController {
     @RequestMapping(value="/printOrderItemCards", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public ModelAndView printOrderCards(Model model, @RequestParam("productionSlotID") Integer productionSlotID, @RequestParam(value="orderItem")Integer[] orderItemIDs) {
        ModelAndView mv = new ModelAndView("printOrderItemCards");
-       
+       Date today = new Date();
        List<OrderItem> orderItemList = new ArrayList<>(0);
        for (Integer orderItemID : orderItemIDs) {
            logger.info("Sended to print orderID : " + orderItemID);
@@ -494,11 +495,10 @@ public class AppController {
        while (it.hasNext()) {
            OrderItem orderItem = it.next();
            orderItem.setorderStatus(orderStatus);
+           orderItem.setorderStatusDate(today);
            orderItemService.update(orderItem);
        }
-       
-       
-       
+
        mv.addObject("selectedOrders", orderItemList);
        ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
        mv.addObject("productionSlot", productionSlot);

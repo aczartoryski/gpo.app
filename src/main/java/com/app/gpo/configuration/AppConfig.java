@@ -24,6 +24,7 @@
 package com.app.gpo.configuration;
 
 import com.app.gpo.security.SecurityConfig;
+import com.app.gpo.services.OrderItemAutoChangeStatus;
 import javax.servlet.Filter;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +32,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -51,6 +53,7 @@ import org.springframework.web.servlet.view.ResourceBundleViewResolver;
 @EnableWebMvc
 @ComponentScan("com.app.gpo.*")
 @Import(value={ SecurityConfig.class })
+@EnableScheduling
 public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Bean
@@ -90,6 +93,11 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
         return filter;
+    }
+    
+    @Bean
+    public OrderItemAutoChangeStatus orderItemAutoChangeStatus() {
+        return new OrderItemAutoChangeStatus();
     }
     
     @Override

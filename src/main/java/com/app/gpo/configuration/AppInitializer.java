@@ -24,10 +24,8 @@
 package com.app.gpo.configuration;
 
 import com.app.gpo.security.SecurityConfig;
-import com.app.gpo.services.CustomUserDetailsService;
 import javax.servlet.Filter;
 import javax.servlet.ServletContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
