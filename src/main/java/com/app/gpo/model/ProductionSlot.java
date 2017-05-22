@@ -55,7 +55,7 @@ public class ProductionSlot implements Serializable {
     private String productionSlotDescription;
     
     @Column(name = "productionSlotNumber", nullable = false)
-    private Integer productionSlotNumber;
+    private String productionSlotNumber;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "productionSlot", cascade=CascadeType.ALL)
     @OrderBy ("fieldMappingOrder")
@@ -64,13 +64,13 @@ public class ProductionSlot implements Serializable {
     public ProductionSlot () {
     }
     
-    public ProductionSlot (int productionSlotID,String productionSlotDescription,Integer productionSlotNumber ) {
+    public ProductionSlot (int productionSlotID,String productionSlotDescription,String productionSlotNumber ) {
         this.productionSlotID = productionSlotID;
         this.productionSlotNumber = productionSlotNumber;
         this.productionSlotDescription = productionSlotDescription;
     }
     
-    public ProductionSlot (int productionSlotID,String productionSlotDescription,Integer productionSlotNumber,Set<FieldMapping> fieldMappings ) {
+    public ProductionSlot (int productionSlotID,String productionSlotDescription,String productionSlotNumber,Set<FieldMapping> fieldMappings ) {
         this.productionSlotID = productionSlotID;
         this.productionSlotNumber = productionSlotNumber;
         this.productionSlotDescription = productionSlotDescription;
@@ -96,11 +96,11 @@ public class ProductionSlot implements Serializable {
     }
     
     
-    public Integer getProductionSlotNumber() {
+    public String getProductionSlotNumber() {
         return productionSlotNumber;
     }
  
-    public void setProductionSlotNumber(Integer number) {
+    public void setProductionSlotNumber(String number) {
         this.productionSlotNumber = number;
     }
     
