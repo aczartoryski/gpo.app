@@ -42,8 +42,8 @@ public class OrderItemAutoChangeStatus {
     OrderItemService orderItemService;
     @Autowired
     OrderStatusService orderStatusService;
-    
-    @Scheduled(cron="*/15 0* * * * ?")
+
+    @Scheduled(cron="0 30 * * * ?")
     public void scheduleChangeStatus() {
         // something that should execute on weekdays only
         logger.info("Searching for order items to change status");
