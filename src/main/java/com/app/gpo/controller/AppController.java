@@ -23,15 +23,19 @@
  */
 package com.app.gpo.controller;
 
+import com.app.gpo.model.ArrayView;
 import com.app.gpo.model.Field;
 import com.app.gpo.model.FieldMapping;
+import com.app.gpo.model.FieldMappingToView;
 import com.app.gpo.model.FieldOnMainScreenForm;
 import com.app.gpo.model.FileUploadForm;
 import com.app.gpo.model.OrderItem;
 import com.app.gpo.model.OrderItemField;
 import com.app.gpo.model.OrderStatus;
 import com.app.gpo.model.ProductionSlot;
+import com.app.gpo.services.ArrayViewService;
 import com.app.gpo.services.FieldMappingService;
+import com.app.gpo.services.FieldMappingToViewService;
 import com.app.gpo.services.FieldService;
 import com.app.gpo.services.OrderItemFieldService;
 import com.app.gpo.services.OrderItemService;
@@ -88,7 +92,11 @@ public class AppController {
    OrderStatusService orderStatusService;
    @Autowired
    ProductionSlotService productionSlotService;
-    
+   @Autowired
+   FieldMappingToViewService fieldMappingToViewService; 
+   @Autowired
+   ArrayViewService arrayViewService;
+   
     @RequestMapping(method = RequestMethod.GET, value = "header")
     public String getHeader(Model model) {
         return "/shared/header";
@@ -119,9 +127,11 @@ public class AppController {
         return "/shared/scripts";
     }
     
+        
     @RequestMapping(method = RequestMethod.POST, value = "menu")
     public String getMenuPost(Model model) {
         model.addAttribute("user", getPrincipal());
+        model.addAttribute("arrayViewList", arrayViewService.findAll());
         return "/shared/menu";
         
     }
@@ -129,6 +139,7 @@ public class AppController {
     @RequestMapping(method = RequestMethod.GET, value = "menu")
     public String getMenuGet(Model model) {
         model.addAttribute("user", getPrincipal());
+        model.addAttribute("arrayViewList", arrayViewService.findAll());
         return "/shared/menu";
     }
     
@@ -158,45 +169,58 @@ public class AppController {
         OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
         List<OrderItem> orderItemList = orderItemService.findNotOrderStatus(orderStatus);
         mv.addObject("orderItemList", orderItemList);
-        List<Field> fieldsForTable = fieldService.findAllForMainScreen();
+        List<Field> fieldsForTable = fieldService.findAll();
+        mv.addObject("fieldsForTable", fieldsForTable);
+        return mv;
+    }
+    
+    @RequestMapping(value="/listOrders-{arrayViewID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
+    public ModelAndView listOrders(Model model, @PathVariable Integer arrayViewID) {
+        ModelAndView mv = new ModelAndView("listOrders");
+        ArrayView arrayView = arrayViewService.find(arrayViewID);
+        mv.addObject("arrayView", arrayView);
+        OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
+        List<OrderItem> orderItemList = new ArrayList<OrderItem>();
+        if (arrayView.getArrayViewForClosed()) {
+            orderItemList = orderItemService.findByOrderStatus(orderStatus); 
+        } else {
+            orderItemList = orderItemService.findNotOrderStatus(orderStatus);
+        }
+        mv.addObject("orderItemList", orderItemList);
+        List<Field> fieldsForTable = fieldService.findAllAssignToArrayView(arrayViewID);
         mv.addObject("fieldsForTable", fieldsForTable);
         return mv;
     } 
     
+   
     @RequestMapping(value="/index", method = RequestMethod.POST)
     public ModelAndView showIndexPost() {
         ModelAndView mv = new ModelAndView("index");
         OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
         List<OrderItem> orderItemList = orderItemService.findNotOrderStatus(orderStatus);
         mv.addObject("orderItemList", orderItemList);
-        List<Field> fieldsForTable = fieldService.findAllForMainScreen();
+        List<Field> fieldsForTable = fieldService.findAll();
         mv.addObject("fieldsForTable", fieldsForTable);
         return mv;
     } 
     
-    @RequestMapping(value="/listOrderItemsClosed", method = RequestMethod.GET)
-    public ModelAndView showlistOrderItemsClosed() {
-
-        ModelAndView mv = new ModelAndView("listOrderItemsClosed");
+    @RequestMapping(value="/listOrders-{arrayViewID}", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+    public ModelAndView listOrdersPost(Model model, @PathVariable Integer arrayViewID) {
+        ModelAndView mv = new ModelAndView("listOrders");
+        ArrayView arrayView = arrayViewService.find(arrayViewID);
+        mv.addObject("arrayView", arrayView);
         OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
-        List<OrderItem> orderItemList = orderItemService.findByOrderStatus(orderStatus);
+        List<OrderItem> orderItemList = new ArrayList<OrderItem>();
+        if (arrayView.getArrayViewForClosed()) {
+            orderItemList = orderItemService.findByOrderStatus(orderStatus); 
+        } else {
+            orderItemList = orderItemService.findNotOrderStatus(orderStatus);
+        }
         mv.addObject("orderItemList", orderItemList);
-        List<Field> fieldsForTable = fieldService.findAllForMainScreen();
+        List<Field> fieldsForTable = fieldService.findAllAssignToArrayView(arrayViewID);
         mv.addObject("fieldsForTable", fieldsForTable);
         return mv;
     } 
-    
-    @RequestMapping(value="/listOrderItemsClosed", method = RequestMethod.POST)
-    public ModelAndView showlistOrderItemsClosedPost() {
-        ModelAndView mv = new ModelAndView("listOrderItemsClosed");
-        OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
-        List<OrderItem> orderItemList = orderItemService.findByOrderStatus(orderStatus);
-        mv.addObject("orderItemList", orderItemList);
-        List<Field> fieldsForTable = fieldService.findAllForMainScreen();
-        mv.addObject("fieldsForTable", fieldsForTable);
-        return mv;
-    } 
-    
     
     
     @RequestMapping(value = "/selectProductionSlotMultiple", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
@@ -331,9 +355,23 @@ public class AppController {
         return mv;
     }
     
+    @RequestMapping(value="/arrayViews", method = RequestMethod.GET)
+    public ModelAndView showArrayViews() {
+        ModelAndView mv = new ModelAndView("arrayViews");
+        List<ArrayView> arrayViewList = arrayViewService.findAll();
+        mv.addObject("arrayViewList", arrayViewList);
+        return mv;
+    }
+    
     @RequestMapping(value="/newProductionSlot", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView newProductionSlot() {
         ModelAndView mv = new ModelAndView("newProductionSlot");
+        return mv;
+    }
+    
+    @RequestMapping(value="/newArrayView", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
+    public ModelAndView newArrayView() {
+        ModelAndView mv = new ModelAndView("newArrayView");
         return mv;
     }
     
@@ -344,6 +382,15 @@ public class AppController {
         mv.addObject("productionSlot", productionSlot);
         return mv;
     }
+    
+    @RequestMapping(value = { "/editArrayView-{arrayViewID}" }, method = RequestMethod.GET, produces = "text/html; charset=utf-8")
+    public ModelAndView editArrayView(Model model, @PathVariable Integer arrayViewID) {
+        ArrayView arrayView = arrayViewService.find(arrayViewID);
+        ModelAndView mv = new ModelAndView("editArrayView");
+        mv.addObject("arrayView", arrayView);
+        return mv;
+    }
+    
             
     @RequestMapping(value="/updateProductionSlot", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public String updateProductionSlot(@ModelAttribute ProductionSlot productionSlot,BindingResult bindingResult,RedirectAttributes redirectAttributes) {
@@ -364,6 +411,26 @@ public class AppController {
         return "redirect:/productionSlots";
     }
     
+    @RequestMapping(value="/updateArrayView", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+    public String updateArrayView(@ModelAttribute ArrayView arrayView,BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+        String message;
+        if (bindingResult.hasErrors()) {
+            message = "W trakcie aktualizacji wystąpiły błędy !";
+            message = message + bindingResult.getAllErrors().toString();
+        } else {
+            if (arrayView.getArrayViewID() == 0) {
+                arrayViewService.save(arrayView);
+                message = "Widok tabeli ("+arrayView.getArrayViewName()+") został poprawnie zapisany." ;
+            } else {
+                arrayViewService.update(arrayView);
+                message = "Widok tabeli ("+arrayView.getArrayViewName()+") został poprawnie zaktualizowany." ;
+            }
+        }
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/arrayViews";
+    }
+    
+    
     @RequestMapping(value = { "/deleteProductionSlot-{productionSlotID}" }, method = RequestMethod.GET)
     public String deleteProductionSlot(@PathVariable Integer productionSlotID,Model model,RedirectAttributes redirectAttributes) {
         String message;
@@ -371,6 +438,15 @@ public class AppController {
         message = "Gniazdo produkcyjne zostało poprawnie usunięte." ;
         redirectAttributes.addFlashAttribute("message", message);
         return "redirect:/productionSlots";
+    }
+    
+    @RequestMapping(value = { "/deleteArrayView-{arrayViewID}" }, method = RequestMethod.GET)
+    public String deleteArrayView(@PathVariable Integer arrayViewID,Model model,RedirectAttributes redirectAttributes) {
+        String message;
+        arrayViewService.delete(arrayViewID);
+        message = "Widok został poprawnie usunięte." ;
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/arrayViews";
     }
     
     @RequestMapping(value="/fieldMappings", method = RequestMethod.GET)
@@ -381,32 +457,6 @@ public class AppController {
         return mv;
     } 
     
-    @RequestMapping(value="/fieldOnMainScreen", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
-    public ModelAndView showFields() {
-        ModelAndView mv = new ModelAndView("fieldOnMainScreen");
-        FieldOnMainScreenForm fieldOnMainScreenForm = new FieldOnMainScreenForm(); 
-        fieldOnMainScreenForm.setfieldList(fieldService.findAll());
-        mv.addObject("fieldOnMainScreenForm", fieldOnMainScreenForm);
-        return mv;
-    } 
-    
-    @RequestMapping(value="/fieldOnMainScreen", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
-    public ModelAndView saveFields(@ModelAttribute("fieldOnMainScreenForm") FieldOnMainScreenForm fieldOnMainScreenForm) {
-        
-        List<Field> fieldListToSave = fieldOnMainScreenForm.getfieldList();
-        logger.info(fieldOnMainScreenForm);
-        logger.info(fieldOnMainScreenForm.getfieldList());
-        for (Field field : fieldListToSave) {
-            logger.info(field.getFieldID()+" "+field.getFieldOriginID()+" "+field.getFieldValueID()+" "+field.getFieldLabel());
-            fieldService.update(field);
-        }
-        
-        ModelAndView mv = new ModelAndView("fieldOnMainScreen");
-        mv.addObject("fieldOnMainScreenForm", fieldService.findAll());
-        return mv;
-    } 
-    
-    
     @RequestMapping(value="/editFieldMapping-{productionSlotID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editfieldMapping(Model model, @PathVariable Integer productionSlotID) {
         ModelAndView mv = new ModelAndView("editFieldMapping");
@@ -415,6 +465,18 @@ public class AppController {
         List<FieldMapping> fieldMappingList = fieldMappingService.findByProductionSlotID(productionSlotID);
         mv.addObject("fieldMappingList", fieldMappingList);
         List<Field> fieldList = fieldService.findAllNotAssignToProductSlot(productionSlotID);
+        mv.addObject("fieldList",fieldList);
+        return mv;
+    } 
+    
+    @RequestMapping(value="/editFieldMappingToView-{arrayViewID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
+    public ModelAndView editFieldMappingToView(Model model, @PathVariable Integer arrayViewID) {
+        ModelAndView mv = new ModelAndView("editFieldMappingToView");
+        ArrayView arrayView = arrayViewService.find(arrayViewID);
+        mv.addObject("arrayView", arrayView);
+        List<FieldMappingToView> fieldMappingToViewList = fieldMappingToViewService.findByArrayViewID(arrayViewID);
+        mv.addObject("fieldMappingToViewList", fieldMappingToViewList);
+        List<Field> fieldList = fieldService.findAllNotAssignToArrayView(arrayViewID);
         mv.addObject("fieldList",fieldList);
         return mv;
     } 
@@ -454,6 +516,34 @@ public class AppController {
         return "redirect:/fieldMappings";
     }
     
+    
+    @RequestMapping(value={ "saveFieldMappingToView" }, method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+    public String saveFieldMappingToView (@RequestParam("fieldMappingString") String getFormString,@RequestParam("arrayViewID") Integer arrayViewID, RedirectAttributes redirectAttributes) throws JSONException {
+        logger.info("saveFieldMappingToView.RequestParam: "+getFormString);
+        String fieldMappingString = getFormString.replaceAll("fieldMapping_", "{\"fieldmapping\":");
+        fieldMappingString = fieldMappingString.replaceAll(",", "},");
+        fieldMappingString = "{\"fieldmappings\":["+fieldMappingString + "}]}";
+        fieldMappingToViewService.deleteByArrayViewID(arrayViewID);
+        JSONObject fieldMappingOrderJSON = new JSONObject(fieldMappingString);
+        JSONArray fieldMappingOrderArray = fieldMappingOrderJSON.getJSONArray("fieldmappings");
+        for (int i=0; i<fieldMappingOrderArray.length(); i++) {
+            JSONObject fieldMappingOrderItem = fieldMappingOrderArray.getJSONObject(i);
+            Integer fieldID = fieldMappingOrderItem.getInt("fieldmapping");
+            logger.info("saveFieldMapping.loop.fieldID: "+fieldID);
+            Field field = fieldService.find(fieldID);
+            ArrayView arrayView = arrayViewService.find(arrayViewID);
+            Integer fieldMappingOrder = i+1;
+            FieldMappingToView fieldMappingToView = new FieldMappingToView ();
+            fieldMappingToView.setArrayView(arrayView);
+            fieldMappingToView.setfield(field);
+            fieldMappingToView.setfieldMappingToViewOrder(fieldMappingOrder);
+            fieldMappingToViewService.save(fieldMappingToView);
+        }
+        String message = "Mapowanie pól zostało zapisane prawidłowo.";
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/arrayViews";
+    }
+    
     @RequestMapping(value = "/selectProductionSlot-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView selectProductionSlot(Model model, @PathVariable Integer orderItemID) {
         ModelAndView mv = new ModelAndView("selectProductionSlot");
@@ -462,7 +552,6 @@ public class AppController {
         mv.addObject("orderItemID", orderItemID);
         return mv;
     } 
-    
     
     @RequestMapping(value="/printOrderItemCard-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView printOrderCard(Model model, @PathVariable Integer orderItemID, @RequestParam("productionSlotID") Integer productionSlotID) {
@@ -575,6 +664,14 @@ public class AppController {
                             for (int item=0; item<importedJSONArray.length(); item++) {
                                 JSONObject jsonObject = importedJSONArray.getJSONObject(item);
                                 // Setup new imported Order and save into DB
+                                /*
+                                Required changes for :
+                                "2000": {
+                                "LABEL": "$TYPE_PRODUCT",
+                                "TEXT": "$COUNT_PRODUCT",
+                                "ID": "2000"
+                                },
+                                                */
                                 int j = item+1;
                                 OrderItem orderItem = new OrderItem();
                                 orderItem.setorderStatusDate(today);

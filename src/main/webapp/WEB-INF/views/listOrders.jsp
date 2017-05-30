@@ -67,7 +67,7 @@
             <div class="col-xs-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Lista zleceń produkcji
+                        <div class="card-title"><c:out value='${arrayView.arrayViewDescription}' />
                             <c:if test="${not empty message}">
                                 <div class="alert alert-warning alert-dismissible" role="alert" style="width: 50%;">
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -135,12 +135,12 @@
                         </a>
                     </th>
                     <th>Nr<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
-                    <th>Termin<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Wyrób<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Data zmiany statusu<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Status<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <c:forEach var="f4Table" items="${fieldsForTable}">
-                    <th><c:out value='${f4Table.fieldLabel}' /><div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
+                    <th>(<c:out value='${f4Table.fieldOriginID}' />) <c:out value='${f4Table.fieldLabel}' />
+                        <div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     </c:forEach>
                 </tr>
             </thead>
@@ -181,7 +181,6 @@
                                 <input type="checkbox" id="orderItemID" name="orderItemID" value="<c:out value='${oItem.orderItemID}' />">&nbsp;&nbsp;
                                         <c:out value='${oItem.orderNumber}' />
                             </td>
-                            <td><c:out value='${oItem.orderItemDueDate}' /></td>
                             <td><c:out value='${oItem.orderItemName}' /></td>
                             <td><c:out value='${oItem.orderStatusDate}' /></td>
                             <td>
@@ -249,6 +248,9 @@
     <script type="text/javascript" src="resources/js/dataTables.buttons.js"></script>
     <script type="text/javascript" src="resources/js/buttons.bootstrap.js"></script>
     <script type="text/javascript" src="resources/js/buttons.colVis.js"></script>
+    <script type="text/javascript" src="resources/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" src="resources/js/buttons.html.min.js"></script>
+    <script type="text/javascript" src="resources/js/jszip.min.js"></script>
     <script type="text/javascript" src="resources/js/buttons.print.js"></script>
     <script src="resources/assets/js/index.config.js" type="text/javascript"></script>
     <script src="resources/assets/js/datatable-scrollx.js" type="text/javascript"></script>

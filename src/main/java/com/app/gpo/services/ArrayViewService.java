@@ -23,8 +23,8 @@
  */
 package com.app.gpo.services;
 
-import com.app.gpo.dao.FieldDAO;
-import com.app.gpo.model.Field;
+import com.app.gpo.dao.ArrayViewDAO;
+import com.app.gpo.model.ArrayView;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,51 +35,33 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
 
-@Service("fieldService")
+@Service("arrayViewService")
 @Transactional
-public class FieldService {
+public class ArrayViewService {
     
     @Autowired
-    private FieldDAO dao;
+    private ArrayViewDAO dao;
     
-    public List<Field> findAll() {
+    
+    public List<ArrayView> findAll() {
         return dao.findAll();
     }
-    
-    public List<Field> findAllNotAssignToProductSlot (int id) {
-        return dao.findAllNotAssignToProductSlot(id);
-    }
  
-    public List<Field> findAllNotAssignToArrayView (int id) {
-        return dao.findAllNotAssignToArrayView(id);
-    }
-    
-    public List<Field> findAllAssignToArrayView (int id) {
-        return dao.findAllAssignToArrayView(id);
-    }
-    
-    public Field find(int id) {
+    public ArrayView find(int id) {
         return dao.find(id);
     }
     
-    public Field findByfieldOriginID(String id) {
-        return dao.findByfieldOriginID(id);
+    public void save (ArrayView arrayView) {
+        dao.save(arrayView);
     }
     
-    public void save (Field field) {
-        dao.save(field);
-    }
-    
-    public String saveNew (Field field) {
-        return dao.saveNew(field);
-    }
-    
-    public void update (Field field) {
-        dao.update(field);
+    public void update (ArrayView arrayView) {
+        dao.update(arrayView);
     }
     
     public void delete (int id) {
         dao.delete(id);
     }
+    
     
 }

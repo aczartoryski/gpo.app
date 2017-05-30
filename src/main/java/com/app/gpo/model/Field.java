@@ -62,6 +62,9 @@ public class Field implements Serializable {
     private Set<FieldMapping> fieldMappings = new HashSet<FieldMapping>(0);
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "field")
+    private Set<FieldMappingToView> fieldMappingToViews = new HashSet<FieldMappingToView>(0);
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "field")
     private Set<OrderItemField> orderItemFields = new HashSet<OrderItemField>(0);
     
     @Column(name = "fieldShownInMainTable")

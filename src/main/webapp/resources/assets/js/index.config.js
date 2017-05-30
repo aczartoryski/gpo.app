@@ -43,7 +43,19 @@ $(document).ready(function() {
   
   $(".datatable").DataTable({
     "dom": '<"top"fl<"clear">>Brt<"bottom"ip<"clear">>',
-    "buttons": [{
+    "buttons": [
+        {
+            extend: 'csv',
+            text: 'Eksport tabeli do CSV',
+            className: 'btn btn-info btn-xs',
+            filename: 'Lista pozycji zamówień',
+            exportOptions: {
+                modifier: {
+                    search: 'none'
+                }
+            }
+        },       
+        {
             extend: 'colvis',
             columns: ':gt(0)',
             text: 'Ukryj/pokaż kolumny',

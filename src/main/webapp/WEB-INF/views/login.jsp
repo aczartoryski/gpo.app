@@ -71,7 +71,7 @@
       <div class="app-block">
       <div class="app-form">
         <div class="form-header">
-          <div class="app-brand"><span class="highlight">v1</span> GKZP</div>
+          <div class="app-brand"><span class="highlight">v2</span> GKZP</div>
         </div>
         <c:if test="${param.error != null}">
                                 <div class="alert alert-danger">

@@ -23,8 +23,8 @@
  */
 package com.app.gpo.services;
 
-import com.app.gpo.dao.FieldDAO;
-import com.app.gpo.model.Field;
+import com.app.gpo.dao.FieldMappingToViewDAO;
+import com.app.gpo.model.FieldMappingToView;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,51 +35,35 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
 
-@Service("fieldService")
+@Service("fieldMappingToViewService")
 @Transactional
-public class FieldService {
-    
+public class FieldMappingToViewService {
+   
     @Autowired
-    private FieldDAO dao;
+    private FieldMappingToViewDAO dao;
     
-    public List<Field> findAll() {
+    public List<FieldMappingToView> findAll() {
         return dao.findAll();
     }
-    
-    public List<Field> findAllNotAssignToProductSlot (int id) {
-        return dao.findAllNotAssignToProductSlot(id);
-    }
  
-    public List<Field> findAllNotAssignToArrayView (int id) {
-        return dao.findAllNotAssignToArrayView(id);
-    }
-    
-    public List<Field> findAllAssignToArrayView (int id) {
-        return dao.findAllAssignToArrayView(id);
-    }
-    
-    public Field find(int id) {
+    public FieldMappingToView find(int id) {
         return dao.find(id);
     }
     
-    public Field findByfieldOriginID(String id) {
-        return dao.findByfieldOriginID(id);
+    public List<FieldMappingToView> findByArrayViewID (int id) {
+        return dao.findByArrayViewID(id);
     }
     
-    public void save (Field field) {
-        dao.save(field);
-    }
-    
-    public String saveNew (Field field) {
-        return dao.saveNew(field);
-    }
-    
-    public void update (Field field) {
-        dao.update(field);
+    public void save (FieldMappingToView fieldMapping) {
+        dao.save(fieldMapping);
     }
     
     public void delete (int id) {
         dao.delete(id);
+    }
+    
+    public void deleteByArrayViewID(Integer arrayViewID) {
+        dao.deleteByArrayViewID(arrayViewID);
     }
     
 }

@@ -32,7 +32,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <aside class="app-sidebar" id="sidebar">
   <div class="sidebar-header">
-    <a class="sidebar-brand" href="/"><span class="highlight">v1</span> GKZP</a>
+    <a class="sidebar-brand" href="/"><span class="highlight">v2</span> GKZP</a>
     <button type="button" class="sidebar-toggle">
       <i class="fa fa-times"></i>
     </button>
@@ -57,8 +57,16 @@
         </a>
         <div class="dropdown-menu">
           <ul>
-            <li class="section"><i class="fa fa-bars" aria-hidden="true"></i><a href="index">Lista standardowa</a></li>
-            <li class="section"><i class="fa fa-check-square-o" aria-hidden="true"></i><a href="listOrderItemsClosed">Lista zakończonych</a></li>
+              <li class="section">
+                  <i class="fa fa-bars" aria-hidden="true"></i>
+                  <a href="index">Lista domyślna</a>
+              </li> 
+            <c:forEach var="arrayView" items="${arrayViewList}">
+              <li class="section">
+                  <i class="fa fa-bars" aria-hidden="true"></i>
+                  <a href="listOrders-<c:out value='${arrayView.arrayViewID}' />"><c:out value='${arrayView.arrayViewName}' /></a>
+              </li>  
+            </c:forEach>
           </ul>
         </div>
       </li>
@@ -71,13 +79,20 @@
           <div class="title">Lista gniazd</div>
         </a>
       </li>
-      
+      <li class="<% if ((session.getAttribute( "menuActive" ))=="arrayViews") { %> active <% } %>">
+        <a href="arrayViews">
+          <div class="icon">
+            <i class="fa fa-desktop" aria-hidden="true"></i>
+          </div>
+          <div class="title">Lista widoków</div>
+        </a>
+      </li>
       <li class="<% if ((session.getAttribute( "menuActive" ))=="fields") { %> active <% } %>">
         <a href="fieldMappings">
           <div class="icon">
             <i class="fa fa-print" aria-hidden="true"></i>
           </div>
-          <div class="title">Mapowanie pól</div>
+          <div class="title">Mapowanie pól na wydruk</div>
         </a>
       </li>
       </sec:authorize>

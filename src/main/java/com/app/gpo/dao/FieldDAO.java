@@ -79,19 +79,27 @@ public class FieldDAO extends AbstractDao<Integer, Field> {
     }
     
     @SuppressWarnings("unchecked")
+    public List<Field> findAllNotAssignToArrayView (int id) {
+        Query query = getSession().createQuery("from Field as f where f.fieldID not in "
+                + "(select fm.field.fieldID from FieldMappingToView as fm where fm.arrayView.arrayViewID = :arrayViewID)");
+        query.setString("arrayViewID", Integer.toString(id));
+        return query.list();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Field> findAllAssignToArrayView (int id) {
+        Query query = getSession().createQuery("from Field as f where f.fieldID in "
+                + "(select fm.field.fieldID from FieldMappingToView as fm where fm.arrayView.arrayViewID = :arrayViewID)");
+        query.setString("arrayViewID", Integer.toString(id));
+        return query.list();
+    }
+    
+    
+    @SuppressWarnings("unchecked")
     public Field findByfieldOriginID (String fieldOriginID) {
         Query query = getSession().createQuery("from Field as f where f.fieldOriginID = :fieldOriginID)");
         query.setString("fieldOriginID", fieldOriginID);
         return (Field) query.uniqueResult();
     }
     
-    @SuppressWarnings("unchecked")
-    public List<Field> findAllForMainScreen() {
-        Criteria criteria = createEntityCriteria();
-        criteria.add(Restrictions.sqlRestriction("{alias}.fieldShownInMainTable = 1"));
-        return (List<Field>) criteria.list();
-    }
-    
-    
-
 }
