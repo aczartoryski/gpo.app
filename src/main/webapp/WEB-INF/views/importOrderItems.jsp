@@ -38,43 +38,30 @@
 
 <!-- Start Main Content -->
 <div class="app-container">
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="card">
-        <div class="card-header">
-            <div class="card-title">Import plików zamówień</div>
-        </div>
-        <div class="card-body no-paddings">
-                <div class="card-body __loading" id="loader" name="loader">
-                    <div class="loader-container text-center">
-                        <div class="icon">
-                            <div class="sk-wave">
-                                <div class="sk-rect sk-rect1"></div>
-                                <div class="sk-rect sk-rect2"></div>
-                                <div class="sk-rect sk-rect3"></div>
-                                <div class="sk-rect sk-rect4"></div>
-                                <div class="sk-rect sk-rect5"></div>
-                              </div>
-                        </div>
-                        <div class="title">Importuję zamówienia z pliku(ów)</div>
-                    </div>
-                    <div class="text-indent"></div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Import plików zamówień</div>
                 </div>
-                <form:form method="POST" action="importOrderItemsSuccess" modelAttribute="uploadForm" enctype="multipart/form-data">
-                        <div>Wybierz pliki do zaimportowania</div>
-                            <table id="fileTable">
-                                <tr>
-                                    <td><input multiple name="files" type="file" class="btn btn-primary" /></td>
-                                </tr>
-                            </table>
-                        <br/>
-                        <input type="submit" class="btn btn-submit" value="Zaimportuj" id="btn-submit"/>
-                </form:form>    
-        </div>
-        </div>
+                <div class="card-body no-paddings">
+                        <form:form method="POST" action="importOrderItemsSuccess" modelAttribute="uploadForm" id="uploadForm" enctype="multipart/form-data">
+                                <div>Wybierz pliki do zaimportowania</div>
+                                    <table id="fileTable">
+                                        <tr>
+                                            <td><input multiple name="files" type="file" class="btn btn-primary" /></td>
+                                        </tr>
+                                    </table>
+                                <br/>
+                                <input type="submit" class="btn btn-submit" value="Zaimportuj" id="btn-submit"/>
+                        </form:form>  
+
+                </div>
+                
+            </div>
         </div>
     </div>
-  </div>
+</div>
 
 <!-- End Main Content -->
     <footer class="app-footer">
@@ -95,15 +82,7 @@
 <script type="text/javascript" src="resources/assets/js/app.js"></script>
 <script type="text/javascript" src="resources/assets/js/jquery-ui.js"></script>
 <script type="text/javascript" src="resources/assets/js/jquery.form.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#loader').hide();
-    });
-    
-    $('#btn-submit').submit(function() {
-        $('#loader').show(); 
-        return true;
-    });
-</script>
+
+
 </body>
 </html>

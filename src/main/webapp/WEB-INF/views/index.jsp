@@ -135,6 +135,7 @@
                         </a>
                     </th>
                     <th>Nr<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
+                    <th>Termin<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Wyrób<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Data zmiany statusu<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Status<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
@@ -181,6 +182,7 @@
                                 <input type="checkbox" id="orderItemID" name="orderItemID" value="<c:out value='${oItem.orderItemID}' />">&nbsp;&nbsp;
                                         <c:out value='${oItem.orderNumber}' />
                             </td>
+                            <td><c:out value='${oItem.orderItemDueDate}' /></td>
                             <td><c:out value='${oItem.orderItemName}' /></td>
                             <td><c:out value='${oItem.orderStatusDate}' /></td>
                             <td>
@@ -249,7 +251,7 @@
     <script type="text/javascript" src="resources/js/buttons.bootstrap.js"></script>
     <script type="text/javascript" src="resources/js/buttons.colVis.js"></script>
     <script type="text/javascript" src="resources/js/buttons.flash.min.js"></script>
-    <script type="text/javascript" src="resources/js/buttons.html.min.js"></script>
+    <script type="text/javascript" src="resources/js/buttons.html5.min.js"></script>
     <script type="text/javascript" src="resources/js/jszip.min.js"></script>
     <script type="text/javascript" src="resources/js/buttons.print.js"></script>
     <script src="resources/assets/js/index.config.js" type="text/javascript"></script>

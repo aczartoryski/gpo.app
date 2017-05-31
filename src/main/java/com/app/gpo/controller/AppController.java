@@ -27,7 +27,6 @@ import com.app.gpo.model.ArrayView;
 import com.app.gpo.model.Field;
 import com.app.gpo.model.FieldMapping;
 import com.app.gpo.model.FieldMappingToView;
-import com.app.gpo.model.FieldOnMainScreenForm;
 import com.app.gpo.model.FileUploadForm;
 import com.app.gpo.model.OrderItem;
 import com.app.gpo.model.OrderItemField;
@@ -650,8 +649,11 @@ public class AppController {
                     responseStrBuilder.append(inputStr);
                 byte ptext[] = responseStrBuilder.toString().getBytes("UTF-16");
                 String value = new String(ptext, "UTF-16");
+                
+                
                 JSONObject importedJSON = new JSONObject(value);
                 importedFileContent = responseStrBuilder.toString();
+                int j = 1;
                 // Loop in JSON for each Order
                 Iterator<?> keys = importedJSON.keys();
                 while( keys.hasNext() ) {
@@ -659,88 +661,149 @@ public class AppController {
                     if (!orderItemService.isInDbByOrderNumber(keyOrderNumber)) {
                     if ( importedJSON.get(keyOrderNumber) instanceof JSONArray) {
                             JSONArray importedJSONArray = importedJSON.getJSONArray(keyOrderNumber);
-                            logger.info("For order number "+keyOrderNumber+" QTY items founded : "+importedJSONArray.length());
+                            int itemsPerOrderQTY = importedJSONArray.length();
+
                             // Loop for each orderItem in one Order
                             for (int item=0; item<importedJSONArray.length(); item++) {
                                 JSONObject jsonObject = importedJSONArray.getJSONObject(item);
                                 // Setup new imported Order and save into DB
-                                /*
-                                Required changes for :
-                                "2000": {
-                                "LABEL": "$TYPE_PRODUCT",
-                                "TEXT": "$COUNT_PRODUCT",
-                                "ID": "2000"
-                                },
-                                                */
-                                int j = item+1;
-                                OrderItem orderItem = new OrderItem();
-                                orderItem.setorderStatusDate(today);
-                                orderItem.setorderNumber(keyOrderNumber+"#"+j+"#"+importedJSONArray.length());
-                                logger.info("Importing order number "+keyOrderNumber+"#"+j+"#"+importedJSONArray.length()+" item");
-                                orderItem.setorderStatus(orderStatus);
-                                JSONObject j1 = jsonObject.getJSONObject("0");
-                                orderItem.setorderItemName(j1.getString("LABEL"));
-                                Date date = null;
-                                if (jsonObject.has("1013")) {
-                                    JSONObject j2 = jsonObject.getJSONObject("1013");
-                                    date = formatter.parse(j2.getString("TEXT"));
+                                
+                                
+                                JSONObject j1 = new JSONObject();
+                                int orderItemsQTY = 1;
+                                if (jsonObject.has("0")) {
+                                    j1 = jsonObject.getJSONObject("0");
+                                    JSONObject j2 = jsonObject.getJSONObject("0");
+                                    String qty = j2.getString("TEXT");
+                                    if (qty.contains(":")) {
+                                        qty = qty.substring(qty.lastIndexOf(":")+2);
+                                    }
+                                    if (qty.isEmpty()) {
+                                        orderItemsQTY = 1;
+                                    } else {
+                                        orderItemsQTY = Integer.parseInt(qty);
+                                    }
+                                } else 
+                                if (jsonObject.has("2000.")) {
+                                    j1 = jsonObject.getJSONObject("2000.");  
+                                    JSONObject j2 = jsonObject.getJSONObject("2000.");
+                                    String qty = j2.getString("TEXT");
+                                    if (qty.contains(":")) {
+                                        qty = qty.substring(qty.lastIndexOf(":"+2));
+                                    }
+                                    if (qty.isEmpty()) {
+                                        orderItemsQTY = 1;
+                                    } else {
+                                        orderItemsQTY = Integer.parseInt(qty);
+                                    }
+                                }
+                                itemsPerOrderQTY = itemsPerOrderQTY+orderItemsQTY-1;
+                            }
+                            logger.info("For order number "+keyOrderNumber+" QTY items founded : "+itemsPerOrderQTY);
+                            for (int item=0; item<importedJSONArray.length(); item++) {
+                                JSONObject jsonObject = importedJSONArray.getJSONObject(item);
+                                // Setup new imported Order and save into DB  
+                                JSONObject j1 = new JSONObject();
+                                int orderItemsQTY = 1;
+                                if (jsonObject.has("0")) {
+                                    j1 = jsonObject.getJSONObject("0");
+                                    JSONObject j2 = jsonObject.getJSONObject("0");
+                                    String qty = j2.getString("TEXT");
+                                    if (qty.contains(":")) {
+                                        qty = qty.substring(qty.lastIndexOf(":")+2);
+                                    }
+                                    if (qty.isEmpty()) {
+                                        orderItemsQTY = 1;
+                                    } else {
+                                        orderItemsQTY = Integer.parseInt(qty);
+                                    }
+                                } else 
+                                if (jsonObject.has("2000.")) {
+                                    j1 = jsonObject.getJSONObject("2000.");  
+                                    JSONObject j2 = jsonObject.getJSONObject("2000.");
+                                    String qty = j2.getString("TEXT");
+                                    if (qty.contains(":")) {
+                                        qty = qty.substring(qty.lastIndexOf(":")+2);
+                                    }
+                                    if (qty.isEmpty()) {
+                                        orderItemsQTY = 1;
+                                    } else {
+                                        orderItemsQTY = Integer.parseInt(qty);
+                                    }
                                 }
                                 
-                                orderItem.setorderItemDueDate(date);
-                                String addedOrderID = orderItemService.saveNew(orderItem);
-                                importedOrders.add(orderItem);
-                                
-                                // Prepare list of fields from DB to compare
-                                fieldList = fieldService.findAll();
-                                
-                                // Find saved Order
-                                OrderItem insertedOrderItem = orderItemService.find(Integer.parseInt(addedOrderID));
-                                
-                                // Loop for other fields imported from JSON
-                                Iterator<?> innerKeys = jsonObject.keys();
-                                while (innerKeys.hasNext()) {
-                                    String innerKey = (String) innerKeys.next();
-                                    if ("0".equals(innerKey) || "1013".equals(innerKey) || "1000".equals(innerKey))
-                                    {} 
-                                    else {
-
-                                        OrderItemField orderItemField = new OrderItemField();
-                                        Boolean result = fieldList.stream()
-                                            .filter(field -> innerKey.equals(field.getFieldOriginID()))
-                                            .findFirst().isPresent();
-                                        if (result) {
-                                            logger.info(keyOrderNumber+"-->"+innerKey+"=="); 
-                                            JSONObject jObject = jsonObject.getJSONObject(innerKey);
-                                            
-                                            // Find saved Field
-                                            Field foundedField= fieldService.findByfieldOriginID(innerKey);
-                                            orderItemField.setfield(foundedField);
-                                            orderItemField.setfieldText(jObject.getString("TEXT"));
-                                            orderItemField.setorderItem(insertedOrderItem);
-                                            orderItemFieldService.save(orderItemField);
-                                        } else {
-                                            logger.info(keyOrderNumber+"-->"+innerKey+"<>");
-                                            JSONObject jObject = jsonObject.getJSONObject(innerKey);
-                                            Field impField = new Field();
-                                            impField.setFieldID(0);
-                                            impField.setFieldLabel(jObject.getString("LABEL"));
-                                            impField.setFieldOriginID(innerKey);
-                                            logger.info(keyOrderNumber+"-->"+innerKey+"-->"+jObject.getString("LABEL"));
-                                            String fieldValueID = "";
-                                            if (!innerKey.contains("100")) {
-                                                fieldValueID = jObject.getString("VALUEID");
-                                            }
-                                            impField.setFieldValueID(fieldValueID);
-                                            String addedFieldID = fieldService.saveNew(impField);
-                                            // Find saved Field
-                                            Field insertedField= fieldService.find(Integer.parseInt(addedFieldID));
-                                            orderItemField.setfield(insertedField);
-                                            orderItemField.setfieldText(jObject.getString("TEXT"));
-                                            orderItemField.setorderItem(insertedOrderItem);
-                                            orderItemFieldService.save(orderItemField);
-                                            newFieldList.add(impField);
-                                        }                                       
+                                for (int k=0; k<orderItemsQTY; k++) {
+                                    
+                                    OrderItem orderItem = new OrderItem();
+                                    orderItem.setorderStatusDate(today);
+                                    orderItem.setorderNumber(keyOrderNumber+"#"+j+"#"+itemsPerOrderQTY);
+                                    logger.info("Importing order number "+keyOrderNumber+"#"+j+"#"+itemsPerOrderQTY+" item");
+                                    orderItem.setorderStatus(orderStatus);
+                                    orderItem.setorderItemName(j1.getString("LABEL"));
+ 
+                                    Date date = null;
+                                    if (jsonObject.has("1013")) {
+                                        JSONObject j2 = jsonObject.getJSONObject("1013");
+                                        date = formatter.parse(j2.getString("TEXT"));
                                     }
+                                
+                                    orderItem.setorderItemDueDate(date);
+                                    String addedOrderID = orderItemService.saveNew(orderItem);
+                                    importedOrders.add(orderItem);
+                                
+                                    // Prepare list of fields from DB to compare
+                                    fieldList = fieldService.findAll();
+                                
+                                    // Find saved Order
+                                    OrderItem insertedOrderItem = orderItemService.find(Integer.parseInt(addedOrderID));
+                                
+                                    // Loop for other fields imported from JSON
+                                    Iterator<?> innerKeys = jsonObject.keys();
+                                    while (innerKeys.hasNext()) {
+                                        String innerKey = (String) innerKeys.next();
+                                        if ("0".equals(innerKey) || "2000.".equals(innerKey))
+                                        {} 
+                                        else {
+
+                                            OrderItemField orderItemField = new OrderItemField();
+                                            Boolean result = fieldList.stream()
+                                                .filter(field -> innerKey.equals(field.getFieldOriginID()))
+                                                .findFirst().isPresent();
+                                            if (result) {
+                                                logger.info(keyOrderNumber+"-->"+innerKey+"=="); 
+                                                JSONObject jObject = jsonObject.getJSONObject(innerKey);
+
+                                                // Find saved Field
+                                                Field foundedField= fieldService.findByfieldOriginID(innerKey);
+                                                orderItemField.setfield(foundedField);
+                                                orderItemField.setfieldText(jObject.getString("TEXT"));
+                                                orderItemField.setorderItem(insertedOrderItem);
+                                                orderItemFieldService.save(orderItemField);
+                                            } else {
+                                                logger.info(keyOrderNumber+"-->"+innerKey+"<>");
+                                                JSONObject jObject = jsonObject.getJSONObject(innerKey);
+                                                Field impField = new Field();
+                                                impField.setFieldID(0);
+                                                impField.setFieldLabel(jObject.getString("LABEL"));
+                                                impField.setFieldOriginID(innerKey);
+                                                logger.info(keyOrderNumber+"-->"+innerKey+"-->"+jObject.getString("LABEL"));
+                                                String fieldValueID = "";
+                                                if (!innerKey.contains("100")) {
+                                                    fieldValueID = jObject.getString("VALUEID");
+                                                }
+                                                impField.setFieldValueID(fieldValueID);
+                                                String addedFieldID = fieldService.saveNew(impField);
+                                                // Find saved Field
+                                                Field insertedField= fieldService.find(Integer.parseInt(addedFieldID));
+                                                orderItemField.setfield(insertedField);
+                                                orderItemField.setfieldText(jObject.getString("TEXT"));
+                                                orderItemField.setorderItem(insertedOrderItem);
+                                                orderItemFieldService.save(orderItemField);
+                                                newFieldList.add(impField);
+                                            }                                       
+                                        }
+                                    }
+                                    j = j+1;
                                 }
                             } 
                         }
