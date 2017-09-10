@@ -40,6 +40,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -57,6 +61,7 @@ public class OrderItem implements Serializable {
     private int orderItemID;
     
     @ManyToOne(fetch=FetchType.LAZY)
+    @BatchSize(size=100)
     @JoinColumn(name="orderStatusID")
     private OrderStatus orderStatus;
     
@@ -78,6 +83,7 @@ public class OrderItem implements Serializable {
     private String orderNumber;
     
     @OneToMany(targetEntity = OrderItemField.class, fetch = FetchType.LAZY, mappedBy = "orderItem", cascade=CascadeType.ALL)
+    @BatchSize(size=100)
     private Set<OrderItemField> orderItemFields = new HashSet<OrderItemField>(0);
     /**
      * Default empty constructor

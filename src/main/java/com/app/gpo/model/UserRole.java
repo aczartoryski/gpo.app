@@ -27,6 +27,10 @@ package com.app.gpo.model;
  *
  * @author Artur Czartoryski <artur at czartoryski.wroclaw.pl>
  */
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -69,6 +73,7 @@ public class UserRole{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@BatchSize(size=10)
 	@JoinColumn(name = "username", nullable = false)
 	public User getUser() {
 		return this.user;

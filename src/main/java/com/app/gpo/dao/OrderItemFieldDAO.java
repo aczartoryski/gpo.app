@@ -25,6 +25,8 @@ package com.app.gpo.dao;
 
 import com.app.gpo.model.OrderItemField;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
@@ -36,32 +38,40 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("orderItemFieldDAO")
 public class OrderItemFieldDAO   extends AbstractDao<Integer, OrderItemField> {
-    
+    private static final Logger logger = Logger.getLogger(OrderItemFieldDAO.class);
    public OrderItemField find (int id) {
+       logger.info("HQL started find OrderItemField");
        OrderItemField orderItemField = getByKey(id);
        Hibernate.initialize(orderItemField.getorderItem());
        Hibernate.initialize(orderItemField.getfield());
+       logger.info("HQL finished find OrderItemField");
        return orderItemField;
     }
  
     public void save (OrderItemField orderItemField) {
-        persist(orderItemField);
+        logger.info("HQL finished save OrderItemField");
+       persist(orderItemField);
+        logger.info("HQL finished save OrderItemField");
     }
  
     public void delete (int id) {
+        logger.info("HQL started delete OrderItemField");
         Query query = getSession().createSQLQuery("delete from orderItemField where orderItemFieldID = :orderItemFieldID");
         query.setString("orderItemFieldID", Integer.toString(id));
         query.executeUpdate();
+        logger.info("HQL finished delete OrderItemField");
     }
  
     @SuppressWarnings("unchecked")
     public List<OrderItemField> findAll() {
+        logger.info("HQL started findAll OrderItemField");
         Criteria criteria = createEntityCriteria();
         List<OrderItemField> orderItemFields = criteria.list();
-        for(OrderItemField s : orderItemFields){
-            Hibernate.initialize(s.getfield());
-            Hibernate.initialize(s.getorderItem());
-        }
+        //for(OrderItemField s : orderItemFields){
+        //    Hibernate.initialize(s.getfield());
+        //    Hibernate.initialize(s.getorderItem());
+        //}
+        logger.info("HQL started findAll OrderItemField");
         return orderItemFields;
     }
     

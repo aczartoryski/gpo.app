@@ -129,16 +129,20 @@ public class AppController {
         
     @RequestMapping(method = RequestMethod.POST, value = "menu")
     public String getMenuPost(Model model) {
+        logger.info("MVC started getMenuPost");
         model.addAttribute("user", getPrincipal());
         model.addAttribute("arrayViewList", arrayViewService.findAll());
+        logger.info("MVC finished getMenuPost");
         return "/shared/menu";
         
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "menu")
     public String getMenuGet(Model model) {
+        logger.info("MVC started getMenuGet");
         model.addAttribute("user", getPrincipal());
         model.addAttribute("arrayViewList", arrayViewService.findAll());
+        logger.info("MVC finished getMenuGet");
         return "/shared/menu";
     }
     
@@ -164,17 +168,21 @@ public class AppController {
     
     @RequestMapping(value="/index", method = RequestMethod.GET)
     public ModelAndView showIndex() {
+        logger.info("MVC started showIndex");
         ModelAndView mv = new ModelAndView("index");
         OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
         List<OrderItem> orderItemList = orderItemService.findNotOrderStatus(orderStatus);
         mv.addObject("orderItemList", orderItemList);
         List<Field> fieldsForTable = fieldService.findAll();
         mv.addObject("fieldsForTable", fieldsForTable);
+        logger.info("MVC finished showIndex");
         return mv;
     }
+
     
     @RequestMapping(value="/listOrders-{arrayViewID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView listOrders(Model model, @PathVariable Integer arrayViewID) {
+        logger.info("MVC started listOrders");
         ModelAndView mv = new ModelAndView("listOrders");
         ArrayView arrayView = arrayViewService.find(arrayViewID);
         mv.addObject("arrayView", arrayView);
@@ -188,23 +196,27 @@ public class AppController {
         mv.addObject("orderItemList", orderItemList);
         List<Field> fieldsForTable = fieldService.findAllAssignToArrayView(arrayViewID);
         mv.addObject("fieldsForTable", fieldsForTable);
+        logger.info("MVC finished listOrders");
         return mv;
     } 
     
    
     @RequestMapping(value="/index", method = RequestMethod.POST)
     public ModelAndView showIndexPost() {
+        logger.info("MVC started showIndexPost");
         ModelAndView mv = new ModelAndView("index");
         OrderStatus orderStatus = orderStatusService.findIdByName("Zakończone");
         List<OrderItem> orderItemList = orderItemService.findNotOrderStatus(orderStatus);
         mv.addObject("orderItemList", orderItemList);
         List<Field> fieldsForTable = fieldService.findAll();
         mv.addObject("fieldsForTable", fieldsForTable);
+        logger.info("MVC finished showIndexPost");
         return mv;
     } 
     
     @RequestMapping(value="/listOrders-{arrayViewID}", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public ModelAndView listOrdersPost(Model model, @PathVariable Integer arrayViewID) {
+        logger.info("MVC started listOrdersPost");
         ModelAndView mv = new ModelAndView("listOrders");
         ArrayView arrayView = arrayViewService.find(arrayViewID);
         mv.addObject("arrayView", arrayView);
@@ -218,12 +230,14 @@ public class AppController {
         mv.addObject("orderItemList", orderItemList);
         List<Field> fieldsForTable = fieldService.findAllAssignToArrayView(arrayViewID);
         mv.addObject("fieldsForTable", fieldsForTable);
+        logger.info("MVC finished listOrdersPost");
         return mv;
     } 
     
     
     @RequestMapping(value = "/selectProductionSlotMultiple", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public ModelAndView selectProductionSlotMultiple(Model model,@RequestParam(value="orderItemID")Integer[] checkboxList) {
+        logger.info("MVC started selectProductionSlotMultiple");
         ModelAndView mv = new ModelAndView("selectProductionSlotMultiple");
         List<ProductionSlot> productionSlotList = productionSlotService.findAll(); 
         List<OrderItem> orderItemList = new ArrayList<>(0);
@@ -234,6 +248,7 @@ public class AppController {
        }
         mv.addObject("productionSlotList", productionSlotList);
         mv.addObject("ordersList", orderItemList);
+        logger.info("MVC finished selectProductionSlotMultiple");
         return mv;
     } 
     
@@ -245,36 +260,42 @@ public class AppController {
     
     @RequestMapping(value={ "/editOrderItem-{orderItemID}" }, method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editOrderItem (Model model, @PathVariable Integer orderItemID) {
+        logger.info("MVC started editOrderItem");
         OrderItem orderItem = orderItemService.find(orderItemID);
         List<OrderStatus> orderStatusList = orderStatusService.findAll();
         ModelAndView mv = new ModelAndView("editOrderItem");
         mv.addObject("orderItem", orderItem);
         mv.addObject("orderStatusList", orderStatusList);
+        logger.info("MVC finished editOrderItem");
         return mv;
     }
     
     @RequestMapping(value={ "/viewOrderItem-{orderItemID}" }, method = RequestMethod.GET)
     public ModelAndView viewOrderItem (Model model, @PathVariable Integer orderItemID) {
+        logger.info("MVC started viewOrderItem");
         OrderItem orderItem = orderItemService.find(orderItemID);
         List<OrderStatus> orderStatusList = orderStatusService.findAll();
         ModelAndView mv = new ModelAndView("viewOrderItem");
         mv.addObject("orderItem", orderItem);
         mv.addObject("orderStatusList", orderStatusList);
+        logger.info("MVC finished viewOrderItem");
         return mv;
     }
     
     @RequestMapping(value = { "/deleteOrderItem-{orderItemID}" }, method = RequestMethod.GET)
     public String deleteOrderItem(@PathVariable Integer orderItemID,Model model,RedirectAttributes redirectAttributes) {
+        logger.info("MVC started deleteOrderItem");
         String message;
         orderItemService.delete(orderItemID);
         message = "Pozycja zamówienia została poprawnie usunięta." ;
         redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished deleteOrderItem");
         return "redirect:/index";
     }
     
     @RequestMapping(value="/deleteOrderItems", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public String deleteOrderItems(Model model, @RequestParam(value="orderItemID")Integer[] orderItemIDs,RedirectAttributes redirectAttributes) {
-
+        logger.info("MVC started deleteOrderItems");
        String message = "Usunięto pozycje zamówień :: "+orderItemIDs.length+"sztuk(i).";
        
        for (Integer id : orderItemIDs) {
@@ -283,12 +304,14 @@ public class AppController {
        }
        
        redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished deleteOrderItems");
        return "redirect:/index";
     }
     
     @RequestMapping(value="/statusChangeForOrderItems", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public ModelAndView statusChangeForOrderItems(Model model, @RequestParam(value="orderItemID")Integer[] orderItemIDs) {
-       ModelAndView mv = new ModelAndView("statusChangeForOrderItems");
+        logger.info("MVC started statusChangeForOrderItems");
+        ModelAndView mv = new ModelAndView("statusChangeForOrderItems");
        
        List<OrderItem> orderItemList = new ArrayList<>(0);
        for (Integer orderItemID : orderItemIDs) {
@@ -297,13 +320,13 @@ public class AppController {
        }
        mv.addObject("orderStatuses", orderStatusService.findAll());
        mv.addObject("orderItemList", orderItemList);
-
+        logger.info("MVC finished statusChangeForOrderItems");
        return mv;
     }
     
     @RequestMapping(value="saveStatusChangeForOrderItems", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public String saveStatusChangeForOrderItems(Model model, @RequestParam(value="orderItemID")Integer[] orderItemIDs, @RequestParam(value="orderStatus")Integer orderStatusID, RedirectAttributes redirectAttributes) {
-       
+        logger.info("MVC started saveStatusChangeForOrderItems");
        OrderStatus orderStatus = orderStatusService.find(orderStatusID);
        
        List<OrderItem> orderItemList = new ArrayList<>(0);
@@ -320,12 +343,13 @@ public class AppController {
        
        String message = "Zmiana statusu na '"+orderStatus.getorderStatusName()+"' została zapisana dla "+orderItemList.size()+" zamówień.";
        redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished saveStatusChangeForOrderItems");
        return "redirect:/index";
     }
     
     @RequestMapping(value="/updateOrderItem", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
     public String updateOrderItem(@ModelAttribute OrderItem orderItem,BindingResult bindingResult,RedirectAttributes redirectAttributes) {
-        
+        logger.info("MVC started updateOrderItem");
         String message;
         Date today = new Date();
         if (bindingResult.hasErrors()) {
@@ -343,56 +367,70 @@ public class AppController {
             }
         }
         redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished updateOrderItem");
         return "redirect:/index";
     }
     
     @RequestMapping(value="/productionSlots", method = RequestMethod.GET)
     public ModelAndView showProductionSlots() {
+        logger.info("MVC started showProductionSlots");
         ModelAndView mv = new ModelAndView("productionSlots");
         List<ProductionSlot> productionSlotList = productionSlotService.findAll();
         mv.addObject("productionSlotList", productionSlotList);
+        logger.info("MVC finished showProductionSlots");
         return mv;
     }
     
     @RequestMapping(value="/arrayViews", method = RequestMethod.GET)
     public ModelAndView showArrayViews() {
+        logger.info("MVC started showArrayViews");
         ModelAndView mv = new ModelAndView("arrayViews");
         List<ArrayView> arrayViewList = arrayViewService.findAll();
         mv.addObject("arrayViewList", arrayViewList);
+        logger.info("MVC finished showArrayViews");
         return mv;
     }
     
     @RequestMapping(value="/newProductionSlot", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView newProductionSlot() {
+        logger.info("MVC started newProductionSlot");
         ModelAndView mv = new ModelAndView("newProductionSlot");
+        logger.info("MVC finished newProductionSlot");
         return mv;
     }
     
     @RequestMapping(value="/newArrayView", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView newArrayView() {
+        logger.info("MVC started newArrayView");
         ModelAndView mv = new ModelAndView("newArrayView");
+        logger.info("MVC finished newArrayView");
         return mv;
     }
     
     @RequestMapping(value = { "/editProductionSlot-{productionSlotID}" }, method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editProductionSlot(Model model, @PathVariable Integer productionSlotID) {
+        logger.info("MVC started editProductionSlot");
         ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
         ModelAndView mv = new ModelAndView("editProductionSlot");
         mv.addObject("productionSlot", productionSlot);
+        logger.info("MVC finished editProductionSlot");
         return mv;
     }
     
     @RequestMapping(value = { "/editArrayView-{arrayViewID}" }, method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editArrayView(Model model, @PathVariable Integer arrayViewID) {
+        logger.info("MVC started editArrayView");
         ArrayView arrayView = arrayViewService.find(arrayViewID);
         ModelAndView mv = new ModelAndView("editArrayView");
         mv.addObject("arrayView", arrayView);
+        logger.info("MVC finished editArrayView");
         return mv;
     }
     
             
     @RequestMapping(value="/updateProductionSlot", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public String updateProductionSlot(@ModelAttribute ProductionSlot productionSlot,BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+        logger.info("MVC started updateProductionSlot");
         String message;
         if (bindingResult.hasErrors()) {
             message = "W trakcie aktualizacji wystąpiły błędy !";
@@ -407,11 +445,13 @@ public class AppController {
             }
         }
         redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished updateProductionSlot");
         return "redirect:/productionSlots";
     }
     
     @RequestMapping(value="/updateArrayView", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public String updateArrayView(@ModelAttribute ArrayView arrayView,BindingResult bindingResult,RedirectAttributes redirectAttributes) {
+        logger.info("MVC started updateArrayView");
         String message;
         if (bindingResult.hasErrors()) {
             message = "W trakcie aktualizacji wystąpiły błędy !";
@@ -426,38 +466,46 @@ public class AppController {
             }
         }
         redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished updateArrayView");
         return "redirect:/arrayViews";
     }
     
     
     @RequestMapping(value = { "/deleteProductionSlot-{productionSlotID}" }, method = RequestMethod.GET)
     public String deleteProductionSlot(@PathVariable Integer productionSlotID,Model model,RedirectAttributes redirectAttributes) {
+        logger.info("MVC started deleteProductionSlot");
         String message;
         productionSlotService.delete(productionSlotID);
         message = "Gniazdo produkcyjne zostało poprawnie usunięte." ;
         redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished deleteProductionSlot");
         return "redirect:/productionSlots";
     }
     
     @RequestMapping(value = { "/deleteArrayView-{arrayViewID}" }, method = RequestMethod.GET)
     public String deleteArrayView(@PathVariable Integer arrayViewID,Model model,RedirectAttributes redirectAttributes) {
+        logger.info("MVC started deleteArrayView");
         String message;
         arrayViewService.delete(arrayViewID);
         message = "Widok został poprawnie usunięte." ;
         redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished deleteArrayView");
         return "redirect:/arrayViews";
     }
     
     @RequestMapping(value="/fieldMappings", method = RequestMethod.GET)
     public ModelAndView showfieldMappings() {
+        logger.info("MVC started showfieldMappings");
         ModelAndView mv = new ModelAndView("fieldMappings");
         List<ProductionSlot> productionSlotList = productionSlotService.findAll();
         mv.addObject("productionSlotList", productionSlotList);
+        logger.info("MVC finished showfieldMappings");
         return mv;
     } 
     
     @RequestMapping(value="/editFieldMapping-{productionSlotID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editfieldMapping(Model model, @PathVariable Integer productionSlotID) {
+        logger.info("MVC started editfieldMapping");
         ModelAndView mv = new ModelAndView("editFieldMapping");
         ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
         mv.addObject("productionSlot", productionSlot);
@@ -465,11 +513,13 @@ public class AppController {
         mv.addObject("fieldMappingList", fieldMappingList);
         List<Field> fieldList = fieldService.findAllNotAssignToProductSlot(productionSlotID);
         mv.addObject("fieldList",fieldList);
+        logger.info("MVC finished editfieldMapping");
         return mv;
     } 
     
     @RequestMapping(value="/editFieldMappingToView-{arrayViewID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView editFieldMappingToView(Model model, @PathVariable Integer arrayViewID) {
+        logger.info("MVC started editFieldMappingToView");
         ModelAndView mv = new ModelAndView("editFieldMappingToView");
         ArrayView arrayView = arrayViewService.find(arrayViewID);
         mv.addObject("arrayView", arrayView);
@@ -477,19 +527,23 @@ public class AppController {
         mv.addObject("fieldMappingToViewList", fieldMappingToViewList);
         List<Field> fieldList = fieldService.findAllNotAssignToArrayView(arrayViewID);
         mv.addObject("fieldList",fieldList);
+        logger.info("MVC finished editFieldMappingToView");
         return mv;
     } 
     
     @RequestMapping(value="/deleteFieldMapping-{productionSlotID}", method = RequestMethod.GET)
     public String deletefieldMapping(RedirectAttributes redirectAttributes, @PathVariable Integer productionSlotID) {
+        logger.info("MVC started deletefieldMapping");
         fieldMappingService.deleteByProductionSlotID(productionSlotID);
         String message = "Mapowanie pól zostało wyczyszczone prawidłowo.";
         redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished deletefieldMapping");
         return "redirect:/fieldMappings";
     } 
     
     @RequestMapping(value={ "saveFieldMapping" }, method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public String saveFieldMapping (@RequestParam("fieldMappingString") String getFormString,@RequestParam("productionSlotID") Integer productionSlotID, RedirectAttributes redirectAttributes) throws JSONException {
+        logger.info("MVC started saveFieldMapping");
         logger.info("saveFieldMapping.RequestParam: "+getFormString);
         String fieldMappingString = getFormString.replaceAll("fieldMapping_", "{\"fieldmapping\":");
         fieldMappingString = fieldMappingString.replaceAll(",", "},");
@@ -512,12 +566,14 @@ public class AppController {
         }
         String message = "Mapowanie pól zostało zapisane prawidłowo.";
         redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished saveFieldMapping");
         return "redirect:/fieldMappings";
     }
     
     
     @RequestMapping(value={ "saveFieldMappingToView" }, method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public String saveFieldMappingToView (@RequestParam("fieldMappingString") String getFormString,@RequestParam("arrayViewID") Integer arrayViewID, RedirectAttributes redirectAttributes) throws JSONException {
+        logger.info("MVC started saveFieldMappingToView");
         logger.info("saveFieldMappingToView.RequestParam: "+getFormString);
         String fieldMappingString = getFormString.replaceAll("fieldMapping_", "{\"fieldmapping\":");
         fieldMappingString = fieldMappingString.replaceAll(",", "},");
@@ -540,21 +596,25 @@ public class AppController {
         }
         String message = "Mapowanie pól zostało zapisane prawidłowo.";
         redirectAttributes.addFlashAttribute("message", message);
+        logger.info("MVC finished saveFieldMappingToView");
         return "redirect:/arrayViews";
     }
     
     @RequestMapping(value = "/selectProductionSlot-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView selectProductionSlot(Model model, @PathVariable Integer orderItemID) {
+        logger.info("MVC started selectProductionSlot");
         ModelAndView mv = new ModelAndView("selectProductionSlot");
         List<ProductionSlot> productionSlotList = productionSlotService.findAll();
         mv.addObject("productionSlotList", productionSlotList);
         mv.addObject("orderItemID", orderItemID);
+        logger.info("MVC finished selectProductionSlot");
         return mv;
     } 
     
     @RequestMapping(value="/printOrderItemCard-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView printOrderCard(Model model, @PathVariable Integer orderItemID, @RequestParam("productionSlotID") Integer productionSlotID) {
-       Date today = new Date();
+        logger.info("MVC started printOrderCard");
+        Date today = new Date();
        ModelAndView mv = new ModelAndView("printOrderItemCard");
        OrderItem orderItem = orderItemService.find(orderItemID);
        
@@ -566,12 +626,14 @@ public class AppController {
        mv.addObject("orderItem", orderItem);
        ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
        mv.addObject("productionSlot", productionSlot);
+        logger.info("MVC finished printOrderCard");
        return mv;
     }
     
     @RequestMapping(value="/printOrderItemCards", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public ModelAndView printOrderCards(Model model, @RequestParam("productionSlotID") Integer productionSlotID, @RequestParam(value="orderItem")Integer[] orderItemIDs) {
-       ModelAndView mv = new ModelAndView("printOrderItemCards");
+        logger.info("MVC started printOrderCards");
+        ModelAndView mv = new ModelAndView("printOrderItemCards");
        Date today = new Date();
        List<OrderItem> orderItemList = new ArrayList<>(0);
        for (Integer orderItemID : orderItemIDs) {
@@ -590,22 +652,26 @@ public class AppController {
        mv.addObject("selectedOrders", orderItemList);
        ProductionSlot productionSlot = productionSlotService.find(productionSlotID);
        mv.addObject("productionSlot", productionSlot);
+        logger.info("MVC finished printOrderCards");
        return mv;
     }
     
     @RequestMapping(value = "/printProductionLabel-{orderItemID}", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
     public ModelAndView printProductionLabel(Model model, @PathVariable Integer orderItemID) {
+        logger.info("MVC started printProductionLabel");
         ModelAndView mv = new ModelAndView("pdforderLabelCard");
         // create some sample data
         OrderItem orderItem = orderItemService.find(orderItemID);
         logger.info("Sended to print label orderID : " + orderItemID);
         mv.addObject("orderItem", orderItem);
         // return a view which will be resolved by an PDF view resolver
+        logger.info("MVC finished printProductionLabel");
         return mv;
     }
     
     @RequestMapping(value = "/printProductionLabels", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
     public ModelAndView printProductionLabels(Model model, @RequestParam(value="orderItemID")Integer[] orderItemIDs) {
+        logger.info("MVC started printProductionLabels");
         ModelAndView mv = new ModelAndView("pdforderLabelCards");
         // create some sample data
         List<OrderItem> orderItemList = new ArrayList<>(0);
@@ -615,6 +681,7 @@ public class AppController {
         }
         mv.addObject("orderItemList", orderItemList);
         // return a view which will be resolved by an PDF view resolver
+        logger.info("MVC finished printProductionLabels");
         return mv;
     }
     
@@ -626,7 +693,9 @@ public class AppController {
     
     @RequestMapping(value = "/importOrderItemsSuccess", method = RequestMethod.POST,produces = "text/html; charset=utf-8")
     public String save(@ModelAttribute("uploadForm") FileUploadForm uploadForm,Model map) throws JSONException, IOException, ParseException {
-    	List<MultipartFile> files = uploadForm.getFiles();
+
+        logger.info("MVC started save (importOrderItemsSuccess)");
+        List<MultipartFile> files = uploadForm.getFiles();
         List<String> fileNames = new ArrayList<>();
         String importedFileContent = new String();
         List<OrderItem> importedOrders = new ArrayList<>();
@@ -818,6 +887,7 @@ public class AppController {
         map.addAttribute("importedFileContent",importedFileContent);
         map.addAttribute("importedOrders",importedOrders);
 	map.addAttribute("files", fileNames);
+        logger.info("MVC finished save (importOrderItemsSuccess)");
 	return "importOrderItemsSuccess";
     }
     

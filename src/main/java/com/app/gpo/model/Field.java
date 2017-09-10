@@ -23,6 +23,10 @@
  */
 package com.app.gpo.model;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -59,12 +63,17 @@ public class Field implements Serializable {
     private String fieldOriginID;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "field")
+    @BatchSize(size=100)
+    //@Fetch(FetchMode.JOIN)
     private Set<FieldMapping> fieldMappings = new HashSet<FieldMapping>(0);
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "field")
+    @BatchSize(size=100)
+    //@Fetch(FetchMode.JOIN)
     private Set<FieldMappingToView> fieldMappingToViews = new HashSet<FieldMappingToView>(0);
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "field")
+    @BatchSize(size=100)
     private Set<OrderItemField> orderItemFields = new HashSet<OrderItemField>(0);
     
     @Column(name = "fieldShownInMainTable")

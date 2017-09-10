@@ -25,6 +25,8 @@ package com.app.gpo.dao;
 
 import com.app.gpo.model.FieldMapping;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
@@ -37,62 +39,76 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("fieldMappingDAO")
 public class FieldMappingDAO extends AbstractDao<Integer, FieldMapping> {
-    
+    private static final Logger logger = Logger.getLogger(FieldMappingDAO.class);
    public FieldMapping find (int id) {
+       logger.info("HQL started find FieldMapping");
         FieldMapping fieldMapping = getByKey(id);
-        Hibernate.initialize(fieldMapping.getProductionSlot());
-        Hibernate.initialize(fieldMapping.getfield());
+        //Hibernate.initialize(fieldMapping.getProductionSlot());
+        //Hibernate.initialize(fieldMapping.getfield());
+       logger.info("HQL finished find FieldMapping");
         return fieldMapping;
    }
  
     public void save (FieldMapping fieldMapping) {
-        persist(fieldMapping);
+        logger.info("HQL started save FieldMapping");
+       persist(fieldMapping);
+        logger.info("HQL finished save FieldMapping");
     }
  
     public void delete (int id) {
+        logger.info("HQL started delete FieldMapping");
         Query query = getSession().createSQLQuery("delete from fieldMapping where fieldMappingID = :fieldMappingID");
         query.setString("fieldMappingID", Integer.toString(id));
         query.executeUpdate();
+        logger.info("HQL finished delete FieldMapping");
     }
  
     public void deleteByProductionSlotID (int id) {
+        logger.info("HQL started deleteByProductionSlotID FieldMapping");
        Query query = getSession().createSQLQuery("delete from fieldMapping where productionSlotID = :productionSlotID");
        query.setString("productionSlotID", Integer.toString(id));
-       query.executeUpdate(); 
+       query.executeUpdate();
+        logger.info("HQL finished deleteByProductionSlotID FieldMapping");
     }
     
     @SuppressWarnings("unchecked")
     public List<FieldMapping> findAll() {
+        logger.info("HQL started findAll FieldMapping");
         Criteria criteria = createEntityCriteria();
         List<FieldMapping> fieldMappings = (List<FieldMapping>) criteria.list();
-        for(FieldMapping s : fieldMappings){
-            Hibernate.initialize(s.getProductionSlot());
-            Hibernate.initialize(s.getfield());
-        }
+        //for(FieldMapping s : fieldMappings){
+        //    Hibernate.initialize(s.getProductionSlot());
+        //    Hibernate.initialize(s.getfield());
+        //}
+        logger.info("HQL finished findAll FieldMapping");
         return fieldMappings;
     }
     
     @SuppressWarnings("unchecked")
     public List<FieldMapping> findByProductionSlotID (int id) {
+        logger.info("HQL started findByProductionSlotID FieldMapping");
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.sqlRestriction("{alias}.productionSlotID = "+id));
         List<FieldMapping> fieldMappings = (List<FieldMapping>) criteria.list();
-        for(FieldMapping s : fieldMappings){
-            Hibernate.initialize(s.getProductionSlot());
-            Hibernate.initialize(s.getfield());
-        }
+        //for(FieldMapping s : fieldMappings){
+         //   Hibernate.initialize(s.getProductionSlot());
+         //   Hibernate.initialize(s.getfield());
+        //}
+        logger.info("HQL finished findByProductionSlotID FieldMapping");
         return fieldMappings;
     }
     
     @SuppressWarnings("unchecked")
     public List<FieldMapping> findByNotProductionSlotID (int id) {
+        logger.info("HQL started findByNotProductionSlotID FieldMapping");
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.sqlRestriction("{alias}.productionSlotID = "+id));
         List<FieldMapping> fieldMappings = (List<FieldMapping>) criteria.list();
-        for(FieldMapping s : fieldMappings){
-            Hibernate.initialize(s.getProductionSlot());
-            Hibernate.initialize(s.getfield());
-        }
+        //for(FieldMapping s : fieldMappings){
+        //    Hibernate.initialize(s.getProductionSlot());
+         //   Hibernate.initialize(s.getfield());
+        //}
+        logger.info("HQL finished findByNotProductionSlotID FieldMapping");
         return fieldMappings;
     }
     

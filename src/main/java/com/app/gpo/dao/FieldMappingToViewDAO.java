@@ -25,6 +25,8 @@ package com.app.gpo.dao;
 
 import com.app.gpo.model.FieldMappingToView;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
@@ -37,50 +39,62 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("fieldMappingToViewDAO")
 public class FieldMappingToViewDAO extends AbstractDao<Integer, FieldMappingToView> {
-    
+    private static final Logger logger = Logger.getLogger(FieldMappingToViewDAO.class);
    public FieldMappingToView find (int id) {
+       logger.info("HQL started find FieldMappingToView");
         FieldMappingToView fieldMappingToView = getByKey(id);
         Hibernate.initialize(fieldMappingToView.getArrayView());
         Hibernate.initialize(fieldMappingToView.getfield());
+       logger.info("HQL finished find FieldMappingToView");
         return fieldMappingToView;
    }
  
     public void save (FieldMappingToView fieldMappingToView) {
-        persist(fieldMappingToView);
+        logger.info("HQL started save FieldMappingToView");
+       persist(fieldMappingToView);
+        logger.info("HQL finished save FieldMappingToView");
     }
  
     public void delete (int id) {
+        logger.info("HQL started delete FieldMappingToView");
         Query query = getSession().createSQLQuery("delete from fieldMappingToView where fieldMappingToViewID = :fieldMappingToViewID");
         query.setString("fieldMappingToViewID", Integer.toString(id));
         query.executeUpdate();
+        logger.info("HQL finished delete FieldMappingToView");
     }
  
     public void deleteByArrayViewID (int id) {
-       Query query = getSession().createSQLQuery("delete from fieldMappingToView where arrayViewID = :arrayViewID");
+        logger.info("HQL started deleteByArrayViewID FieldMappingToView");
+        Query query = getSession().createSQLQuery("delete from fieldMappingToView where arrayViewID = :arrayViewID");
        query.setString("arrayViewID", Integer.toString(id));
-       query.executeUpdate(); 
+       query.executeUpdate();
+        logger.info("HQL finished deleteByArrayViewID FieldMappingToView");
     }
     
     @SuppressWarnings("unchecked")
     public List<FieldMappingToView> findAll() {
+        logger.info("HQL started findAll FieldMappingToView");
         Criteria criteria = createEntityCriteria();
         List<FieldMappingToView> fieldMappings = (List<FieldMappingToView>) criteria.list();
-        for(FieldMappingToView s : fieldMappings){
-            Hibernate.initialize(s.getArrayView());
-            Hibernate.initialize(s.getfield());
-        }
+        //for(FieldMappingToView s : fieldMappings){
+         //   Hibernate.initialize(s.getArrayView());
+        //    Hibernate.initialize(s.getfield());
+        //}
+        logger.info("HQL finished findAll FieldMappingToView");
         return fieldMappings;
     }
     
     @SuppressWarnings("unchecked")
     public List<FieldMappingToView> findByArrayViewID (int id) {
+        logger.info("HQL started findByArrayViewID FieldMappingToView");
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.sqlRestriction("{alias}.arrayViewID = "+id));
         List<FieldMappingToView> fieldMappings = (List<FieldMappingToView>) criteria.list();
-        for(FieldMappingToView s : fieldMappings){
-            Hibernate.initialize(s.getArrayView());
-            Hibernate.initialize(s.getfield());
-        }
+        //for(FieldMappingToView s : fieldMappings){
+        //    Hibernate.initialize(s.getArrayView());
+        //    Hibernate.initialize(s.getfield());
+        //}
+        logger.info("HQL finished findByArrayViewID FieldMappingToView");
         return fieldMappings;
     }
         

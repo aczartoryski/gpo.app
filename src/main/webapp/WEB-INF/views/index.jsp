@@ -27,10 +27,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <% request.setCharacterEncoding("UTF-8"); %>
 <!DOCTYPE html>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c"       uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt"     uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form"    uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec"     uri="http://www.springframework.org/security/tags" %>
 <% session.setAttribute( "menuActive", "orderItems" ); %>
 <html lang="pl">
 <html>
@@ -139,16 +139,19 @@
                     <th>Wyrób<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Data zmiany statusu<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     <th>Status<div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
+
                     <c:forEach var="f4Table" items="${fieldsForTable}">
                     <th>(<c:out value='${f4Table.fieldOriginID}' />) <c:out value='${f4Table.fieldLabel}' />
                         <div><input type="search" class="form-control input-sm" style="font-size: 10px; width: 100px;" placeholder="filter..." /></div></th>
                     </c:forEach>
+
                 </tr>
             </thead>
             <tbody>
             <c:forEach var="oItem" items="${orderItemList}" varStatus="status">
                         <tr>
                             <td>
+
                               <a href="selectProductionSlot-<c:out value='${oItem.orderItemID}' />" title='Drukuj kartę zlecenia'>
                                 <span class="badge badge-primary badge-icon">
                                     <i class="fa fa-print" aria-hidden="true"></i>
@@ -177,6 +180,7 @@
                                 </span>
                               </a>
                               </sec:authorize>
+
                             </td>
                             <td>
                                 <input type="checkbox" id="orderItemID" name="orderItemID" value="<c:out value='${oItem.orderItemID}' />">&nbsp;&nbsp;
@@ -186,6 +190,7 @@
                             <td><c:out value='${oItem.orderItemName}' /></td>
                             <td><c:out value='${oItem.orderStatusDate}' /></td>
                             <td>
+
                                     <c:choose>
                                         <c:when test="${oItem.orderStatus.orderStatusName == 'Nowe'}">
                                            <span class="label label-info">
@@ -208,53 +213,58 @@
                                     </c:choose>
                                     <c:out value='${oItem.orderStatus.orderStatusName}' />
                                 </span>
+
                             </td>
+
                             <c:forEach var="f4Table" items="${fieldsForTable}">
-                            <td>
-                                <c:forEach var="orderItemfield" items="${oItem.orderItemFields}">
-                                    <c:if test="${f4Table.fieldID eq orderItemfield.field.fieldID}">
-                                        <c:out value='${orderItemfield.fieldText}' />
-                                    </c:if>    
-                                </c:forEach>
-                            </td>
+                                <td>
+
+                                    <c:forEach var="orderItemfield" items="${oItem.orderItemFields}">
+                                        <c:if test="${f4Table.fieldID eq orderItemfield.field.fieldID}">
+                                            <c:out value='${orderItemfield.fieldText}' />
+                                        </c:if>
+                                    </c:forEach>
+
+                                </td>
                             </c:forEach>
-                        </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-                        </div>
-                    </div>
-                </div>
+
+            </tr>
+            </c:forEach>
+        </tbody>
+    </table>
             </div>
         </div>
-    </form>
-        <footer class="app-footer">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="footer-copyright">© 2017 Copyright Artur Czartoryski</div>
-                </div>
-            </div>
-            <div class="wrapper">
-                <span class="pull-right">v1.0<a href="#">
-                <i class="fa fa-long-arrow-up"></i></a></span>
-            </div>
-        </footer>
-<!-- End class="app-container" -->
     </div>
+</div>
+</div>
+</form>
+<footer class="app-footer">
+<div class="row">
+    <div class="col-xs-12">
+        <div class="footer-copyright">© 2017 Copyright Artur Czartoryski</div>
+    </div>
+</div>
+<div class="wrapper">
+    <span class="pull-right">v1.0<a href="#">
+    <i class="fa fa-long-arrow-up"></i></a></span>
+</div>
+</footer>
+<!-- End class="app-container" -->
+</div>
 <!-- End class="app app-default" -->
 </div>
-    <script type="text/javascript" src="resources/js/jquery-2.2.4.js"></script>
-    <script type="text/javascript" src="resources/js/bootstrap.js"></script>
-    <script type="text/javascript" src="resources/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" src="resources/js/dataTables.bootstrap.js"></script>
-    <script type="text/javascript" src="resources/js/dataTables.buttons.js"></script>
-    <script type="text/javascript" src="resources/js/buttons.bootstrap.js"></script>
-    <script type="text/javascript" src="resources/js/buttons.colVis.js"></script>
-    <script type="text/javascript" src="resources/js/buttons.flash.min.js"></script>
-    <script type="text/javascript" src="resources/js/buttons.html5.min.js"></script>
-    <script type="text/javascript" src="resources/js/jszip.min.js"></script>
-    <script type="text/javascript" src="resources/js/buttons.print.js"></script>
-    <script src="resources/assets/js/index.config.js" type="text/javascript"></script>
-    <script src="resources/assets/js/datatable-scrollx.js" type="text/javascript"></script>
+<script type="text/javascript" src="resources/js/jquery-2.2.4.js"></script>
+<script type="text/javascript" src="resources/js/bootstrap.js"></script>
+<script type="text/javascript" src="resources/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="resources/js/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="resources/js/dataTables.buttons.js"></script>
+<script type="text/javascript" src="resources/js/buttons.bootstrap.js"></script>
+<script type="text/javascript" src="resources/js/buttons.colVis.js"></script>
+<script type="text/javascript" src="resources/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="resources/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="resources/js/jszip.min.js"></script>
+<script type="text/javascript" src="resources/js/buttons.print.js"></script>
+<script src="resources/assets/js/index.config.js" type="text/javascript"></script>
+<script src="resources/assets/js/datatable-scrollx.js" type="text/javascript"></script>
 </body>
 </html>

@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserDao extends AbstractDao<Integer, User>{
+public class UserDao extends AbstractDao<Integer, User> {
 
 	@Autowired
 	private SessionFactory sessionFactory;

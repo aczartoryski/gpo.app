@@ -23,6 +23,10 @@
  */
 package com.app.gpo.model;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,12 +47,14 @@ import javax.persistence.Table;
 @Table(name="fieldmapping")
 public class FieldMapping implements Serializable {
     
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @BatchSize(size=100)
     @JoinColumn(name = "productionSlotID")
     private ProductionSlot productionSlot;
     
     
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @BatchSize(size=100)
     @JoinColumn(name = "fieldID")
     private Field field;
     

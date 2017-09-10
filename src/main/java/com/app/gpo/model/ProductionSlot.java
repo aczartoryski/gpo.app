@@ -23,6 +23,10 @@
  */
 package com.app.gpo.model;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -58,6 +62,8 @@ public class ProductionSlot implements Serializable {
     private Integer productionSlotNumber;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "productionSlot", cascade=CascadeType.ALL)
+    @BatchSize(size=100)
+    //@Fetch(FetchMode.JOIN)
     @OrderBy ("fieldMappingOrder")
     private Set<FieldMapping> fieldMappings = new HashSet<FieldMapping>(0);
     

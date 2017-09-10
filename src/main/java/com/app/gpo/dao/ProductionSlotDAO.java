@@ -25,6 +25,8 @@ package com.app.gpo.dao;
 
 import com.app.gpo.model.ProductionSlot;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -37,38 +39,48 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("productionSlotDAO")
 public class ProductionSlotDAO extends AbstractDao<Integer, ProductionSlot> {
-    
+    private static final Logger logger = Logger.getLogger(ProductionSlotDAO.class);
    public ProductionSlot find (int id) {
+       logger.info("HQL started find ProductionSlot");
         ProductionSlot productionSlot = getByKey(id);
-        Hibernate.initialize(productionSlot.getFieldMappings());
+        //Hibernate.initialize(productionSlot.getFieldMappings());
+       logger.info("HQL finished find ProductionSlot");
         return productionSlot;
     }
  
     public void save (ProductionSlot productionSlot) {
-        persist(productionSlot);
+        logger.info("HQL started save ProductionSlot");
+       persist(productionSlot);
+        logger.info("HQL finished save ProductionSlot");
     }
     
     public void update (ProductionSlot productionSlot) throws HibernateException  {
-        try {
+        logger.info("HQL started update ProductionSlot");
+       try {
            saveUpdate(productionSlot);
         } catch (final HibernateException e) {
             throw new HibernateException(e);
         }
+        logger.info("HQL finished update ProductionSlot");
     }
  
     public void delete (int id) {
+        logger.info("HQL started delete ProductionSlot");
         Query query = getSession().createSQLQuery("delete from productionSlot where productionSlotID = :productionSlotID");
         query.setString("productionSlotID", Integer.toString(id));
         query.executeUpdate();
+        logger.info("HQL finished delete ProductionSlot");
     }
  
     @SuppressWarnings("unchecked")
     public List<ProductionSlot> findAll() {
+        logger.info("HQL started findAll ProductionSlot");
         Criteria criteria = createEntityCriteria();
         List<ProductionSlot> productionSlots = (List<ProductionSlot>) criteria.list(); 
-        for(ProductionSlot productionSlot : productionSlots){
-            Hibernate.initialize(productionSlot.getFieldMappings());
-        }
+        //for(ProductionSlot productionSlot : productionSlots){
+        //    Hibernate.initialize(productionSlot.getFieldMappings());
+        //}
+        logger.info("HQL finished findAll ProductionSlot");
         return productionSlots;
     }
 }

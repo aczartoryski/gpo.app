@@ -32,7 +32,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <aside class="app-sidebar" id="sidebar">
   <div class="sidebar-header">
-    <a class="sidebar-brand" href="/"><span class="highlight">v2</span> GKZP</a>
+    <a class="sidebar-brand" href="/"><span class="highlight">v2.1</span> GKZP</a>
     <button type="button" class="sidebar-toggle">
       <i class="fa fa-times"></i>
     </button>

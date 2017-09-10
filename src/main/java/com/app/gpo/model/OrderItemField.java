@@ -23,6 +23,8 @@
  */
 package com.app.gpo.model;
 
+import org.hibernate.annotations.*;
+
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,11 +50,15 @@ public class OrderItemField implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderItemfieldID;
     
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @BatchSize(size=100)
+    //@Fetch(FetchMode.JOIN)
     @JoinColumn(name="fieldID")
     private Field field;
     
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
+    @BatchSize(size=100)
+    //@Fetch(FetchMode.JOIN)
     @JoinColumn(name="orderItemID")
     private OrderItem orderItem;
     

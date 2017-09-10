@@ -23,6 +23,10 @@
  */
 package com.app.gpo.model;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -61,6 +65,8 @@ public class ArrayView implements Serializable {
     private Boolean arrayViewForClosed;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "arrayView", cascade=CascadeType.ALL)
+    @BatchSize(size=100)
+    //@Fetch(FetchMode.JOIN)
     @OrderBy ("fieldMappingToViewOrder")
     private Set<FieldMappingToView> fieldMappingToViews = new HashSet<FieldMappingToView>(0);
     
